@@ -35,7 +35,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
     - [ ] Users can double-tap to like a post
 - [ ] Users can take a picture as their profile picture
 - [ ] Users can find recommended "matched" users
-    - [ ] The app searchs through other accounts' favorite songs to find exact song matches
+    - [ ] The app searches through other accounts' favorite songs to find exact song matches
 - [ ] Parse is used to keep track of the data
 
 **Optional Nice-to-have Stories**
@@ -64,7 +64,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
     * Users can search songs from Spotify
 * Matching view
     * Users can find recommended "matched" users
-        * The app searchs through other accounts' favorite songs to find exact song matches
+        * The app searches through other accounts' favorite songs to find exact song matches
 * Profile view
     * Users can log out
     * Users can take a picture as their profile picture
