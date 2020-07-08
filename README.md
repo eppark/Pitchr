@@ -7,6 +7,7 @@ Original App Design Project
 1. [Overview](#Overview)
 1. [Product Spec](#Product-Spec)
 1. [Wireframes](#Wireframes)
+1. [Timeline](#Timeline)
 2. [Schema](#Schema)
 
 ## Overview
@@ -94,7 +95,8 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 ### [BONUS] Digital Wireframes & Mockups
 <img src="https://imgur.com/W27eazp.jpg" width=600>
 
-### [BONUS] Interactive Prototype
+## Timeline
+
 
 ## Schema 
 [This section will be completed in Unit 9]
