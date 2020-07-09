@@ -108,10 +108,98 @@ Loose timeline idea:
 | FBU week 8, project week 5 	| - Project complete                                                                                                                                                                                                                                                                                      	|
 
 ## Schema 
-[This section will be completed in Unit 9]
+
 ### Models
-[Add table of models]
+
+User
+| Property  	| Type              	| Description                                               	|
+|-----------	|-------------------	|-----------------------------------------------------------	|
+| objectId  	| String            	| unique id for the user (default field)                    	|
+| pfp       	| File              	| user's profile picture                                    	|
+| topSongs  	| Relation of Songs 	| top five songs that the user indicates as their favorites 	|
+| followers 	| Relation of Users 	| user's followers                                          	|
+| following 	| Relation of Users 	| user's following list                                     	|
+
+Song
+| Property   	| Type             	| Description                            	|
+|------------	|------------------	|----------------------------------------	|
+| objectId   	| String           	| unique ID for the song (default field) 	|
+| name       	| String           	| song name                              	|
+| artists    	| Array of Strings 	| array of artist names                  	|
+| spotifyId 	| String           	| unique Spotify Id for the song        	|
+| features   	| Array of floats  	| Spotify audio features for the track   	|
+| image      	| File             	| image cover for the song               	|
+
+Post
+| Property  	| Type              	| Description                                   	|
+|-----------	|-------------------	|-----------------------------------------------	|
+| objectId  	| String            	| unique ID for the song (default field)        	|
+| createdAt 	| DateTime          	| date when the post is created (default field) 	|
+| author    	| Pointer to User   	| author User of the post                       	|
+| song      	| Pointer to Song   	| Song content of the post                      	|
+| caption   	| String            	| author's caption of the post                  	|
+| likes     	| Relation of Users 	| Relation of Users that liked the post         	|
+
 ### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+<b>List of networking requests by screen</b>
+
+* Main feed
+    * (Read/GET) Query all posts where the author is in the following list of the current user
+    <pre><code>ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+    query.include(Post.KEY_USER);
+    query.whereContainedIn("author", ParseUser.getCurrentUser().getFollowing());
+    query.setLimit(20); // Only show 20 posts
+    query.addDescendingOrder(Post.KEY_CREATED_AT);
+    query.findInBackground(new FindCallback<Post>() {
+        @Override
+        public void done(List<Post> posts, ParseException e) {
+            if (e != null) {
+                Log.e(TAG, "Issue with getting posts", e);
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Log.d(TAG, "Query posts success!");
+            allPosts.addAll(posts);
+            adapter.notifyDataSetChanged();
+        }
+    });</pre></code>
+    * (Create/POST) Create a new like on a post
+    * (Delete) Delete existing like
+    * (Create/POST) Create a new post
+* Matching view
+    * (Read/GET) Query all user's top songs' names ~~and audio features~~
+    <pre><code>ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+    query.include(ParseUser.KEY_TOP_SONGS);
+    query.setLimit(20); // Only show 20 posts
+    query.findInBackground(new FindCallback<ParseUser>() {
+        @Override
+        public void done(List<ParseUser> users, ParseException e) {
+            if (e != null) {
+                Log.e(TAG, "Issue with getting songs", e);
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Log.d(TAG, "Query songs success!");
+            List<Song> currentUserSongs = getSongs();
+            for (ParseUser user : users) {
+                compareSongs(ParseUser.getCurrentUser().getSongs(), user.getSongs());
+            }
+        }
+    });</pre></code>
+* Profile view
+    * (Read/GET) Query user
+    * (Update/PUT) Update user profile picture
+    * (Create/POST) Create new top Song
+    * (Delete) Delete top Song
+    * (Update/PUT) Add to the user's follower/following relations
+
+**Existing API Endpoints**
+
+* Spotify base URL - https://api.spotify.com/v1/
+
+| HTTP Verb 	| Endpoint            	| Description                                      	|
+|-----------	|---------------------	|--------------------------------------------------	|
+| GET       	| me/top/tracks       	| get top tracks for the current user              	|
+| GET       	| audio-features/{id} 	| get a track's audio features with its Spotify Id 	|
+| GET       	| tracks/{id}         	| get a track from Spotify                         	|
+| GET       	| albums/{id}         	| get an album from Spotify                        	|
