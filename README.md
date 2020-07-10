@@ -106,6 +106,10 @@ Pitchr is a music-related social networking / connecting app that focuses on con
     - Divide the score by 150 to get the percentage. A higher percentage indicates a higher match.
 3) The app then lists the top five matches onto the screen, the first match being the one with the highest percentage. Users can click on a matched user's profile to see more details.
 
+Improvements to this algorithm could be
+* Not only checking a user's top tracks, but also their similar/recommended tracks in the matching process
+* Not only checking exact artist matches, but also recommended artist matches in the matching process
+
 ## Schema 
 
 ### Models
