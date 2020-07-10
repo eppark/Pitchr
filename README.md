@@ -7,8 +7,8 @@ Original App Design Project
 1. [Overview](#Overview)
 1. [Product Spec](#Product-Spec)
 1. [Wireframes](#Wireframes)
-1. [Timeline](#Timeline)
-2. [Schema](#Schema)
+2. [Matching Algorithm](#Matching-Algorithm)
+3. [Schema](#Schema)
 
 ## Overview
 ### Description
@@ -28,7 +28,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 
 **Required Must-have Stories**
 
-- [ ] Users can create an account/log in
+- [ ] Users can create an account/log in, bringing up the main feed with a fade-in algorithm
 - [ ] Users can log out
 - [ ] Users can connect their Spotify account
 - [ ] Users can post Spotify songs
@@ -38,6 +38,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 - [ ] Users can find recommended "matched" users
     - [ ] The app searches through other accounts' favorite songs to find exact song matches
 - [ ] Parse is used to keep track of the data
+- [ ] Material.io library is used for adding visual polish
 
 **Optional Nice-to-have Stories**
 
@@ -65,7 +66,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
     * Users can search songs from Spotify
 * Matching view
     * Users can find recommended "matched" users
-        * The app searches through other accounts' favorite songs to find exact song matches
+        * The app searchs through other accounts' favorite songs to find exact song matches
 * Profile view
     * Users can log out
     * Users can take a picture as their profile picture
@@ -95,17 +96,15 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 ### [BONUS] Digital Wireframes & Mockups
 <img src="https://imgur.com/W27eazp.jpg" width=600>
 
-## Timeline
-Loose timeline idea:
 
-| Week                       	| Goals                                                                                                                                                                                                                                                                                                   	|
-|----------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| FBU week 3, project week 0 	| - Create app idea<br>- Create project plan                                                                                                                                                                                                                                                              	|
-| FBU week 4, project week 1 	| - Set up data models (User, Post, Song) and validate they work<br>- Build the navigational skeleton (bottom navigation tabs) of app<br>- Build out skeleton views (Timeline, Matching, Profile) for app<br>- Build basic login/logout (and account creation flow)<br>- Build profile picture camera use 	|
-| FBU week 5, project week 2 	| - Build compose post<br>- Build matching algorithm                                                                                                                                                                                                                                                      	|
-| FBU week 6, project week 3 	| - Add visuals + add external UI library<br>- Add animations<br>- Add gesture recognizers                                                                                                                                                                                                                	|
-| FBU week 7, project week 4 	| - Build following/followers list<br>- Build user posts timeline on profile<br>- Add more complexity to the matching algorithm<br>- Integrate song playback                                                                                                                                              	|
-| FBU week 8, project week 5 	| - Project complete                                                                                                                                                                                                                                                                                      	|
+## Matching Algorithm
+
+1) Using a top tracks query to Spotify, the app will get each user's top 10 tracks
+2) When the "find matches" button is pressed on the Matching screen, the app will:
+    - Find all users that have at least one top track that is an exact match to one of the current user's top tracks
+    - For each of these users, initialize a score value of 0 and count how many songs match exactly. For each song that matches exactly, the score increases by 10. If a song doesn't match with the other user's song but has the same artist, the score increases by 5.
+    - Divide the score by 150 to get the percentage. A higher percentage indicates a higher match.
+3) The app then lists the top five matches onto the screen, the first match being the one with the highest percentage. Users can click on a matched user's profile to see more details.
 
 ## Schema 
 
@@ -126,7 +125,7 @@ Song
 | objectId   	| String           	| unique ID for the song (default field) 	|
 | name       	| String           	| song name                              	|
 | artists    	| Array of Strings 	| array of artist names                  	|
-| spotifyId 	| String           	| unique Spotify Id for the song        	|
+| spotifyId 	| String           	| unique Spotify ID for the song        	|
 | features   	| Array of floats  	| Spotify audio features for the track   	|
 | image      	| File             	| image cover for the song               	|
 
@@ -141,6 +140,7 @@ Post
 | likes     	| Relation of Users 	| Relation of Users that liked the post         	|
 
 ### Networking
+
 <b>List of networking requests by screen</b>
 
 * Main feed
