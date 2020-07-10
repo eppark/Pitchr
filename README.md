@@ -9,6 +9,7 @@ Original App Design Project
 1. [Wireframes](#Wireframes)
 2. [Matching Algorithm](#Matching-Algorithm)
 3. [Schema](#Schema)
+4. [Timeline](#Timeline)
 
 ## Overview
 ### Description
@@ -207,3 +208,16 @@ Post
 | GET       	| audio-features/{id} 	| get a track's audio features with its Spotify Id 	|
 | GET       	| tracks/{id}         	| get a track from Spotify                         	|
 | GET       	| albums/{id}         	| get an album from Spotify                        	|
+
+## Timeline
+
+Loose timeline idea:
+
+| Week                       	| Goals                                                                                                                                                                                                                                                                                                   	|
+|----------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| FBU week 3, project week 0 	| - Create app idea<br>- Create project plan                                                                                                                                                                                                                                                              	|
+| FBU week 4, project week 1 	| - Set up data models (User, Post, Song) and validate they work<br>- Build the navigational skeleton (bottom navigation tabs) of app<br>- Build out skeleton views (Timeline, Matching, Profile) for app<br>- Build basic login/logout (and account creation flow)<br>- Build profile picture camera use 	|
+| FBU week 5, project week 2 	| - Build compose post<br>- Build matching algorithm                                                                                                                                                                                                                                                      	|
+| FBU week 6, project week 3 	| - Add visuals + add external UI library<br>- Add animations<br>- Add gesture recognizers                                                                                                                                                                                                                	|
+| FBU week 7, project week 4 	| - Build following/followers list<br>- Build user posts timeline on profile<br>- Add more complexity to the matching algorithm<br>- Integrate song playback                                                                                                                                              	|
+| FBU week 8, project week 5 	| - Project complete                                                                                                                                                                                                                                                                                      	|
