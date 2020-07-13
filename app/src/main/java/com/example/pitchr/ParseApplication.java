@@ -3,6 +3,8 @@ package com.example.pitchr;
 import android.app.Application;
 
 import com.example.pitchr.R;
+import com.example.pitchr.models.Post;
+import com.example.pitchr.models.Song;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -13,8 +15,8 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         // Register the parse models
-        //ParseObject.registerSubclass(Post.class);
-        //ParseObject.registerSubclass(Song.class);
+        ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(Song.class);
 
         // set applicationId, and server server based on the values in the Heroku settings.
         // clientKey is not needed unless explicitly configured

@@ -1,4 +1,4 @@
-package com.example.pitchr;
+package com.example.pitchr.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,16 +9,21 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
     ActivityLoginBinding binding;
+    private static final String REDIRECT_URI = "intent://";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // If we've already logged in before, skip the login screen
         if (ParseUser.getCurrentUser() != null) {
-            goMainActivity();
+            ParseUser.logOut();
         }
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -106,5 +111,15 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
+    }
+
+    private void spotifyLogin() {
+        AuthenticationRequest.Builder builder =
+                new AuthenticationRequest.Builder(getString(R.string.spotify_api_key), AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
+
+        builder.setScopes(new String[]{"streaming", "user-top-read", "app-remote-control"});
+        AuthenticationRequest request = builder.build();
+
+        AuthenticationClient.openLoginInBrowser(this, request);
     }
 }

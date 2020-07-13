@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivPFP"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/ivPFP"
+        android:textColor="@color/gray3"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="pepinouo"
+        tools:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/rlSong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivPFP"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/gray3"
+        android:backgroundTint="@color/gray3"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivSongImage"
+            android:layout_width="48dp"
+
+            android:layout_height="48dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvSongName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/ibtnPlay"
+            android:layout_toEndOf="@+id/ivSongImage"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="Maps" />
+
+        <TextView
+            android:id="@+id/tvArtists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvSongName"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/ibtnPlay"
+            android:layout_toEndOf="@+id/ivSongImage"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/gray1"
+            tools:text="Maroony 5" />
+
+        <ImageButton
+            android:id="@+id/ibtnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/ic_music_play" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlSong"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@android:color/black"
+        tools:text="good song!" />
+
+    <ImageButton
+        android:id="@+id/ibtnLike"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/tvTime"
+        android:layout_marginTop="-8dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/ibtnComment"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:tint="@color/gray3"
+        app:srcCompat="@drawable/ic_heart" />
+
+    <ImageButton
+        android:id="@+id/ibtnComment"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/tvTime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-8dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:tint="@color/gray3"
+        app:srcCompat="@drawable/ic_comments" />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvCaption"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/gray2"
+        tools:text="14m" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ibtnLike"
+        android:layout_marginTop="0dp"
+        android:background="?android:attr/listDivider" />
+
+</RelativeLayout>
