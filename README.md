@@ -29,7 +29,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 
 **Required Must-have Stories**
 
-- [ ] Users can create an account/log in, bringing up the main feed with a fade-in algorithm
+- [ ] Users can create an account/log in, bringing up the main feed with a fade-in animation
 - [ ] Users can log out
 - [ ] Users can connect their Spotify account
 - [ ] Users can post Spotify songs
@@ -39,7 +39,7 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 - [ ] Users can find recommended "matched" users
     - [ ] The app searches through other accounts' favorite songs to find exact song matches
 - [ ] Parse is used to keep track of the data
-- [ ] Material.io library is used for adding visual polish
+- [ ] Material.io library is used for adding visual polish/animations between screens
 
 **Optional Nice-to-have Stories**
 
