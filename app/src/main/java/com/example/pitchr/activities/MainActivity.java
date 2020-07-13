@@ -22,14 +22,17 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     public ActivityMainBinding binding;
-    private SpotifyApi spotifyApi;
+    public SpotifyApi spotifyApi;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set the Spotify API
         spotifyApi = new SpotifyApi();
-        //getIntent().getStringExtra("token");
+        token = getIntent().getStringExtra("token"); // get the access token
+        spotifyApi.setAccessToken(token);
 
         // Set ViewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());

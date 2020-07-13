@@ -10,20 +10,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
+import com.example.pitchr.SpotifyAuthenticationActivity;
 import com.example.pitchr.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
     ActivityLoginBinding binding;
-    private static final String REDIRECT_URI = "intent://";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                goMainActivity();
+                goSpotifyAuth();
                 Toast.makeText(LoginActivity.this, "Login success.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -101,25 +98,16 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                goMainActivity();
+                goSpotifyAuth();
                 Toast.makeText(LoginActivity.this, "Signup success.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
+    private void goSpotifyAuth() {
+        Intent i = new Intent(this, SpotifyAuthenticationActivity.class);
+        Log.d(TAG, "spotifyauth");
         startActivity(i);
         finish();
-    }
-
-    private void spotifyLogin() {
-        AuthenticationRequest.Builder builder =
-                new AuthenticationRequest.Builder(getString(R.string.spotify_api_key), AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
-
-        builder.setScopes(new String[]{"streaming", "user-top-read", "app-remote-control"});
-        AuthenticationRequest request = builder.build();
-
-        AuthenticationClient.openLoginInBrowser(this, request);
     }
 }
