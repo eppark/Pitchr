@@ -5,4 +5,6 @@
     <string name="login">login</string>
     <string name="sign_up">sign up</string>
     <string name="messages">Messages</string>
+    <string name="search">Search...</string>
+    <string name="loading">Loading...</string>
 </resources>

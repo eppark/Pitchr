@@ -1,5 +1,6 @@
 package com.example.pitchr.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,9 +16,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
+import com.example.pitchr.SearchActivity;
+import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.Post;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -32,6 +36,7 @@ public class PostsFragment extends Fragment {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
     ProgressBar pbLoading;
+    FloatingActionButton fabCompose;
 
     // Swipe to refresh and endless scrolling
     private SwipeRefreshLayout swipeContainer;
@@ -59,6 +64,7 @@ public class PostsFragment extends Fragment {
         rvPosts = (RecyclerView) view.findViewById(R.id.rvPosts);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         pbLoading = (ProgressBar) view.findViewById(R.id.pbLoading);
+        fabCompose = (FloatingActionButton) view.findViewById(R.id.fabCompose);
         pbLoading.setVisibility(View.GONE); // Hide progress bar at first
 
         // Set posts, adapter, and layout
@@ -96,6 +102,15 @@ public class PostsFragment extends Fragment {
         // Get posts initially
         pbLoading.setVisibility(View.VISIBLE); // Show progress bar
         queryPosts(0);
+
+        // Create the compose button click event
+        fabCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), SearchActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     // Query posts from database

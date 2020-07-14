@@ -14,6 +14,7 @@ import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityMainBinding;
 import com.example.pitchr.fragments.PostsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the Spotify API
         spotifyApi = new SpotifyApi();
-        token = getIntent().getStringExtra("token"); // get the access token
+        token = ParseUser.getCurrentUser().getString("token"); // get the access token
         spotifyApi.setAccessToken(token);
 
         // Set ViewBinding

@@ -14,20 +14,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.pitchr.activities.LoginActivity;
 import com.example.pitchr.activities.MainActivity;
+import com.parse.ParseUser;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 public class SpotifyAuthenticationActivity extends AppCompatActivity {
 
-    // Get credentials from shared preferences
-    private SharedPreferences.Editor editor;
-    private SharedPreferences msharedPreferences;
-
     private static final String TAG = SpotifyAuthenticationActivity.class.getSimpleName();
     private static final String SCOPES = "streaming,user-top-read,app-remote-control";
     private static final int REQUEST_CODE = 11037;
-    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +31,7 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_spotify_authentication);
 
-        msharedPreferences = this.getSharedPreferences("SPOTIFY", 0);
-        token = msharedPreferences.getString("token", ""); // null by default if the key isn't there
-
-        Log.d(TAG, "oncreate");
-        if (token.isEmpty()) {
-            // Authenticate
-            authenticateSpotify();
-        } else {
-            // We can just go to the main activity
-            goMainActivity();
-        }
+        authenticateSpotify();
     }
 
     @Override
@@ -59,11 +45,9 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
             switch (response.getType()) {
                 // Response was successful and contains auth token
                 case TOKEN:
-                    editor = getSharedPreferences("SPOTIFY", 0).edit();
-                    token = response.getAccessToken();
-                    editor.putString("token", token);
-                    Log.d("STARTING", "GOT AUTH TOKEN");
-                    editor.apply();
+                    ParseUser.getCurrentUser().put("token", response.getAccessToken());
+                    ParseUser.getCurrentUser().saveInBackground();
+                    Log.d(TAG, "Successfully got auth token");
                     goMainActivity();
                     break;
 
@@ -94,7 +78,6 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
 
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("token", token);
         startActivity(i);
         finish();
     }

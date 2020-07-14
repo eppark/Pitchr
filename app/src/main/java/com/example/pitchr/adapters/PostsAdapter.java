@@ -133,7 +133,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (image != null) {
                 Glide.with(context).load(image).into(ivSongImage);
             } else {
-                // find default song image
+                ivSongImage.setImageDrawable(context.getDrawable(R.drawable.music_placeholder));
             }
             ParseFile pfpImage = post.getUser().getParseFile("pfp");
             if (pfpImage != null) {
