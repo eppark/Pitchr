@@ -6,21 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     tools:context=".activities.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:background="@color/spotifyGreen"
+        android:foregroundGravity="top"
+        android:gravity="top"
+        android:minHeight="?attr/actionBarSize"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
-        android:background="@color/spotifyGreen">
+        app:titleTextColor="@color/white">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/ivLogo"
             android:layout_width="72dp"
             android:layout_height="46dp"
             android:scaleType="centerCrop"

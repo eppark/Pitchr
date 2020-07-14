@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/miMessages"
-        android:icon="@drawable/ic_dms"
+        android:id="@+id/miSettings"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="always"
-        android:title="@string/messages">
+        android:title="@string/settings">
     </item>
-
 </menu>

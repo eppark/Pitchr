@@ -1,7 +1,6 @@
 package com.example.pitchr.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,5 +107,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
     // Easy access to the context object in the recyclerview
     private Context getContext() {
         return mContext;
+    }
+
+    // Clean all elements of the recycler
+    public void clear() {
+        mSongs.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items
+    public void addAll(List<Song> list) {
+        mSongs.addAll(list);
+        notifyDataSetChanged();
     }
 }
