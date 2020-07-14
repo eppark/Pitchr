@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -41,6 +42,7 @@ public class ProfileFragment extends Fragment {
     public ParseUser user;
     TextView tvUsername;
     ImageView ivPfp;
+    ImageView htabHeader;
     Button btnFollow;
     TabLayout htabTabs;
     ViewPager htabViewpager;
@@ -64,6 +66,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -73,6 +76,7 @@ public class ProfileFragment extends Fragment {
         ivPfp = view.findViewById(R.id.ivPfp);
         tvUsername = view.findViewById(R.id.tvUsername);
         btnFollow = view.findViewById(R.id.btnFollow);
+        htabHeader = view.findViewById(R.id.htab_header);
         htabTabs = view.findViewById(R.id.htab_tabs);
         htabViewpager = view.findViewById(R.id.htab_viewpager);
 
@@ -84,8 +88,10 @@ public class ProfileFragment extends Fragment {
         ParseFile pfpImage = user.getParseFile("pfp");
         if (pfpImage != null) {
             Glide.with(this).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
+            Glide.with(this).load(pfpImage.getUrl()).into(htabHeader);
         } else {
             Glide.with(this).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
+            Glide.with(this).load(R.drawable.default_pfp).into(ivPfp);
         }
 
         // Set up view pager and tabs

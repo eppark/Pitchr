@@ -13,11 +13,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/PostsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/PostsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/UsersAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/UsersAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/FavSongsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/FavSongsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/PostsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/PostsFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/ProfileFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/ProfileFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_bottom_navigation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_bottom_navigation.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +219,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594765344700</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="View a user's profile through posts or following/followers page">
+      <created>1594767133171</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1594767133171</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -233,7 +239,8 @@
     <MESSAGE value="Set up getting the top ten songs for a user" />
     <MESSAGE value="Allow user to take photo or choose a photo from the gallery for their profile picture" />
     <MESSAGE value="Implemented logging out" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented logging out" />
+    <MESSAGE value="View a user's profile through posts or following/followers page" />
+    <option name="LAST_COMMIT_MESSAGE" value="View a user's profile through posts or following/followers page" />
   </component>
   <component name="WindowStateProjectService">
     <state x="394" y="257" key="#PSD" timestamp="1594742235678">
@@ -267,12 +274,12 @@
     <state x="725" y="390" key="AndroidCreateXmlResourceDialog/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594684816926" />
     <state x="725" y="391" key="AndroidCreateXmlResourceDialog/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594752781935" />
     <state x="725" y="392" key="AndroidCreateXmlResourceDialog/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1594766824848" />
-    <state x="332" y="121" key="CommitChangelistDialog2" timestamp="1594765344636">
+    <state x="332" y="121" key="CommitChangelistDialog2" timestamp="1594767133075">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="368" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594688511476" />
     <state x="332" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594757894847" />
-    <state x="332" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1594765344636" />
+    <state x="332" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1594767133075" />
     <state width="1653" height="331" key="GridCell.Tab.0.bottom" timestamp="1594766538313">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
@@ -350,11 +357,11 @@
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="682" y="380" key="psd.choose.module.panel.dimension/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594742220857" />
-    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup" timestamp="1594766975625">
+    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup" timestamp="1594768652713">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="534" y="241" width="670" height="676" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594688676389" />
     <state x="534" y="241" width="670" height="678" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594758378083" />
-    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1594766975625" />
+    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1594768652713" />
   </component>
 </project>

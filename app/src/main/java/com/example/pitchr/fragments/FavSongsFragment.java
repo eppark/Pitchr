@@ -1,5 +1,6 @@
 package com.example.pitchr.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -16,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
+import com.example.pitchr.activities.ComposeActivity;
+import com.example.pitchr.activities.SearchActivity;
 import com.example.pitchr.adapters.SongsAdapter;
 import com.example.pitchr.adapters.UsersAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
@@ -100,6 +103,18 @@ public class FavSongsFragment extends Fragment {
 
         // Populate the feed
         queryInitial();
+
+        // Set the adapter position click listener
+        adapter.setOnItemClickListener(new SongsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                // Make sure the position is valid
+                if (position != RecyclerView.NO_POSITION) {
+                    Song song = allSongs.get(position);
+
+                }
+            }
+        });
     }
 
     private void queryInitial() {
