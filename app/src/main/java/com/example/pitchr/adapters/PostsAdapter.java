@@ -12,10 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
+import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.helpers.TimeFormatter;
 import com.example.pitchr.models.Post;
 import com.parse.FindCallback;
@@ -84,8 +87,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             View.OnClickListener profileListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //((MainActivity) context).fragmentManager.beginTransaction().replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser())).commit();
-
+                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser()), TAG);
+                    ft.addToBackStack(TAG);
+                    ft.commit();
                 }
             };
             tvUsername.setOnClickListener(profileListener);

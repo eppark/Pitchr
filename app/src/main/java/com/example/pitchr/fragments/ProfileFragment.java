@@ -24,6 +24,7 @@ import com.example.pitchr.adapters.ViewPagerAdapter;
 import com.example.pitchr.models.Following;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.DeleteCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -115,15 +116,19 @@ public class ProfileFragment extends Fragment {
             query.include(Following.KEY_FOLLOWING);
             query.whereEqualTo(Following.KEY_FOLLOWING, user);
             query.whereEqualTo(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
-            Task<Following> object = query.getFirstInBackground();
             // If the user is currently following them, show that
-            if (object.getResult() == null) {
-                following = false;
-            } else {
-                followingObject = object.getResult();
-                following = true;
-            }
-            setupFollowStatus();
+            query.getFirstInBackground(new GetCallback<Following>() {
+                @Override
+                public void done(Following object, ParseException e) {
+                    if (object == null) {
+                        following = false;
+                    } else {
+                        followingObject = object;
+                        following = true;
+                    }
+                    setupFollowStatus();
+                }
+            });
 
             // Set up following/unfollowing via button
             btnFollow.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +197,7 @@ public class ProfileFragment extends Fragment {
     private void setupFollowStatus() {
         if (following) {
             btnFollow.setSelected(true);
-            btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.gray3));
+            btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.spotifyGreen));
             btnFollow.setText("FOLLOWING");
         } else {
             btnFollow.setSelected(false);

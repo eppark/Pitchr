@@ -10,11 +10,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
+import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.models.Following;
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -90,9 +94,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             queryFollowersCount();
         }
 
+        // Go to the user's profile when clicked
         @Override
         public void onClick(View view) {
-            //
+            FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.flContainer, ProfileFragment.newInstance(user), TAG);
+            ft.addToBackStack(TAG);
+            ft.commit();
         }
 
         // Count the number of followers this user has
@@ -101,12 +109,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             query.include(Following.KEY_FOLLOWED_BY);
             query.include(Following.KEY_FOLLOWING);
             query.whereEqualTo(Following.KEY_FOLLOWING, user);
-            Task<Integer> count = query.countInBackground();
-            if (count.getResult() == null) {
-                tvFollowers.setText("0 followers");
-            } else {
-                tvFollowers.setText(String.format("%d followers", count.getResult()));
-            }
+            query.countInBackground(new CountCallback() {
+                @Override
+                public void done(int count, ParseException e) {
+                    if (count <= 0) {
+                        tvFollowers.setText("0 followers");
+                    } else {
+                        tvFollowers.setText(String.format("%d followers", count));
+                    }
+                }
+            });
         }
     }
 

@@ -156,4 +156,11 @@ public class MainActivity extends AppCompatActivity {
             favSongsObject.saveInBackground();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
 }

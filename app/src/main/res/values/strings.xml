@@ -14,4 +14,7 @@
     <string name="take_photo">Take Photo</string>
     <string name="edit_profile_picture">Edit Profile Picture</string>
     <string name="logout">Logout</string>
+    <string name="home">Home</string>
+    <string name="match">Match</string>
+    <string name="profile">Profile</string>
 </resources>
