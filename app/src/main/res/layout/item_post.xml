@@ -9,7 +9,7 @@
         android:id="@+id/ivPFP"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -90,9 +90,9 @@
         android:layout_below="@id/rlSong"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:textColor="@android:color/black"
         tools:text="good song!" />
 
@@ -127,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvCaption"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:textColor="@color/gray2"
         tools:text="14m" />

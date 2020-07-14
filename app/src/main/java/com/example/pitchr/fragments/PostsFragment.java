@@ -3,6 +3,7 @@ package com.example.pitchr.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
-import com.example.pitchr.SearchActivity;
-import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.activities.SearchActivity;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.Post;
@@ -32,6 +32,7 @@ import java.util.List;
 public class PostsFragment extends Fragment {
 
     private static final String TAG = PostsFragment.class.getSimpleName();
+    private static final int RESULT_CODE = 11037;
     protected RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
@@ -79,9 +80,7 @@ public class PostsFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter.clear();
-                pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-                queryPosts(0);
+                initialQuery();
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -100,17 +99,23 @@ public class PostsFragment extends Fragment {
         rvPosts.addOnScrollListener(scrollListener);
 
         // Get posts initially
-        pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-        queryPosts(0);
+        initialQuery();
 
         // Create the compose button click event
         fabCompose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getContext(), SearchActivity.class);
-                startActivity(i);
+                startActivityForResult(i, RESULT_CODE);
             }
         });
+    }
+
+    // Initial query
+    private void initialQuery() {
+        adapter.clear();
+        pbLoading.setVisibility(View.VISIBLE); // Show progress bar
+        queryPosts(0);
     }
 
     // Query posts from database
@@ -135,5 +140,13 @@ public class PostsFragment extends Fragment {
                 pbLoading.setVisibility(View.GONE); // Hide progress bar
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CODE) {
+            initialQuery();
+        }
     }
 }

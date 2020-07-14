@@ -17,10 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="MissingClass">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".activities.ComposeActivity"></activity>
+        <activity android:name=".activities.SearchActivity" />
         <activity
             android:name=".SpotifyAuthenticationActivity"
-            android:launchMode="singleInstance"></activity>
+            android:launchMode="singleInstance" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         // If we've already logged in before, skip the login screen
         if (ParseUser.getCurrentUser() != null) {
             ParseUser.logOut();
+            //goSpotifyAuth();
         }
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {

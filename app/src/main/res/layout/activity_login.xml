@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnLogin"
         android:layout_marginTop="0dp"
+        android:backgroundTint="@color/gray1"
         android:text="@string/sign_up"
         android:textColor="@color/gray3" />
 

@@ -43,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
-        getSupportActionBar().setTitle("Pitchr");
-        binding.toolbar.setTitle("Pitchr");
+        getSupportActionBar().setTitle(" ");
 
         // Set the bottom navigation view
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

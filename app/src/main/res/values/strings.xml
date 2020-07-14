@@ -7,4 +7,6 @@
     <string name="messages">Messages</string>
     <string name="search">Search...</string>
     <string name="loading">Loading...</string>
+    <string name="write_a_caption">Write a caption...</string>
+    <string name="post">POST</string>
 </resources>

@@ -1,16 +1,25 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/spotifyGreen</item>
         <item name="colorPrimaryDark">@color/gray3</item>
         <item name="colorAccent">@color/gray1</item>
         <item name="font">@font/pitchr</item>
+        <item name="android:textColorHint">@color/gray2</item>
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="PitchrTextAppearance">
         <item name="android:fontFamily">@font/pitchr</item>
         <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="BottomNavigationView">
+        <item name="colorPrimary">@color/spotifyGreen</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:colorForeground">@color/white</item>
     </style>
 
 </resources>

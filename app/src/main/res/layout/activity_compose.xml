@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ComposeActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/spotifyGreen"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_below="@id/toolbar"
+        app:titleTextColor="@android:color/white" />
+
+    <RelativeLayout
+        android:id="@+id/rlUser"
+        android:layout_below="@id/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivPFP"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <EditText
+            android:id="@+id/etCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@+id/ivPFP"
+            android:ems="10"
+            android:hint="@string/write_a_caption"
+            android:inputType="textMultiLine"
+            android:textColor="@color/gray3"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlSong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlUser"
+        android:layout_marginTop="16dp"
+        android:background="@color/gray3"
+        android:backgroundTint="@color/gray3"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivSongImage"
+            android:layout_width="48dp"
+
+            android:layout_height="48dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvSongName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/ibtnPlay"
+            android:layout_toEndOf="@+id/ivSongImage"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="Maps" />
+
+        <TextView
+            android:id="@+id/tvArtists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvSongName"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/ibtnPlay"
+            android:layout_toEndOf="@+id/ivSongImage"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/gray1"
+            tools:text="Maroony 5" />
+
+        <ImageButton
+            android:id="@+id/ibtnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/ic_music_play" />
+    </RelativeLayout>
+
+</RelativeLayout>

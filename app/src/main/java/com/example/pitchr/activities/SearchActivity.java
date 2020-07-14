@@ -1,11 +1,13 @@
-package com.example.pitchr;
+package com.example.pitchr.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,12 +15,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.R;
 import com.example.pitchr.adapters.SongsAdapter;
 import com.example.pitchr.databinding.ActivitySearchBinding;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.Song;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +38,7 @@ import retrofit.client.Response;
 public class SearchActivity extends AppCompatActivity {
 
     public static final String TAG = SearchActivity.class.getSimpleName();
+    public static final int RESULT_CODE = 11037;
     SpotifyService spotify;
     ActivitySearchBinding binding;
     private SongsAdapter songsAdapter;
@@ -41,14 +46,15 @@ public class SearchActivity extends AppCompatActivity {
     private static final int LIMIT = 20;
     String songQuery;
 
-    // Instance of the progress action-view
-    MenuItem miActionProgressItem;
-
     private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Animation
+
+
         // Set ViewBinding
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
 
@@ -58,6 +64,7 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         view.setBackgroundColor(getResources().getColor(R.color.gray3));
         getSupportActionBar().setTitle("Find song");
+        binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
         binding.pbProgressAction.setVisibility(View.GONE);
 
         aSongs = new ArrayList<>();
@@ -77,11 +84,11 @@ public class SearchActivity extends AppCompatActivity {
                     Song song = aSongs.get(position);
 
                     // Create an intent for the new activity
-                    //Intent intent = new Intent(BookListActivity.this, BookDetailActivity.class);
-                    //intent.putExtra(Book.class.getSimpleName(), Parcels.wrap(book)); // serialize the movie using Parceler
+                    Intent intent = new Intent(SearchActivity.this, ComposeActivity.class);
+                    intent.putExtra(Song.class.getSimpleName(), Parcels.wrap(song)); // serialize the movie using Parceler
 
                     // Show the activity
-                    //BookListActivity.this.startActivity(intent);
+                    startActivityForResult(intent, RESULT_CODE);
                 }
             }
         });
@@ -133,6 +140,7 @@ public class SearchActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_search_list, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint("Search songs...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -155,5 +163,14 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CODE) {
+            setResult(RESULT_CODE);
+            finish();
+        }
     }
 }
