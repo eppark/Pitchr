@@ -91,7 +91,7 @@ public class ProfileFragment extends Fragment {
             Glide.with(this).load(pfpImage.getUrl()).into(htabHeader);
         } else {
             Glide.with(this).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
-            Glide.with(this).load(R.drawable.default_pfp).into(ivPfp);
+            Glide.with(this).load(R.drawable.default_pfp).into(htabHeader);
         }
 
         // Set up view pager and tabs

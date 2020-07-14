@@ -23,11 +23,13 @@ import com.example.pitchr.R;
 import com.example.pitchr.activities.SearchActivity;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
+import com.example.pitchr.models.Following;
 import com.example.pitchr.models.Post;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class PostsFragment extends Fragment {
     protected RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
+    protected List<ParseUser> following;
     ProgressBar pbLoading;
     FloatingActionButton fabCompose;
 
@@ -75,6 +78,7 @@ public class PostsFragment extends Fragment {
 
         // Set posts, adapter, and layout
         allPosts = new ArrayList<>();
+        following = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -97,7 +101,7 @@ public class PostsFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-                queryPosts(page);
+                queryFollowing(page);
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -116,11 +120,36 @@ public class PostsFragment extends Fragment {
         });
     }
 
+    // Query posts by the current user and by the user's following list
+    private void queryFollowing(int page) {
+        following.clear();
+        following.add(ParseUser.getCurrentUser()); // also want posts from the current user
+        ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
+        query.include(Following.KEY_FOLLOWED_BY);
+        query.include(Following.KEY_FOLLOWING);
+        query.whereEqualTo(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
+        query.addDescendingOrder(Following.KEY_CREATED_AT);
+        query.findInBackground(new FindCallback<Following>() {
+            @Override
+            public void done(List<Following> userList, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting following", e);
+                    return;
+                }
+                Log.d(TAG, "Query following success!");
+                for (Following followingItem : userList) {
+                    following.add(followingItem.getFollowing());
+                }
+                queryPosts(page);
+            }
+        });
+    }
+
     // Initial query
     private void initialQuery() {
         adapter.clear();
         pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-        queryPosts(0);
+        queryFollowing(0);
     }
 
     // Query posts from database
@@ -128,6 +157,7 @@ public class PostsFragment extends Fragment {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
         query.include(Post.KEY_SONG);
+        query.whereContainedIn(Post.KEY_AUTHOR, following);
         query.setSkip(20 * page);
         query.setLimit(20); // Only show 20 posts
         query.addDescendingOrder(Post.KEY_CREATED_AT);
