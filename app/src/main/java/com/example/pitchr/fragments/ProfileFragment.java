@@ -49,7 +49,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     public static ProfileFragment newInstance(ParseUser user) {
@@ -111,8 +110,6 @@ public class ProfileFragment extends Fragment {
 
         // If this isn't the current user, show the follow button
         if (!user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
-            btnFollow.setFocusableInTouchMode(true);
-            btnFollow.setVisibility(View.VISIBLE);
             ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
             query.include(Following.KEY_FOLLOWED_BY);
             query.include(Following.KEY_FOLLOWING);
@@ -137,47 +134,59 @@ public class ProfileFragment extends Fragment {
                     setupFollowStatus();
                 }
             });
+
+            // Set up following/unfollowing via button
+            btnFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (following) {
+                        followingObject.deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    Log.e(TAG, "Issue with unfollowing", e);
+                                    return;
+                                }
+                                Log.d(TAG, "Unfollow success");
+                                following = false;
+                                setupFollowStatus();
+                            }
+                        });
+                    } else {
+                        followingObject = new Following();
+                        followingObject.put(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
+                        followingObject.put(Following.KEY_FOLLOWING, user);
+                        followingObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    Log.e(TAG, "Issue with following", e);
+                                    return;
+                                }
+                                Log.d(TAG, "Follow success");
+                                following = true;
+                                setupFollowStatus();
+                            }
+                        });
+                    }
+                }
+            });
         } else {
-            // If this is the current user, we can hide the follow button
-            btnFollow.setVisibility(View.GONE);
+            // If this is the current user, we can change the button to settings
+            btnFollow.setSelected(false);
+            btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+            btnFollow.setText("SETTINGS");
+
+            // Set up settings page
+            btnFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Go to the settings page
+                }
+            });
         }
 
-        // Set up following/unfollowing via button
-        btnFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (following) {
-                    followingObject.deleteInBackground(new DeleteCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "Issue with unfollowing", e);
-                                return;
-                            }
-                            Log.d(TAG, "Unfollow success");
-                            following = false;
-                            setupFollowStatus();
-                        }
-                    });
-                } else {
-                    followingObject = new Following();
-                    followingObject.put(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
-                    followingObject.put(Following.KEY_FOLLOWING, user);
-                    followingObject.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "Issue with following", e);
-                                return;
-                            }
-                            Log.d(TAG, "Follow success");
-                            following = true;
-                            setupFollowStatus();
-                        }
-                    });
-                }
-            }
-        });
+
     }
 
     // Set up fav songs, followers, and following tabs
@@ -200,14 +209,5 @@ public class ProfileFragment extends Fragment {
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
             btnFollow.setText("FOLLOW");
         }
-    }
-
-    // Menu icons are inflated just as they were with actionbar
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menu.clear();
-        inflater.inflate(R.menu.menu_profile, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 }

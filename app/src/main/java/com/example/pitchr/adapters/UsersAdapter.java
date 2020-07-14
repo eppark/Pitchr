@@ -1,19 +1,26 @@
 package com.example.pitchr.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
+import com.example.pitchr.models.Following;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.boltsinternal.Task;
 
 import java.util.List;
 
@@ -78,11 +85,28 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             } else {
                 Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
             }
+
+            // Count the number of followers
+            queryFollowersCount();
         }
 
         @Override
         public void onClick(View view) {
             //
+        }
+
+        // Count the number of followers this user has
+        private void queryFollowersCount() {
+            ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
+            query.include(Following.KEY_FOLLOWED_BY);
+            query.include(Following.KEY_FOLLOWING);
+            query.whereEqualTo(Following.KEY_FOLLOWING, user);
+            Task<Integer> count = query.countInBackground();
+            if (count.getResult() == null) {
+                tvFollowers.setText("0 followers");
+            } else {
+                tvFollowers.setText(String.format("%d followers", count.getResult()));
+            }
         }
     }
 

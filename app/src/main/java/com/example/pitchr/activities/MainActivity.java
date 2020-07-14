@@ -24,6 +24,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.boltsinternal.Task;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         spotifyApi = new SpotifyApi();
         token = ParseUser.getCurrentUser().getString("token"); // get the access token
         spotifyApi.setAccessToken(token);
+
+        // Get the fav songs for the current user if we need to
+        queryFavSongs();
 
         // Set ViewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -101,11 +105,6 @@ public class MainActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<FavSongs>() {
             @Override
             public void done(FavSongs favSong, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting fav songs", e);
-                    return;
-                }
-                Log.d(TAG, "Query fav song success!");
                 if (favSong == null) {
                     // If we don't have any fav songs, we should query them from Spotify
                     Map<String, Object> options = new HashMap<>();
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "Get fav tracks success!");
                             for (Song song : Song.songsFromTracksList(trackPager.items)) {
                                 // For each song, turn it into a Song for the database
-
+                                addToFavSong(song);
                             }
                         }
 
@@ -129,5 +128,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // Create new FavSong objects for the database
+    private void addToFavSong(Song song) {
+        // Query in the database if the Song already exists
+        ParseQuery<Song> songQuery = new ParseQuery<>(Song.class);
+        songQuery.include(Song.KEY_SPOTIFY_ID);
+        songQuery.whereEqualTo(Song.KEY_SPOTIFY_ID, song.getSpotifyId());
+        Task<Song> object = songQuery.getFirstInBackground();
+
+        // Create a new FavSongs row
+        FavSongs favSongsObject = new FavSongs();
+        favSongsObject.put(FavSongs.KEY_USER, ParseUser.getCurrentUser());
+        if (object.getResult() == null) {
+            // If the Song isn't already in the database, we need to save it
+            song.saveInBackground();
+            favSongsObject.put(FavSongs.KEY_SONG, song);
+        } else {
+            // If the song is already in the database, we don't want to create a new one
+            favSongsObject.put(FavSongs.KEY_SONG, object.getResult());
+        }
+        favSongsObject.saveInBackground();
     }
 }
