@@ -52,9 +52,6 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Animation
-
-
         // Set ViewBinding
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
 

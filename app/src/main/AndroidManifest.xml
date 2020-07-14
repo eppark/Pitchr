@@ -15,9 +15,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
         tools:ignore="MissingClass">
-        <activity android:name=".activities.ComposeActivity"></activity>
+        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.ComposeActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity
             android:name=".SpotifyAuthenticationActivity"
@@ -30,6 +32,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.pitchr.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
     </application>
 
 </manifest>

@@ -35,10 +35,8 @@ public class LoginActivity extends AppCompatActivity {
         binding.pbLoading.setVisibility(View.INVISIBLE); // Hide the progress bar at first
         Glide.with(this).load(R.drawable.pitchr_name_green).into(binding.imageView);
 
-        // If we've already logged in before, skip the login screen
         if (ParseUser.getCurrentUser() != null) {
             ParseUser.logOut();
-            //goSpotifyAuth();
         }
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {

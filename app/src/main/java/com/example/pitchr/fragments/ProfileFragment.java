@@ -1,5 +1,6 @@
 package com.example.pitchr.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,9 +11,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,22 +19,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
+import com.example.pitchr.activities.SettingsActivity;
 import com.example.pitchr.adapters.ViewPagerAdapter;
 import com.example.pitchr.models.Following;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.DeleteCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.boltsinternal.Task;
 
 import org.parceler.Parcels;
 
 public class ProfileFragment extends Fragment {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
+    public static final int RESULT_CODE = 1337;
     public ParseUser user;
     TextView tvUsername;
     ImageView ivPfp;
@@ -115,25 +115,15 @@ public class ProfileFragment extends Fragment {
             query.include(Following.KEY_FOLLOWING);
             query.whereEqualTo(Following.KEY_FOLLOWING, user);
             query.whereEqualTo(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
-            query.getFirstInBackground(new GetCallback<Following>() {
-
-                @Override
-                public void done(Following object, ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Issue with getting following status", e);
-                        return;
-                    }
-                    Log.d(TAG, "Query followers success!");
-                    // If we are following the user
-                    if (object != null) {
-                        followingObject = object;
-                        following = true;
-                    } else {
-                        following = false;
-                    }
-                    setupFollowStatus();
-                }
-            });
+            Task<Following> object = query.getFirstInBackground();
+            // If the user is currently following them, show that
+            if (object.getResult() == null) {
+                following = false;
+            } else {
+                followingObject = object.getResult();
+                following = true;
+            }
+            setupFollowStatus();
 
             // Set up following/unfollowing via button
             btnFollow.setOnClickListener(new View.OnClickListener() {
@@ -182,16 +172,16 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     // Go to the settings page
+                    Intent i = new Intent(getContext(), SettingsActivity.class);
+                    startActivityForResult(i, RESULT_CODE);
                 }
             });
         }
-
-
     }
 
     // Set up fav songs, followers, and following tabs
     private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFrag(FavSongsFragment.newInstance(user), "Fav Songs");
         adapter.addFrag(UserFragment.newInstance(user, "Followers"), "Followers");
         adapter.addFrag(UserFragment.newInstance(user, "Following"), "Following");
@@ -208,6 +198,14 @@ public class ProfileFragment extends Fragment {
             btnFollow.setSelected(false);
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
             btnFollow.setText("FOLLOW");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CODE) {
+            getActivity().finish();
         }
     }
 }

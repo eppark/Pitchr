@@ -7,10 +7,8 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityMainBinding;
@@ -19,11 +17,12 @@ import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Song;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.boltsinternal.Task;
 
 import java.util.HashMap;
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     // If we don't have any fav songs, we should query them from Spotify
                     Map<String, Object> options = new HashMap<>();
                     options.put(SpotifyService.LIMIT, FAV_SONG_LIMIT);
+                    options.put(SpotifyService.TIME_RANGE, "long_term");
 
                     spotifyApi.getService().getTopTracks(options, new Callback<Pager<Track>>() {
                         @Override
@@ -143,12 +143,17 @@ public class MainActivity extends AppCompatActivity {
         favSongsObject.put(FavSongs.KEY_USER, ParseUser.getCurrentUser());
         if (object.getResult() == null) {
             // If the Song isn't already in the database, we need to save it
-            song.saveInBackground();
-            favSongsObject.put(FavSongs.KEY_SONG, song);
+            song.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    favSongsObject.put(FavSongs.KEY_SONG, song);
+                    favSongsObject.saveInBackground();
+                }
+            });
         } else {
             // If the song is already in the database, we don't want to create a new one
-            favSongsObject.put(FavSongs.KEY_SONG, object.getResult());
+            favSongsObject.setSong((Song) ParseObject.createWithoutData(song.getClassName(), object.getResult().getObjectId()));
+            favSongsObject.saveInBackground();
         }
-        favSongsObject.saveInBackground();
     }
 }

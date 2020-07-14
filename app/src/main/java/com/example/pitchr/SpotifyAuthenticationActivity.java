@@ -72,6 +72,7 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
     private void authenticateSpotify() {
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(getString(R.string.spotify_api_key), AuthenticationResponse.Type.TOKEN, getString(R.string.redirect_url));
         builder.setScopes(new String[]{SCOPES});
+        builder.setShowDialog(true);
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }

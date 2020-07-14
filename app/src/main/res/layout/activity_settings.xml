@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray3"
+    android:hardwareAccelerated="false"
+    tools:context=".activities.SettingsActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/spotifyGreen"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ivPFP"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_toEndOf="@+id/ivPFP"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                tools:text="pepinouo" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/ivPFP"
+                android:layout_marginTop="16dp"
+                android:background="@color/gray1" />
+
+            <TextView
+                android:id="@+id/tvChangePfp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/divider1"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/edit_profile_picture"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnTakePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvChangePfp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/take_photo" />
+
+            <Button
+                android:id="@+id/btnGallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnTakePhoto"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/choose_from_gallery" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/btnGallery"
+                android:layout_marginTop="16dp"
+                android:background="@color/gray1" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider2"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/logout" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
