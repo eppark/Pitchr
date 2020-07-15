@@ -3,6 +3,7 @@ package com.example.pitchr.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -14,14 +15,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
 import com.example.pitchr.activities.SearchActivity;
 import com.example.pitchr.adapters.PostsAdapter;
+import com.example.pitchr.chat.DirectMessagesActivity;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.Following;
 import com.example.pitchr.models.Post;
@@ -42,6 +48,8 @@ public class PostsFragment extends Fragment {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
     protected List<ParseUser> following;
+    Button btnFindUsers;
+    TextView tvNoPosts;
     ProgressBar pbLoading;
     FloatingActionButton fabCompose;
 
@@ -75,6 +83,10 @@ public class PostsFragment extends Fragment {
         pbLoading = (ProgressBar) view.findViewById(R.id.pbLoading);
         fabCompose = (FloatingActionButton) view.findViewById(R.id.fabCompose);
         pbLoading.setVisibility(View.GONE); // Hide progress bar at first
+        btnFindUsers = (Button) view.findViewById(R.id.btnFindUsers);
+        tvNoPosts = (TextView) view.findViewById(R.id.tvNoPosts);
+        tvNoPosts.setVisibility(View.GONE);
+        btnFindUsers.setVisibility(View.GONE); // Hide lack of posts at first
 
         // Set posts, adapter, and layout
         allPosts = new ArrayList<>();
@@ -116,6 +128,15 @@ public class PostsFragment extends Fragment {
             public void onClick(View view) {
                 Intent i = new Intent(getContext(), SearchActivity.class);
                 startActivityForResult(i, RESULT_CODE);
+            }
+        });
+
+        // Create find users to match click event
+        btnFindUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Click
+                Log.d(TAG, "button clicked");
             }
         });
     }
@@ -173,6 +194,17 @@ public class PostsFragment extends Fragment {
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
                 pbLoading.setVisibility(View.GONE); // Hide progress bar
+
+                // If we have no posts, show the option to the user to find a match
+                if (allPosts.size() == 0) {
+                    tvNoPosts.setVisibility(View.VISIBLE);
+                    btnFindUsers.setVisibility(View.VISIBLE);
+                    btnFindUsers.setFocusableInTouchMode(true);
+                    btnFindUsers.setClickable(true);
+                } else {
+                    tvNoPosts.setVisibility(View.GONE);
+                    btnFindUsers.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -186,11 +218,25 @@ public class PostsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    // Refresh the feed
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CODE) {
             initialQuery();
+        }
+    }
+
+    // Handle menu clicks
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.miMessages:
+                Intent i = new Intent(getContext(), DirectMessagesActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

@@ -15,9 +15,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="MissingClass">
+        <activity android:name=".chat.ChatActivity"></activity>
+        <activity android:name=".chat.DirectMessagesActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ComposeActivity" />
         <activity android:name=".activities.SearchActivity" />
@@ -32,6 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.pitchr.fileprovider"

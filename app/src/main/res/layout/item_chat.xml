@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/ivProfileOther"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/profile_other"
+        android:src="@drawable/default_pfp"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvBody"
+        android:layout_width="277dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/incoming_speech_bubble"
+        android:ellipsize="end"
+        android:lineSpacingExtra="2dp"
+        android:minLines="1"
+        android:padding="20dp"
+        android:textSize="18sp"
+        tools:text="this is long text yesssssssssssssssssssssssss whowehorjoijfailsdfjl;asjg;ioralfjlk;asdjf;alksfd;akljefaklefja;klfjsd;klfjasdf" />
+
+    <ImageView
+        android:id="@+id/ivProfileMe"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/profile_me"
+        android:src="@drawable/default_pfp"
+        tools:visibility="visible" />
+
+</LinearLayout>
+

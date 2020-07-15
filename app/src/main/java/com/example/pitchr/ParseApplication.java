@@ -3,6 +3,8 @@ package com.example.pitchr;
 import android.app.Application;
 
 import com.example.pitchr.R;
+import com.example.pitchr.chat.DM;
+import com.example.pitchr.chat.Message;
 import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Following;
@@ -23,6 +25,8 @@ public class ParseApplication extends Application {
         ParseObject.registerSubclass(FavSongs.class);
         ParseObject.registerSubclass(Following.class);
         ParseObject.registerSubclass(Comment.class);
+        ParseObject.registerSubclass(DM.class);
+        ParseObject.registerSubclass(Message.class);
 
         // set applicationId, and server server based on the values in the Heroku settings.
         // clientKey is not needed unless explicitly configured

@@ -32,6 +32,29 @@
         android:visibility="visible"
         android:src="@drawable/ic_compose" />
 
+    <TextView
+        android:id="@+id/tvNoPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="232dp"
+        android:text="@string/no_posts_to_show"
+        android:textColor="@color/gray2"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnFindUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvNoPosts"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/spotifyGreen"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/find_users_to_follow"
+        android:textColor="@color/white" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"

@@ -23,4 +23,11 @@
     <string name="no_following">No following</string>
     <string name="edit_favorite_songs_list">Edit favorite songs list</string>
     <string name="get_refresh_songs_from_spotify">Get/Refresh songs from Spotify</string>
+    <string name="no_posts_to_show">No posts to show!</string>
+    <string name="find_users_to_follow">Find Users to Follow</string>
+    <string name="profile_me">My profile</string>
+    <string name="profile_other">Other profile</string>
+    <string name="message_hint">Message…</string>
+    <string name="send">Send</string>
+    <string name="no_messages">No messages. Why not say hi?</string>
 </resources>
