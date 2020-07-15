@@ -307,6 +307,7 @@ public class SettingsActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "PFP save success!");
+                Toast.makeText(SettingsActivity.this, "Successfully changed profile picture!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -348,6 +349,7 @@ public class SettingsActivity extends AppCompatActivity {
                             // For each Track, turn it into a Song for the database
                             addToFavSong(song);
                         }
+                        Toast.makeText(SettingsActivity.this, "Successfully added songs from Spotify!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -375,7 +377,16 @@ public class SettingsActivity extends AppCompatActivity {
                 if (objects.size() > 0) {
                     // If the song is already in the database, we don't want to create a new one
                     favSongsObject.put(FavSongs.KEY_SONG, objects.get(0));
-                    favSongsObject.saveInBackground();
+                    favSongsObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.e(TAG, "Failed to add fav song to database!", e);
+                                return;
+                            }
+                            Log.d(TAG, "Successfully added fav song object to database!");
+                        }
+                    });
 
                 } else {
                     // If the Song isn't already in the database, we need to save it
@@ -383,7 +394,16 @@ public class SettingsActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
                             favSongsObject.put(FavSongs.KEY_SONG, song);
-                            favSongsObject.saveInBackground();
+                            favSongsObject.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e != null) {
+                                        Log.e(TAG, "Failed to add fav song to database!", e);
+                                        return;
+                                    }
+                                    Log.d(TAG, "Successfully added fav song object to database!");
+                                }
+                            });
                         }
                     });
                 }

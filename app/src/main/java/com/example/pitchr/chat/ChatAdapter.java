@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +56,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout ll;
         ImageView imageOther;
         ImageView imageMe;
         TextView body;
@@ -63,6 +66,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             imageOther = (ImageView)itemView.findViewById(R.id.ivProfileOther);
             imageMe = (ImageView)itemView.findViewById(R.id.ivProfileMe);
             body = (TextView)itemView.findViewById(R.id.tvBody);
+            ll = (LinearLayout) itemView.findViewById(R.id.ll);
         }
 
         public void bind(Message message) {
@@ -82,9 +86,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             ImageView profileView;
             if (isMe) {
                 profileView = imageMe;
+                ll.setGravity(Gravity.RIGHT);
                 body.setBackgroundResource(R.drawable.outgoing_speech_bubble);
                 body.setTextColor(mContext.getResources().getColor(R.color.white));
-                body.setPadding(30, 20, 60, 40);
+                body.setPadding(50, 20, 70, 40);
                 if (sender_pfp != null) {
                     Glide.with(mContext).load(sender_pfp.getUrl()).circleCrop().into(profileView);
                 } else {
@@ -92,9 +97,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 }
             } else {
                 profileView = imageOther;
+                ll.setGravity(Gravity.LEFT);
                 body.setBackgroundResource(R.drawable.incoming_speech_bubble);
                 body.setTextColor(mContext.getResources().getColor(R.color.gray3));
-                body.setPadding(60, 20, 30, 40);
+                body.setPadding(70, 20, 50, 40);
                 if (receiver_pfp != null) {
                     Glide.with(mContext).load(receiver_pfp.getUrl()).circleCrop().into(profileView);
                 } else {

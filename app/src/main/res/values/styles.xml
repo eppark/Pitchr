@@ -8,6 +8,7 @@
         <item name="font">@font/pitchr</item>
         <item name="android:textColorHint">@color/gray2</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="PitchrTextAppearance">

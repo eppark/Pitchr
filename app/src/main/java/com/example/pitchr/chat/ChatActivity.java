@@ -1,11 +1,13 @@
 package com.example.pitchr.chat;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,6 +50,9 @@ public class ChatActivity extends AppCompatActivity {
         binding.tvNoMessages.setVisibility(View.GONE);
         binding.pbLoading.setVisibility(View.GONE); // hide loading bar at first
         mFirstLoad = true;
+
+        // Show back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set user and DM info
         receiver = (ParseUser) Parcels.unwrap(getIntent().getParcelableExtra("receiver"));
@@ -151,5 +156,11 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }
