@@ -17,4 +17,5 @@
     <string name="home">Home</string>
     <string name="match">Match</string>
     <string name="profile">Profile</string>
+    <string name="comment">Write a comment...</string>
 </resources>

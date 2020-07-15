@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
-import com.example.pitchr.SpotifyAuthenticationActivity;
 import com.example.pitchr.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;

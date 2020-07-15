@@ -22,7 +22,7 @@
         <activity android:name=".activities.ComposeActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity
-            android:name=".SpotifyAuthenticationActivity"
+            android:name=".activities.SpotifyAuthenticationActivity"
             android:launchMode="singleInstance" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>

@@ -18,19 +18,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.fragments.DetailsFragment;
 import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.helpers.TimeFormatter;
+import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.Post;
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
-    private static final String TAG = PostsAdapter.class.getSimpleName();
+    public static final String TAG = PostsAdapter.class.getSimpleName();
     private Context context;
     private List<Post> posts;
 
@@ -66,10 +73,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvSongName;
         private TextView tvArtists;
         private TextView tvCaption;
+        private TextView tvLikes;
+        private TextView tvComments;
         private ImageButton ibtnLike;
         private ImageButton ibtnComment;
         private TextView tvTime;
         private boolean liked;
+        int likes;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -82,6 +92,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
             tvSongName = (TextView) itemView.findViewById(R.id.tvSongName);
             tvArtists = (TextView) itemView.findViewById(R.id.tvArtists);
+            tvLikes = (TextView) itemView.findViewById(R.id.tvLikes);
+            tvComments = (TextView) itemView.findViewById(R.id.tvComments);
+            likes = 0;
 
             // When the user clicks on text or a profile picture, take them to the profile page for that user
             View.OnClickListener profileListener = new View.OnClickListener() {
@@ -100,7 +113,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             View.OnClickListener detailsListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //((MainActivity) context).fragmentManager.beginTransaction().replace(R.id.flContainer, DetailsFragment.newInstance(currentPost), "DETAILS_TAG").commit();
+                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.flContainer, DetailsFragment.newInstance(currentPost), TAG);
+                    ft.addToBackStack(TAG);
+                    ft.commit();
                 }
             };
             tvCaption.setOnClickListener(detailsListener);
@@ -114,10 +130,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 public void onClick(View view) {
                     if (!liked) {
                         currentPost.addLike();
+                        likes++;
                         addLike();
                     } else {
                         currentPost.removeLike();
+                        likes--;
                         removeLike();
+                    }
+                    if (likes > 0) {
+                        tvLikes.setText(format(likes));
+                    } else {
+                        tvLikes.setText("");
                     }
                 }
             });
@@ -147,8 +170,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPFP);
             }
 
-            // Show if the user likes the post
+            // Show if the user likes the post and the comment count
             queryLiked();
+            setCommentCount();
         }
 
         // Query if the post is liked from database
@@ -164,6 +188,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     Log.d(TAG, "Query likes success!");
                     // If the user liked the post, show that. Otherwise, show the post is not liked
                     removeLike();
+                    likes = users.size();
+                    if (likes > 0) {
+                        tvLikes.setText(format(likes));
+                    } else {
+                        tvLikes.setText("");
+                    }
                     for(int i = 0; i < users.size(); i++) {
                         if(users.get(i).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                             addLike();
@@ -185,6 +215,50 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ibtnLike.setSelected(false);
             ibtnLike.setImageResource(R.drawable.ic_heart);
         }
+
+        // Set the count number of comments
+        public void setCommentCount() {
+            // Count the number of comments this post has
+            ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
+            query.include(Comment.KEY_OPOST);
+            query.whereEqualTo(Comment.KEY_OPOST, currentPost);
+            query.countInBackground(new CountCallback() {
+                @Override
+                public void done(int count, ParseException e) {
+                    if (count > 0) {
+                        tvComments.setText(format(count));
+                    } else {
+                        tvComments.setText("");
+                    }
+                }
+            });
+        }
+    }
+
+    // Truncate counts in a readable format
+    private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
+
+    static {
+        suffixes.put(1_000L, "k");
+        suffixes.put(1_000_000L, "M");
+        suffixes.put(1_000_000_000L, "G");
+        suffixes.put(1_000_000_000_000L, "T");
+        suffixes.put(1_000_000_000_000_000L, "P");
+        suffixes.put(1_000_000_000_000_000_000L, "E");
+    }
+
+    public static String format(long value) {
+        if (value == Long.MIN_VALUE) return format(Long.MIN_VALUE + 1);
+        if (value < 0) return "-" + format(-value);
+        if (value < 1000) return Long.toString(value);
+
+        Map.Entry<Long, String> e = suffixes.floorEntry(value);
+        Long divideBy = e.getKey();
+        String suffix = e.getValue();
+
+        long truncated = value / (divideBy / 10);
+        boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
+        return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
     }
 
     // Clean all elements of the recycler

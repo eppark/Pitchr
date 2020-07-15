@@ -11,15 +11,19 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.pitchr.R;
+import com.example.pitchr.adapters.CommentsAdapter;
+import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.databinding.ActivityMainBinding;
+import com.example.pitchr.fragments.CommentDialogFragment;
+import com.example.pitchr.fragments.DetailsFragment;
 import com.example.pitchr.fragments.PostsFragment;
 import com.example.pitchr.fragments.ProfileFragment;
+import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Song;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.GetCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -37,7 +41,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CommentDialogFragment.CommentDialogFragmentListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     public final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -101,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
         query.include(FavSongs.KEY_USER);
         query.include(FavSongs.KEY_SONG);
         query.whereEqualTo(FavSongs.KEY_USER, ParseUser.getCurrentUser());
-        query.getFirstInBackground(new GetCallback<FavSongs>() {
+        query.findInBackground(new FindCallback<FavSongs>() {
             @Override
-            public void done(FavSongs favSong, ParseException e) {
-                if (favSong == null) {
+            public void done(List<FavSongs> objects, ParseException e) {
+                if (objects.size() <= 0) {
                     // If we don't have any fav songs, we should query them from Spotify
                     Map<String, Object> options = new HashMap<>();
                     options.put(SpotifyService.LIMIT, FAV_SONG_LIMIT);
@@ -115,14 +119,14 @@ public class MainActivity extends AppCompatActivity {
                         public void success(Pager<Track> trackPager, Response response) {
                             Log.d(TAG, "Get fav tracks success!");
                             for (Song song : Song.songsFromTracksList(trackPager.items)) {
-                                // For each song, turn it into a Song for the database
+                                // For each Track, turn it into a Song for the database
                                 addToFavSong(song);
                             }
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            Log.e(TAG, "Get fav tracks failed!", error);
+                            Log.e(TAG, "Get fav tracks failed", error);
                         }
                     });
                 }
@@ -136,25 +140,30 @@ public class MainActivity extends AppCompatActivity {
         ParseQuery<Song> songQuery = new ParseQuery<>(Song.class);
         songQuery.include(Song.KEY_SPOTIFY_ID);
         songQuery.whereEqualTo(Song.KEY_SPOTIFY_ID, song.getSpotifyId());
-        Task<Song> object = songQuery.getFirstInBackground();
-
-        // Create a new FavSongs row
-        FavSongs favSongsObject = new FavSongs();
-        favSongsObject.put(FavSongs.KEY_USER, ParseUser.getCurrentUser());
-        if (object.getResult() == null) {
-            // If the Song isn't already in the database, we need to save it
-            song.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    favSongsObject.put(FavSongs.KEY_SONG, song);
-                    favSongsObject.saveInBackground();
+        songQuery.findInBackground(new FindCallback<Song>() {
+            @Override
+            public void done(List<Song> objects, ParseException e) {
+                if (objects.size() > 0) {
+                    // Create a new FavSongs row
+                    FavSongs favSongsObject = new FavSongs();
+                    favSongsObject.put(FavSongs.KEY_USER, ParseUser.getCurrentUser());
+                    if (objects.get(0) == null) {
+                        // If the Song isn't already in the database, we need to save it
+                        song.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                favSongsObject.put(FavSongs.KEY_SONG, song);
+                                favSongsObject.saveInBackground();
+                            }
+                        });
+                    } else {
+                        // If the song is already in the database, we don't want to create a new one
+                        favSongsObject.put(FavSongs.KEY_SONG, objects.get(0));
+                        favSongsObject.saveInBackground();
+                    }
                 }
-            });
-        } else {
-            // If the song is already in the database, we don't want to create a new one
-            favSongsObject.setSong((Song) ParseObject.createWithoutData(song.getClassName(), object.getResult().getObjectId()));
-            favSongsObject.saveInBackground();
-        }
+            }
+        });
     }
 
     @Override
@@ -164,5 +173,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onFinishCommentDialog(Comment comment) {
+        ((DetailsFragment) fragmentManager.findFragmentByTag(PostsAdapter.TAG)).allComments.add(0, comment);
+        ((DetailsFragment) fragmentManager.findFragmentByTag(PostsAdapter.TAG)).adapter.notifyDataSetChanged();
     }
 }

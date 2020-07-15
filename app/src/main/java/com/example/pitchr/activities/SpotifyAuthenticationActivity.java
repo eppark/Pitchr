@@ -1,19 +1,14 @@
-package com.example.pitchr;
+package com.example.pitchr.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.example.pitchr.activities.LoginActivity;
-import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.R;
 import com.parse.ParseUser;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;

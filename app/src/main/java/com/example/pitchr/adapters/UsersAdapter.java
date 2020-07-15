@@ -1,13 +1,11 @@
 package com.example.pitchr.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,12 +17,10 @@ import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.models.Following;
 import com.parse.CountCallback;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.boltsinternal.Task;
 
 import java.util.List;
 

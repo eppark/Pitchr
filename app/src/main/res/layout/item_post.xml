@@ -103,24 +103,48 @@
         android:layout_below="@id/tvTime"
         android:layout_marginTop="-8dp"
         android:layout_marginEnd="0dp"
-        android:layout_toStartOf="@+id/ibtnComment"
+        android:layout_toStartOf="@+id/tvLikes"
         android:backgroundTint="#00FFFFFF"
         android:scaleType="fitCenter"
         android:tint="@color/gray3"
         app:srcCompat="@drawable/ic_heart" />
+
+    <TextView
+        android:id="@+id/tvLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTime"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/ibtnComment"
+        android:textColor="@color/gray2"
+        tools:text="999m" />
 
     <ImageButton
         android:id="@+id/ibtnComment"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_below="@id/tvTime"
-        android:layout_alignParentEnd="true"
         android:layout_marginTop="-8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/tvComments"
         android:backgroundTint="#00FFFFFF"
         android:scaleType="fitCenter"
         android:tint="@color/gray3"
         app:srcCompat="@drawable/ic_comments" />
+
+    <TextView
+        android:id="@+id/tvComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/gray2"
+        tools:text="999m" />
 
     <TextView
         android:id="@+id/tvTime"
@@ -129,7 +153,7 @@
         android:layout_below="@id/tvCaption"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:textColor="@color/gray2"
+        android:textColor="@color/lightGray"
         tools:text="14m" />
 
     <View
