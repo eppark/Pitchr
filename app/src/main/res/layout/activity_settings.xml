@@ -93,17 +93,51 @@
                 android:layout_marginTop="16dp"
                 android:background="@color/gray1" />
 
+            <TextView
+            android:id="@+id/tvChangeFavSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/divider2"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/edit_favorite_songs_list"
+            android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnRefreshFavSongs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvChangeFavSongs"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/spotifyGreen"
+                android:text="@string/get_refresh_songs_from_spotify"
+                android:textColor="@color/white" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/btnRefreshFavSongs"
+                android:layout_marginTop="16dp"
+                android:background="@color/gray1" />
+
             <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/divider2"
+                android:layout_below="@id/divider3"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/logout" />
+                android:backgroundTint="@color/red"
+                android:text="@string/logout"
+                android:textColor="@color/white" />
 
         </RelativeLayout>
 

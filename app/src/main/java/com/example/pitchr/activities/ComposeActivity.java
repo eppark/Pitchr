@@ -13,15 +13,19 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityComposeBinding;
-import com.example.pitchr.helpers.TimeFormatter;
+import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
+
+import java.util.List;
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -79,34 +83,62 @@ public class ComposeActivity extends AppCompatActivity {
             case R.id.action_post:
                 String caption = binding.etCaption.getText().toString();
                 // Make sure we have a caption
-                if (caption == null || caption.isEmpty()) {
+                if (caption.isEmpty()) {
                     Toast.makeText(this, "Caption can't be empty!", Toast.LENGTH_SHORT).show();
                     return true;
                 } else {
+                    // Make a new Post
                     Post post = new Post();
                     post.put(Post.KEY_AUTHOR, ParseUser.getCurrentUser());
-                    post.put(Post.KEY_SONG, song);
                     post.put(Post.KEY_CAPTION, caption);
-                    post.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "Error while posting!", e);
-                                Toast.makeText(getApplicationContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            Log.d(TAG, "Posting success!");
-                            Toast.makeText(getApplicationContext(), "Shared post successfully", Toast.LENGTH_SHORT).show();
 
-                            // Finish the parent activity as well
-                            setResult(SearchActivity.RESULT_CODE);
-                            finish();
+                    // First check if the Song is already in the database
+                    ParseQuery<Song> songQuery = new ParseQuery<>(Song.class);
+                    songQuery.include(Song.KEY_SPOTIFY_ID);
+                    songQuery.whereEqualTo(Song.KEY_SPOTIFY_ID, song.getSpotifyId());
+                    songQuery.findInBackground(new FindCallback<Song>() {
+                        @Override
+                        public void done(List<Song> objects, ParseException e) {
+                            if (objects.size() > 0) {
+                                post.put(Post.KEY_SONG, objects.get(0));
+                                savePost(post);
+                            } else {
+                                song.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        post.put(Post.KEY_SONG, song);
+                                        savePost(post);
+                                    }
+                                });
+                            }
+
                         }
                     });
+
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // Save the post to the database
+    private void savePost(Post post) {
+        post.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error while posting!", e);
+                    Toast.makeText(getApplicationContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.d(TAG, "Posting success!");
+                Toast.makeText(getApplicationContext(), "Shared post successfully", Toast.LENGTH_SHORT).show();
+
+                // Finish the parent activity as well
+                setResult(SearchActivity.RESULT_CODE);
+                finish();
+            }
+        });
     }
 }

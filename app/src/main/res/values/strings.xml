@@ -5,9 +5,9 @@
     <string name="login">login</string>
     <string name="sign_up">sign up</string>
     <string name="messages">Messages</string>
-    <string name="search">Search...</string>
-    <string name="loading">Loading...</string>
-    <string name="write_a_caption">Write a caption...</string>
+    <string name="search">Search…</string>
+    <string name="loading">Loading…</string>
+    <string name="write_a_caption">Write a caption…</string>
     <string name="post">POST</string>
     <string name="settings">Settings</string>
     <string name="choose_from_gallery">Choose from Gallery</string>
@@ -17,8 +17,10 @@
     <string name="home">Home</string>
     <string name="match">Match</string>
     <string name="profile">Profile</string>
-    <string name="comment">Write a comment...</string>
+    <string name="comment">Write a comment…</string>
     <string name="no_favorite_songs">No favorite songs</string>
     <string name="no_followers">No followers</string>
     <string name="no_following">No following</string>
+    <string name="edit_favorite_songs_list">Edit favorite songs list</string>
+    <string name="get_refresh_songs_from_spotify">Get/Refresh songs from Spotify</string>
 </resources>

@@ -27,8 +27,13 @@ import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivitySettingsBinding;
 import com.example.pitchr.fragments.ProfileFragment;
+import com.example.pitchr.models.FavSongs;
+import com.example.pitchr.models.Song;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -36,6 +41,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Track;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import static androidx.core.content.FileProvider.*;
 
@@ -43,6 +59,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static final String TAG = SettingsActivity.class.getSimpleName();
     ActivitySettingsBinding binding;
+    public static final int FAV_SONG_LIMIT = 10;
+    public SpotifyApi spotifyApi;
 
     // Camera variables
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -104,6 +122,17 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onPickPhoto();
+            }
+        });
+
+        // Set refreshing songs
+        binding.btnRefreshFavSongs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Set the Spotify API
+                spotifyApi = new SpotifyApi();
+                spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
+                queryFavSongs();
             }
         });
     }
@@ -266,6 +295,7 @@ public class SettingsActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    // Save profile picture to database
     private void savePFP(File photoFile) {
         ParseUser.getCurrentUser().put("pfp", new ParseFile(photoFile));
         ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
@@ -277,6 +307,86 @@ public class SettingsActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "PFP save success!");
+            }
+        });
+    }
+
+    // Create a list of favorite songs from Spotify for the user
+    private void queryFavSongs() {
+        ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
+        query.include(FavSongs.KEY_USER);
+        query.include(FavSongs.KEY_SONG);
+        query.whereEqualTo(FavSongs.KEY_USER, ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<FavSongs>() {
+            @Override
+            public void done(List<FavSongs> objects, ParseException e) {
+                // Delete all the favorite songs if we currently have them
+                if (objects.size() > 0) {
+                    for (FavSongs favSong : objects) {
+                        favSong.deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    Log.e(TAG, "Error deleting fav song object from database!", e);
+                                }
+                                Log.d(TAG, "Successfully deleted fav song object from database!");
+                            }
+                        });
+                    }
+                }
+
+                // Now that we don't have any favorite songs, we should query them from Spotify
+                Map<String, Object> options = new HashMap<>();
+                options.put(SpotifyService.LIMIT, FAV_SONG_LIMIT);
+                options.put(SpotifyService.TIME_RANGE, "long_term");
+
+                spotifyApi.getService().getTopTracks(options, new Callback<Pager<Track>>() {
+                    @Override
+                    public void success(Pager<Track> trackPager, Response response) {
+                        Log.d(TAG, "Get fav tracks success!");
+                        for (Song song : Song.songsFromTracksList(trackPager.items)) {
+                            // For each Track, turn it into a Song for the database
+                            addToFavSong(song);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "Get fav tracks failed", error);
+                    }
+                });
+            }
+        });
+    }
+
+    // Create new FavSong objects for the database
+    private void addToFavSong(Song song) {
+        // Query in the database if the Song already exists
+        ParseQuery<Song> songQuery = new ParseQuery<>(Song.class);
+        songQuery.include(Song.KEY_SPOTIFY_ID);
+        songQuery.whereEqualTo(Song.KEY_SPOTIFY_ID, song.getSpotifyId());
+        songQuery.findInBackground(new FindCallback<Song>() {
+            @Override
+            public void done(List<Song> objects, ParseException e) {
+                // Create a new FavSongs row
+                FavSongs favSongsObject = new FavSongs();
+                favSongsObject.put(FavSongs.KEY_USER, ParseUser.getCurrentUser());
+
+                if (objects.size() > 0) {
+                    // If the song is already in the database, we don't want to create a new one
+                    favSongsObject.put(FavSongs.KEY_SONG, objects.get(0));
+                    favSongsObject.saveInBackground();
+
+                } else {
+                    // If the Song isn't already in the database, we need to save it
+                    song.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            favSongsObject.put(FavSongs.KEY_SONG, song);
+                            favSongsObject.saveInBackground();
+                        }
+                    });
+                }
             }
         });
     }

@@ -25,7 +25,6 @@ import com.example.pitchr.adapters.CommentsAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.helpers.TimeFormatter;
 import com.example.pitchr.models.Comment;
-import com.example.pitchr.models.Following;
 import com.example.pitchr.models.Post;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
@@ -124,7 +123,7 @@ public class DetailsFragment extends Fragment {
         tvArtists.setText(TextUtils.join(", ", post.getSong().getArtists()));
 
         // Set the time to the correct format
-        tvTime.setText(TimeFormatter.getTimeDifference(post.getCreatedAt().toString()));
+        tvTime.setText(TimeFormatter.getTimeStamp(post.getCreatedAt().toString()));
 
         // Set the images if we have them
         String image = post.getSong().getImageUrl();
