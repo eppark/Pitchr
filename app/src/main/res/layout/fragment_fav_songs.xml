@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FavSongsFragment">
 
+    <TextView
+        android:id="@+id/tvNoSongs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:text="@string/no_favorite_songs"
+        android:textColor="@color/gray1" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="wrap_content"
@@ -19,6 +29,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

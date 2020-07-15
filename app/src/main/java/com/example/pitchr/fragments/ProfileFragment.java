@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -184,6 +185,12 @@ public class ProfileFragment extends Fragment {
                 public void onClick(View view) {
                     // Go to the settings page
                     Intent i = new Intent(getContext(), SettingsActivity.class);
+                    i.putExtra("finisher", new ResultReceiver(null) {
+                        @Override
+                        protected void onReceiveResult(int resultCode, Bundle resultData) {
+                            getActivity().finish();
+                        }
+                    });
                     startActivityForResult(i, RESULT_CODE);
                 }
             });
@@ -209,14 +216,6 @@ public class ProfileFragment extends Fragment {
             btnFollow.setSelected(false);
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
             btnFollow.setText("FOLLOW");
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CODE) {
-            getActivity().finish();
         }
     }
 }

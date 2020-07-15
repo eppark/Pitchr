@@ -25,8 +25,10 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_spotify_authentication);
+        boolean returning = getIntent().getBooleanExtra("returning", false);
 
-        authenticateSpotify();
+        // If the user is a returning user, we don't need to show the dialog option again. Otherwise, we can show it
+        authenticateSpotify(!returning);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
                     // Handle error response
                     Log.d(TAG, "Error authenticating!");
                     Toast.makeText(SpotifyAuthenticationActivity.this, response.getError(), Toast.LENGTH_SHORT).show();
-                    authenticateSpotify();
+                    authenticateSpotify(true);
                     break;
 
                 // Most likely auth flow was cancelled
@@ -59,15 +61,15 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
                     // Handle other cases
                     Log.d(TAG, "Authentication flow cancelled");
                     Toast.makeText(SpotifyAuthenticationActivity.this, "Authentication flow cancelled!", Toast.LENGTH_SHORT).show();
-                    authenticateSpotify();
+                    authenticateSpotify(true);
             }
         }
     }
 
-    private void authenticateSpotify() {
+    private void authenticateSpotify(boolean dialog) {
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(getString(R.string.spotify_api_key), AuthenticationResponse.Type.TOKEN, getString(R.string.redirect_url));
         builder.setScopes(new String[]{SCOPES});
-        builder.setShowDialog(true);
+        builder.setShowDialog(dialog);
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }

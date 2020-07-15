@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
@@ -37,6 +38,7 @@ public class UserFragment extends Fragment {
     List<ParseUser> allUsers;
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
+    TextView tvNoUsers;
     String id;
 
     public UserFragment() {
@@ -73,6 +75,8 @@ public class UserFragment extends Fragment {
         rvUsers.setLayoutManager(layoutManager);
         adapter = new UsersAdapter(this.getContext(), allUsers);
         rvUsers.setAdapter(adapter);
+        tvNoUsers = (TextView) view.findViewById(R.id.tvNoUsers);
+        tvNoUsers.setVisibility(View.GONE);
 
         // Setup refresh listener which triggers new data loading
         swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
@@ -136,6 +140,13 @@ public class UserFragment extends Fragment {
                 for (Following followingItem : userList) {
                     allUsers.add(followingItem.getFollowedBy());
                 }
+                if (allUsers.size() == 0) {
+                    // If there are no followers, show the message
+                    tvNoUsers.setVisibility(View.VISIBLE);
+                    tvNoUsers.setText(R.string.no_followers);
+                } else {
+                    tvNoUsers.setVisibility(View.GONE);
+                }
                 adapter.notifyDataSetChanged();
             }
         });
@@ -161,6 +172,13 @@ public class UserFragment extends Fragment {
                 Log.d(TAG, "Query following success!");
                 for (Following followingItem : userList) {
                     allUsers.add(followingItem.getFollowing());
+                }
+                if (allUsers.size() == 0) {
+                    // If there are no following, show the message
+                    tvNoUsers.setVisibility(View.VISIBLE);
+                    tvNoUsers.setText(R.string.no_following);
+                } else {
+                    tvNoUsers.setVisibility(View.GONE);
                 }
                 adapter.notifyDataSetChanged();
             }

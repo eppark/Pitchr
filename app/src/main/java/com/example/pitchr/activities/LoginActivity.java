@@ -35,7 +35,13 @@ public class LoginActivity extends AppCompatActivity {
         Glide.with(this).load(R.drawable.pitchr_name_green).into(binding.imageView);
 
         if (ParseUser.getCurrentUser() != null) {
-            ParseUser.logOut();
+            // If the session isn't valid, log the user out
+            if (!ParseUser.getCurrentUser().isAuthenticated()) {
+                ParseUser.logOut();
+            } else {
+                // Else we can just authenticate with Spotify
+                goSpotifyAuth(true);
+            }
         }
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                goSpotifyAuth();
+                goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Login success.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -96,14 +102,15 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                goSpotifyAuth();
+                goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Signup success.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void goSpotifyAuth() {
+    private void goSpotifyAuth(boolean returning) {
         Intent i = new Intent(this, SpotifyAuthenticationActivity.class);
+        i.putExtra("returning", returning);
         Log.d(TAG, "spotifyauth");
         startActivity(i);
         finish();

@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -85,8 +86,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ParseUser.logOut();
-                setResult(ProfileFragment.RESULT_CODE);
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
+                ((ResultReceiver) getIntent().getParcelableExtra("finisher")).send(ProfileFragment.RESULT_CODE, new Bundle());
                 startActivity(i);
                 finish();
             }
@@ -196,7 +197,7 @@ public class SettingsActivity extends AppCompatActivity {
         Bitmap image = null;
         try {
             // check version of Android on device
-            if(Build.VERSION.SDK_INT > 27){
+            if (Build.VERSION.SDK_INT > 27) {
                 // on newer versions of Android, use the new decodeBitmap method
                 ImageDecoder.Source source = ImageDecoder.createSource(SettingsActivity.this.getContentResolver(), photoUri);
                 image = ImageDecoder.decodeBitmap(source);
@@ -257,7 +258,7 @@ public class SettingsActivity extends AppCompatActivity {
         File mediaStorageDir = new File(SettingsActivity.this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
         }
 

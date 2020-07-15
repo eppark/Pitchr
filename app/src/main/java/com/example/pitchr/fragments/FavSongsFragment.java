@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
@@ -43,6 +44,7 @@ public class FavSongsFragment extends Fragment {
     SongsAdapter adapter;
     ArrayList<Song> allSongs;
     SwipeRefreshLayout swipeContainer;
+    TextView tvNoSongs;
     EndlessRecyclerViewScrollListener scrollListener;
 
     public FavSongsFragment() {
@@ -70,6 +72,8 @@ public class FavSongsFragment extends Fragment {
         // Get the user
         user = Parcels.unwrap(getArguments().getParcelable(ParseUser.class.getSimpleName()));
         allSongs = new ArrayList<>();
+        tvNoSongs = (TextView) view.findViewById(R.id.tvNoSongs);
+        tvNoSongs.setVisibility(View.GONE);
 
         // Recycler view setup: layout manager and the adapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -142,6 +146,12 @@ public class FavSongsFragment extends Fragment {
                 Log.d(TAG, "Query fav songs success!");
                 for (FavSongs songItem : songsList) {
                     allSongs.add(songItem.getSong());
+                }
+                if (allSongs.size() == 0) {
+                    // If there are no fav songs for the user, show the message
+                    tvNoSongs.setVisibility(View.VISIBLE);
+                } else {
+                    tvNoSongs.setVisibility(View.GONE);
                 }
                 adapter.notifyDataSetChanged();
             }

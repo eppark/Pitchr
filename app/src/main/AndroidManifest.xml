@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
         tools:ignore="MissingClass">
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ComposeActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity

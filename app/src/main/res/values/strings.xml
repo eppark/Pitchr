@@ -18,4 +18,7 @@
     <string name="match">Match</string>
     <string name="profile">Profile</string>
     <string name="comment">Write a comment...</string>
+    <string name="no_favorite_songs">No favorite songs</string>
+    <string name="no_followers">No followers</string>
+    <string name="no_following">No following</string>
 </resources>
