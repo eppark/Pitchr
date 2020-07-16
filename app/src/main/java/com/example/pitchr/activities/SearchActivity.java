@@ -80,12 +80,21 @@ public class SearchActivity extends AppCompatActivity {
                 if (position != RecyclerView.NO_POSITION) {
                     Song song = aSongs.get(position);
 
-                    // Create an intent for the new activity
-                    Intent intent = new Intent(SearchActivity.this, ComposeActivity.class);
-                    intent.putExtra(Song.class.getSimpleName(), Parcels.wrap(song)); // serialize the movie using Parceler
+                    // Check which intent we are coming from
+                    if (getIntent().getBooleanExtra("add", false)) {
+                        // This means we are in the add activity, so we want to go back to the favorite songs list with the new Song
+                        Intent data = new Intent();
+                        data.putExtra(Song.class.getSimpleName(), Parcels.wrap(song));
+                        setResult(RESULT_OK, data);
+                        finish();
+                    } else {
+                        // Create an intent for the new activity
+                        Intent intent = new Intent(SearchActivity.this, ComposeActivity.class);
+                        intent.putExtra(Song.class.getSimpleName(), Parcels.wrap(song)); // serialize the movie using Parceler
 
-                    // Show the activity
-                    startActivityForResult(intent, RESULT_CODE);
+                        // Show the activity
+                        startActivityForResult(intent, RESULT_CODE);
+                    }
                 }
             }
         });

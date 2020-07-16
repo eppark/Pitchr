@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.pitchr.R;
-import com.example.pitchr.adapters.CommentsAdapter;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.databinding.ActivityMainBinding;
 import com.example.pitchr.fragments.CommentDialogFragment;
@@ -19,33 +18,18 @@ import com.example.pitchr.fragments.DetailsFragment;
 import com.example.pitchr.fragments.PostsFragment;
 import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.models.Comment;
-import com.example.pitchr.models.FavSongs;
-import com.example.pitchr.models.Song;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.boltsinternal.Task;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 public class MainActivity extends AppCompatActivity implements CommentDialogFragment.CommentDialogFragmentListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     public ActivityMainBinding binding;
+    public SpotifyAppRemote mSpotifyAppRemote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
 
         // Set default selection
         binding.bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+        // Get Spotify service
+        //connect();
     }
 
     @Override
@@ -101,5 +88,32 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
     public void onFinishCommentDialog(Comment comment) {
         ((DetailsFragment) fragmentManager.findFragmentByTag(PostsAdapter.TAG)).allComments.add(0, comment);
         ((DetailsFragment) fragmentManager.findFragmentByTag(PostsAdapter.TAG)).adapter.notifyDataSetChanged();
+    }
+
+    // Spotify player
+    private void connect() {
+        // Authorization
+        ConnectionParams connectionParams = new ConnectionParams.Builder(getString(R.string.spotify_api_key)).setRedirectUri(getString(R.string.redirect_url))
+                .showAuthView(false).build();
+
+        // Connect to Spotify
+        SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
+            @Override
+            public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                mSpotifyAppRemote = spotifyAppRemote;
+                Log.d(TAG, "Spotify connected successfully");
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.e(TAG, "Spotify failed to connect", throwable);
+            }
+        });
+    }
+
+    // Disconnect when we need to
+    public void onStop() {
+        super.onStop();
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 }

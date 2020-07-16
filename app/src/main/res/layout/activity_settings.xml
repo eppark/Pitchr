@@ -117,11 +117,23 @@
                 android:text="@string/get_refresh_songs_from_spotify"
                 android:textColor="@color/white" />
 
+            <Button
+                android:id="@+id/btnAddFavSongs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnRefreshFavSongs"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/edit_list_manually" />
+
             <View
                 android:id="@+id/divider3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/btnRefreshFavSongs"
+                android:layout_below="@id/btnAddFavSongs"
                 android:layout_marginTop="16dp"
                 android:background="@color/gray1" />
 

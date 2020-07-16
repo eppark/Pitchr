@@ -36,6 +36,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.spotify.sdk.android.auth.AuthorizationClient;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -104,6 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ParseUser.logOut();
+                AuthorizationClient.clearCookies(SettingsActivity.this); // Clear Spotify cookies
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
                 ((ResultReceiver) getIntent().getParcelableExtra("finisher")).send(ProfileFragment.RESULT_CODE, new Bundle());
                 startActivity(i);
@@ -133,6 +135,16 @@ public class SettingsActivity extends AppCompatActivity {
                 spotifyApi = new SpotifyApi();
                 spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
                 queryFavSongs();
+            }
+        });
+
+        // Set adding songs manually
+        binding.btnAddFavSongs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Move to the activity
+                Intent i = new Intent(SettingsActivity.this, FavSongsListActivity.class);
+                startActivity(i);
             }
         });
     }
@@ -409,5 +421,11 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        ((ResultReceiver) getIntent().getParcelableExtra("updater")).send(ProfileFragment.RESULT_CODE, new Bundle());
+        super.onBackPressed();
     }
 }

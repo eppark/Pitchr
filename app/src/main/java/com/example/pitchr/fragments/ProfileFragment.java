@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.R;
+import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SettingsActivity;
 import com.example.pitchr.adapters.ViewPagerAdapter;
 import com.example.pitchr.models.Following;
@@ -32,7 +33,6 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.boltsinternal.Task;
 
 import org.parceler.Parcels;
 
@@ -86,14 +86,7 @@ public class ProfileFragment extends Fragment {
         tvUsername.setText(user.getUsername());
 
         // Set the images if we have them
-        ParseFile pfpImage = user.getParseFile("pfp");
-        if (pfpImage != null) {
-            Glide.with(this).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
-            Glide.with(this).load(pfpImage.getUrl()).into(htabHeader);
-        } else {
-            Glide.with(this).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
-            Glide.with(this).load(R.drawable.default_pfp).into(htabHeader);
-        }
+        setImages();
 
         // Set up view pager and tabs
         setupViewPager();
@@ -177,7 +170,7 @@ public class ProfileFragment extends Fragment {
             // If this is the current user, we can change the button to settings
             btnFollow.setSelected(false);
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-            btnFollow.setText("SETTINGS");
+            btnFollow.setText(R.string.settings);
 
             // Set up settings page
             btnFollow.setOnClickListener(new View.OnClickListener() {
@@ -188,12 +181,32 @@ public class ProfileFragment extends Fragment {
                     i.putExtra("finisher", new ResultReceiver(null) {
                         @Override
                         protected void onReceiveResult(int resultCode, Bundle resultData) {
+                            //((MainActivity) getActivity()).onStop();
                             getActivity().finish();
+                        }
+                    });
+                    i.putExtra("updater", new ResultReceiver(null) {
+                        @Override
+                        protected void onReceiveResult(int resultCode, Bundle resultData) {
+                            setImages();
+                            ((FavSongsFragment) ((ViewPagerAdapter) htabViewpager.getAdapter()).getItem(0)).queryInitial();
                         }
                     });
                     startActivityForResult(i, RESULT_CODE);
                 }
             });
+        }
+    }
+
+    // Set up images
+    public void setImages() {
+        ParseFile pfpImage = user.getParseFile("pfp");
+        if (pfpImage != null) {
+            Glide.with(this).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
+            Glide.with(this).load(pfpImage.getUrl()).into(htabHeader);
+        } else {
+            Glide.with(this).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
+            Glide.with(this).load(R.drawable.default_pfp).into(htabHeader);
         }
     }
 

@@ -79,6 +79,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageButton ibtnComment;
         private TextView tvTime;
         private boolean liked;
+        private ImageButton ibtnPlay;
         int likes;
 
         public ViewHolder(View itemView) {
@@ -94,6 +95,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvArtists = (TextView) itemView.findViewById(R.id.tvArtists);
             tvLikes = (TextView) itemView.findViewById(R.id.tvLikes);
             tvComments = (TextView) itemView.findViewById(R.id.tvComments);
+            ibtnPlay = (ImageButton) itemView.findViewById(R.id.ibtnPlay);
             likes = 0;
 
             // When the user clicks on text or a profile picture, take them to the profile page for that user
@@ -128,20 +130,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ibtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!liked) {
-                        currentPost.addLike();
-                        likes++;
-                        addLike();
-                    } else {
-                        currentPost.removeLike();
-                        likes--;
-                        removeLike();
-                    }
-                    if (likes > 0) {
-                        tvLikes.setText(format(likes));
-                    } else {
-                        tvLikes.setText("");
-                    }
+                    setLike();
+                }
+            });
+
+            // When a user clicks the play button, play the song
+            ibtnPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity) context).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + currentPost.getSong().getSpotifyId());
                 }
             });
         }
@@ -202,6 +199,24 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     }
                 }
             });
+        }
+
+        // Set likes
+        private void setLike() {
+            if (!liked) {
+                currentPost.addLike();
+                likes++;
+                addLike();
+            } else {
+                currentPost.removeLike();
+                likes--;
+                removeLike();
+            }
+            if (likes > 0) {
+                tvLikes.setText(format(likes));
+            } else {
+                tvLikes.setText("");
+            }
         }
 
         private void addLike() {

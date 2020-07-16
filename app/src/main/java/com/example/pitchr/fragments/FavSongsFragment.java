@@ -121,7 +121,7 @@ public class FavSongsFragment extends Fragment {
         });
     }
 
-    private void queryInitial() {
+    public void queryInitial() {
         adapter.clear();
         querySongs(0);
     }
