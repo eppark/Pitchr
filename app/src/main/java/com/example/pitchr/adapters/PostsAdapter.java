@@ -102,7 +102,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             View.OnClickListener profileListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser()), TAG);
                     ft.addToBackStack(TAG);
                     ft.commit();
@@ -115,7 +115,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             View.OnClickListener detailsListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.flContainer, DetailsFragment.newInstance(currentPost), TAG);
                     ft.addToBackStack(TAG);
                     ft.commit();

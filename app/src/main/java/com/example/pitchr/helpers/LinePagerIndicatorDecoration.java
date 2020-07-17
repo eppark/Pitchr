@@ -64,7 +64,7 @@ public class LinePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
         float indicatorStartX = (parent.getWidth() - indicatorTotalWidth) / 2F;
 
         // center vertically in the allotted space
-        float indicatorPosY = mIndicatorHeight / 2F;
+        float indicatorPosY = mIndicatorHeight * 1.5F;
 
         drawInactiveIndicators(c, indicatorStartX, indicatorPosY, itemCount);
 

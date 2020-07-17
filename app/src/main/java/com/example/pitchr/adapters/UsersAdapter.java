@@ -93,7 +93,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         // Go to the user's profile when clicked
         @Override
         public void onClick(View view) {
-            FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.flContainer, ProfileFragment.newInstance(user), TAG);
             ft.addToBackStack(TAG);
             ft.commit();

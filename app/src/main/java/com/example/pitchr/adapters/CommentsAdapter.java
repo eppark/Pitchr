@@ -102,7 +102,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             View.OnClickListener profileListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.flContainer, ProfileFragment.newInstance(comment.getAuthor()), TAG);
                     ft.addToBackStack(TAG);
                     ft.commit();

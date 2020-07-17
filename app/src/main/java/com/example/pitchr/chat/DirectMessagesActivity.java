@@ -106,6 +106,10 @@ public class DirectMessagesActivity extends AppCompatActivity {
                 for (Following followingItem : userList) {
                     allUsers.add(followingItem.getFollowedBy());
                 }
+                if (allUsers.size() == 0) {
+                    // If we have no users
+                    Toast.makeText(getApplicationContext(), "You don't have any followers to message!", Toast.LENGTH_SHORT).show();
+                }
                 adapter.notifyDataSetChanged();
             }
         });

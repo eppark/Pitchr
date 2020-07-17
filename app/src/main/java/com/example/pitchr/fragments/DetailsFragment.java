@@ -150,7 +150,7 @@ public class DetailsFragment extends Fragment {
         View.OnClickListener profileListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction ft = ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                FragmentTransaction ft = ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.replace(R.id.flContainer, ProfileFragment.newInstance(op), TAG);
                 ft.addToBackStack(TAG);
                 ft.commit();

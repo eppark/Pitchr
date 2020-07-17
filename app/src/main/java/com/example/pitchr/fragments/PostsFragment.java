@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
+import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SearchActivity;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.chat.DirectMessagesActivity;
@@ -135,8 +137,11 @@ public class PostsFragment extends Fragment {
         btnFindUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Click
-                Log.d(TAG, "button clicked");
+                // Take them to the matching page
+                FragmentTransaction ft = ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.replace(R.id.flContainer, new MatchesFragment(), TAG);
+                ft.addToBackStack(TAG);
+                ft.commit();
             }
         });
     }
@@ -199,7 +204,6 @@ public class PostsFragment extends Fragment {
                 if (allPosts.size() == 0) {
                     tvNoPosts.setVisibility(View.VISIBLE);
                     btnFindUsers.setVisibility(View.VISIBLE);
-                    btnFindUsers.setFocusableInTouchMode(true);
                     btnFindUsers.setClickable(true);
                 } else {
                     tvNoPosts.setVisibility(View.GONE);
