@@ -15,6 +15,7 @@ import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.databinding.ActivityMainBinding;
 import com.example.pitchr.fragments.CommentDialogFragment;
 import com.example.pitchr.fragments.DetailsFragment;
+import com.example.pitchr.fragments.MatchesFragment;
 import com.example.pitchr.fragments.PostsFragment;
 import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.models.Comment;
@@ -55,8 +56,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                         fragment = new PostsFragment();
                         break;
                     case R.id.action_match:
-                        //fragment = new ComposeFragment();
-                        fragment = new PostsFragment();
+                        fragment = new MatchesFragment();
                         break;
                     case R.id.action_profile:
                     default:

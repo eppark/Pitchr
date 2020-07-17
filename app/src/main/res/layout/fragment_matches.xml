@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/gradient_match"
+    tools:context=".fragments.MatchesFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMatches"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/ivAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_animation"
+        android:clickable="false"
+        tools:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnFindMatches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="350dp"
+        android:backgroundTint="@color/gray2"
+        android:padding="20dp"
+        android:text="@string/find_a_match"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:visibility="visible" />
+
+    <TextSwitcher
+        android:id="@+id/tsFindUsers"
+        android:layout_width="336dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pitchr"
+            android:text="@string/find_users_with_the_same_music_tastes_as_you"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            tools:visibility="visible" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pitchr"
+            android:text="@string/find_users_with_the_same_music_tastes_as_you"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            tools:visibility="visible" />
+    </TextSwitcher>
+
+
+</RelativeLayout>

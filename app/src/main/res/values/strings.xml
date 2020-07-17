@@ -36,4 +36,7 @@
     <string name="edit_list_manually">Edit list manually</string>
     <string name="snack_bar_text">Deleted favorite song</string>
     <string name="snack_bar_undo">UNDO</string>
+    <string name="find_a_match">Find a match</string>
+    <string name="find_users_with_the_same_music_tastes_as_you">Find users with the same music tastes as you.</string>
+    <string name="finding_matches_for_you">Finding matches for you…</string>
 </resources>

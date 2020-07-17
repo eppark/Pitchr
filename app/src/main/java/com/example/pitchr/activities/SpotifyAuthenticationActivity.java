@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
+import com.example.pitchr.fragments.ProfileFragment;
 import com.parse.ParseUser;
+import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -52,16 +55,14 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
                 case ERROR:
                     // Handle error response
                     Log.d(TAG, "Error authenticating!");
-                    Toast.makeText(SpotifyAuthenticationActivity.this, response.getError(), Toast.LENGTH_SHORT).show();
-                    authenticateSpotify(true);
+                    retryLogin();
                     break;
 
                 // Most likely auth flow was cancelled
                 default:
                     // Handle other cases
                     Log.d(TAG, "Authentication flow cancelled");
-                    Toast.makeText(SpotifyAuthenticationActivity.this, "Authentication flow cancelled!", Toast.LENGTH_SHORT).show();
-                    authenticateSpotify(true);
+                    retryLogin();
             }
         }
     }
@@ -76,6 +77,14 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
 
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void retryLogin() {
+        ParseUser.logOut();
+        AuthorizationClient.clearCookies(this); // Clear Spotify cookies
+        Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
         finish();
     }
