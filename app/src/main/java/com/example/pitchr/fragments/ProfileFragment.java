@@ -1,21 +1,28 @@
 package com.example.pitchr.fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Environment;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +43,12 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 public class ProfileFragment extends Fragment {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
@@ -47,6 +60,7 @@ public class ProfileFragment extends Fragment {
     Button btnFollow;
     TabLayout htabTabs;
     ViewPager htabViewpager;
+    ImageButton ibtnShare;
     Following followingObject;
     public boolean following;
 
@@ -80,6 +94,8 @@ public class ProfileFragment extends Fragment {
         htabHeader = view.findViewById(R.id.htab_header);
         htabTabs = view.findViewById(R.id.htab_tabs);
         htabViewpager = view.findViewById(R.id.htab_viewpager);
+        ibtnShare = view.findViewById(R.id.ibtnShare);
+        ibtnShare.setVisibility(View.GONE); // Hide the share button at first
 
         // Set user info
         user = (ParseUser) Parcels.unwrap(getArguments().getParcelable(ParseUser.class.getSimpleName()));
@@ -109,13 +125,14 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // If this isn't the current user, show the follow button
-        if (!user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+        // If this isn't the current user, show the follow button and hide the share button
+        if (!user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
             ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
             query.include(Following.KEY_FOLLOWED_BY);
             query.include(Following.KEY_FOLLOWING);
             query.whereEqualTo(Following.KEY_FOLLOWING, user);
             query.whereEqualTo(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
+
             // If the user is currently following them, show that
             query.getFirstInBackground(new GetCallback<Following>() {
                 @Override
@@ -166,6 +183,9 @@ public class ProfileFragment extends Fragment {
                     }
                 }
             });
+
+            // Hide the share button
+            ibtnShare.setVisibility(View.GONE);
         } else {
             // If this is the current user, we can change the button to settings
             btnFollow.setSelected(false);
@@ -193,6 +213,34 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                     startActivityForResult(i, RESULT_CODE);
+                }
+            });
+
+            // Show the share button
+            ibtnShare.setVisibility(View.VISIBLE);
+            ibtnShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View buttonView) {
+
+                    view.setDrawingCacheEnabled(true);
+                    Bitmap bitmap = view.getDrawingCache();
+                    Uri uri = saveImage(bitmap);
+
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, "Check out my Pitchr profile!");
+                    sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    sharingIntent.setType("image/*");
+                    Intent chooser = Intent.createChooser(sharingIntent, "Share using");
+
+                    // Grant permissions
+                    List<ResolveInfo> resInfoList = getContext().getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+
+                    for (ResolveInfo resolveInfo : resInfoList) {
+                        String packageName = resolveInfo.activityInfo.packageName;
+                        getContext().grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    }
+                    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivity(chooser);
                 }
             });
         }
@@ -230,5 +278,25 @@ public class ProfileFragment extends Fragment {
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
             btnFollow.setText("FOLLOW");
         }
+    }
+
+    // Returns a Uri from a Bitmap
+    private Uri saveImage(Bitmap image) {
+        File imagesFolder = new File(getContext().getCacheDir(), "images");
+        Uri uri = null;
+        try {
+            imagesFolder.mkdirs();
+            File file = new File(imagesFolder, "shared_image.png");
+
+            FileOutputStream stream = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.flush();
+            stream.close();
+            uri = FileProvider.getUriForFile(getContext(), "com.pitchr.fileprovider", file);
+
+        } catch (IOException e) {
+            Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
+        }
+        return uri;
     }
 }

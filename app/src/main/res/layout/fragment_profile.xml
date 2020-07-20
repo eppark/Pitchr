@@ -90,6 +90,15 @@
                 app:tabSelectedTextColor="@color/spotifyGreen"
                 app:tabTextColor="@color/gray3" />
 
+            <ImageButton
+                android:id="@+id/ibtnShare"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="top|end"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_share" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

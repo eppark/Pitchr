@@ -9,22 +9,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pitchr.R;
-import com.example.pitchr.activities.ComposeActivity;
-import com.example.pitchr.activities.SearchActivity;
+import com.example.pitchr.activities.MainActivity;
+import com.example.pitchr.activities.SettingsActivity;
 import com.example.pitchr.adapters.SongsAdapter;
-import com.example.pitchr.adapters.UsersAdapter;
+import com.example.pitchr.adapters.ViewPagerAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.FavSongs;
-import com.example.pitchr.models.Following;
 import com.example.pitchr.models.Song;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -39,12 +39,14 @@ import java.util.List;
 public class FavSongsFragment extends Fragment {
 
     public static final String TAG = FavSongsFragment.class.getSimpleName();
+    public static final int RESULT_CODE = 4567;
     ParseUser user;
     RecyclerView rvSongs;
     SongsAdapter adapter;
     ArrayList<Song> allSongs;
     SwipeRefreshLayout swipeContainer;
     TextView tvNoSongs;
+    Button btnEditSongs;
     EndlessRecyclerViewScrollListener scrollListener;
 
     public FavSongsFragment() {
@@ -73,7 +75,9 @@ public class FavSongsFragment extends Fragment {
         user = Parcels.unwrap(getArguments().getParcelable(ParseUser.class.getSimpleName()));
         allSongs = new ArrayList<>();
         tvNoSongs = (TextView) view.findViewById(R.id.tvNoSongs);
+        btnEditSongs = (Button) view.findViewById(R.id.btnEditSongs);
         tvNoSongs.setVisibility(View.GONE);
+        btnEditSongs.setVisibility(View.GONE);
 
         // Recycler view setup: layout manager and the adapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -119,6 +123,29 @@ public class FavSongsFragment extends Fragment {
                 }
             }
         });
+
+        // Set button to edit song list if the current user doesn't have any favorite songs
+        btnEditSongs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go to the settings page
+                Intent i = new Intent(getContext(), SettingsActivity.class);
+                i.putExtra("finisher", new ResultReceiver(null) {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+                        //((MainActivity) getActivity()).onStop();
+                        getActivity().finish();
+                    }
+                });
+                i.putExtra("updater", new ResultReceiver(null) {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+                        queryInitial();
+                    }
+                });
+                startActivityForResult(i, RESULT_CODE);
+            }
+        });
     }
 
     public void queryInitial() {
@@ -150,8 +177,13 @@ public class FavSongsFragment extends Fragment {
                 if (allSongs.size() == 0) {
                     // If there are no fav songs for the user, show the message
                     tvNoSongs.setVisibility(View.VISIBLE);
+
+                    if (user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                        btnEditSongs.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     tvNoSongs.setVisibility(View.GONE);
+                    btnEditSongs.setVisibility(View.GONE);
                 }
                 adapter.notifyDataSetChanged();
             }

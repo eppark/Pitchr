@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         binding.bottomNavigationView.setSelectedItemId(R.id.action_home);
 
         // Get Spotify service
-        connect();
+        //connect();
     }
 
     @Override
