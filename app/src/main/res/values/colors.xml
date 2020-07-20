@@ -13,6 +13,7 @@
     <color name="gray3">#454545</color>
     <color name="red">#FF4D4D</color>
     <color name="yellow">#FFEC8C</color>
+    <color name="lightYellow">#FFFBE4</color>
     <color name="orange">#AF8467</color>
     <color name="lightGray">#979797</color>
 </resources>

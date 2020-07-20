@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.pitchr.R;
 import com.example.pitchr.adapters.PostsAdapter;
@@ -25,6 +28,10 @@ import com.parse.ParseUser;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.android.appremote.api.error.CouldNotFindSpotifyApp;
+import com.spotify.android.appremote.api.error.NotLoggedInException;
+import com.spotify.android.appremote.api.error.UserNotAuthorizedException;
+import com.spotify.sdk.android.auth.AuthorizationClient;
 
 public class MainActivity extends AppCompatActivity implements CommentDialogFragment.CommentDialogFragmentListener {
 
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         binding.bottomNavigationView.setSelectedItemId(R.id.action_home);
 
         // Get Spotify service
-        //connect();
+        connect();
     }
 
     @Override
@@ -108,6 +115,19 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
             @Override
             public void onFailure(Throwable throwable) {
                 Log.e(TAG, "Spotify failed to connect", throwable);
+                if (throwable instanceof NotLoggedInException || throwable instanceof UserNotAuthorizedException) {
+                    // Show login button and trigger the login flow from auth library when clicked
+                    Toast.makeText(MainActivity.this, "Login issue. Try again.", Toast.LENGTH_SHORT).show();
+                    ParseUser.logOut();
+                    AuthorizationClient.clearCookies(MainActivity.this); // Clear Spotify cookies
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                } else if (throwable instanceof CouldNotFindSpotifyApp) {
+                    // Show button to download Spotify
+                    Toast.makeText(MainActivity.this, "Please install the Spotify app!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
+                }
             }
         });
     }

@@ -71,20 +71,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         public void bind(Message message) {
             final boolean isMe = message.getSender() != null && message.getSender().getObjectId().equals(ParseUser.getCurrentUser().getObjectId());
+            ImageView profileView;
 
+            // Margin changes depending on which user is using it
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            // If this message is by the current user, align everything to the right. Else, align everything to the left
             if (isMe) {
                 imageMe.setVisibility(View.VISIBLE);
                 imageOther.setVisibility(View.GONE);
                 body.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-
-            } else {
-                imageOther.setVisibility(View.VISIBLE);
-                imageMe.setVisibility(View.GONE);
-                body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-            }
-
-            ImageView profileView;
-            if (isMe) {
                 profileView = imageMe;
                 ll.setGravity(Gravity.RIGHT);
                 body.setBackgroundResource(R.drawable.outgoing_speech_bubble);
@@ -95,7 +94,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 } else {
                     Glide.with(mContext).load(R.drawable.default_pfp).circleCrop().into(profileView);
                 }
+
+                // Margins
+                params.setMargins(0, 30, 30, 0);
+                body.setLayoutParams(params);
             } else {
+                imageOther.setVisibility(View.VISIBLE);
+                imageMe.setVisibility(View.GONE);
+                body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
                 profileView = imageOther;
                 ll.setGravity(Gravity.LEFT);
                 body.setBackgroundResource(R.drawable.incoming_speech_bubble);
@@ -106,6 +112,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 } else {
                     Glide.with(mContext).load(R.drawable.default_pfp).circleCrop().into(profileView);
                 }
+
+                // Margins
+                params.setMargins(30, 30, 0, 0);
+                body.setLayoutParams(params);
             }
 
             body.setText(message.getMessage());

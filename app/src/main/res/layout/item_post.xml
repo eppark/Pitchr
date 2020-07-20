@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/ivPFP"
+        android:id="@+id/ivPfp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
-        android:layout_toEndOf="@+id/ivPFP"
+        android:layout_toEndOf="@+id/ivPfp"
         android:textColor="@color/gray3"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -30,7 +30,7 @@
         android:id="@+id/rlSong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivPFP"
+        android:layout_below="@+id/ivPfp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -41,7 +41,6 @@
         <ImageView
             android:id="@+id/ivSongImage"
             android:layout_width="48dp"
-
             android:layout_height="48dp"
             tools:srcCompat="@tools:sample/avatars" />
 

@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -121,6 +120,19 @@ public class PostsFragment extends Fragment {
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
 
+        // When the user scrolls, hide the compose button
+        rvPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && fabCompose.getVisibility() == View.VISIBLE) {
+                    fabCompose.hide();
+                } else if (dy < 0 && fabCompose.getVisibility() != View.VISIBLE) {
+                    fabCompose.show();
+                }
+            }
+        });
+
         // Get posts initially
         initialQuery();
 
@@ -144,6 +156,13 @@ public class PostsFragment extends Fragment {
                 ft.commit();
             }
         });
+    }
+
+    // Initial query
+    private void initialQuery() {
+        adapter.clear();
+        pbLoading.setVisibility(View.VISIBLE); // Show progress bar
+        queryFollowing(0);
     }
 
     // Query posts by the current user and by the user's following list
@@ -171,13 +190,6 @@ public class PostsFragment extends Fragment {
         });
     }
 
-    // Initial query
-    private void initialQuery() {
-        adapter.clear();
-        pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-        queryFollowing(0);
-    }
-
     // Query posts from database
     protected void queryPosts(int page) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
@@ -197,8 +209,8 @@ public class PostsFragment extends Fragment {
                 }
                 Log.d(TAG, "Query posts success!");
                 allPosts.addAll(posts);
-                adapter.notifyDataSetChanged();
                 pbLoading.setVisibility(View.GONE); // Hide progress bar
+                adapter.notifyDataSetChanged();
 
                 // If we have no posts, show the option to the user to find a match
                 if (allPosts.size() == 0) {

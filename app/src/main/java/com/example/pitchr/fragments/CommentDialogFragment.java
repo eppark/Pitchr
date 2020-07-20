@@ -90,7 +90,7 @@ public class CommentDialogFragment extends DialogFragment {
         post = Parcels.unwrap(getArguments().getParcelable(Post.class.getSimpleName()));
 
         // Show the profile pic if the user has one
-        ParseFile pfpImage = post.getUser().getParseFile("pfp");
+        ParseFile pfpImage = ParseUser.getCurrentUser().getParseFile("pfp");
         if (pfpImage != null) {
             Glide.with(this).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
         } else {

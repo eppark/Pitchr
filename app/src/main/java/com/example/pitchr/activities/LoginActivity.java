@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         binding.pbLoading.setVisibility(View.INVISIBLE); // Hide the progress bar at first
-        Glide.with(this).load(R.drawable.pitchr_name_green).into(binding.imageView);
 
         if (ParseUser.getCurrentUser() != null) {
             // If the session isn't valid, log the user out

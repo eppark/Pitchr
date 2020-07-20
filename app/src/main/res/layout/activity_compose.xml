@@ -40,6 +40,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_toEndOf="@+id/ivPFP"
+            android:backgroundTint="@color/spotifyGreen"
             android:ems="10"
             android:hint="@string/write_a_caption"
             android:inputType="textMultiLine"

@@ -68,7 +68,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         Post currentPost;
         private TextView tvUsername;
-        private ImageView ivPFP;
+        private ImageView ivPfp;
         private ImageView ivSongImage;
         private TextView tvSongName;
         private TextView tvArtists;
@@ -85,7 +85,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
-            ivPFP = (ImageView) itemView.findViewById(R.id.ivPFP);
+            ivPfp = (ImageView) itemView.findViewById(R.id.ivPfp);
             ivSongImage = (ImageView) itemView.findViewById(R.id.ivSongImage);
             tvCaption = (TextView) itemView.findViewById(R.id.tvCaption);
             ibtnLike = (ImageButton) itemView.findViewById(R.id.ibtnLike);
@@ -109,7 +109,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 }
             };
             tvUsername.setOnClickListener(profileListener);
-            ivPFP.setOnClickListener(profileListener);
+            ivPfp.setOnClickListener(profileListener);
 
             // When the user clicks on the post, take them to the details page for that post
             View.OnClickListener detailsListener = new View.OnClickListener() {
@@ -162,9 +162,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
             ParseFile pfpImage = post.getUser().getParseFile("pfp");
             if (pfpImage != null) {
-                Glide.with(context).load(pfpImage.getUrl()).circleCrop().into(ivPFP);
+                Glide.with(context).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
             } else {
-                Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPFP);
+                Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
             }
 
             // Show if the user likes the post and the comment count
