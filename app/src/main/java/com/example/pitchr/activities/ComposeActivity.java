@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityComposeBinding;
 import com.example.pitchr.models.FavSongs;
@@ -25,6 +26,7 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ComposeActivity extends AppCompatActivity {
@@ -130,10 +132,16 @@ public class ComposeActivity extends AppCompatActivity {
                 if (e != null) {
                     Log.e(TAG, "Error while posting!", e);
                     Toast.makeText(getApplicationContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("postEvent", Arrays.asList("status"), Arrays.asList("failure"));
                     return;
                 }
                 Log.d(TAG, "Posting success!");
                 Toast.makeText(getApplicationContext(), "Shared post successfully", Toast.LENGTH_SHORT).show();
+
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("postEvent", Arrays.asList("status"), Arrays.asList("success"));
 
                 // Finish the parent activity as well
                 setResult(SearchActivity.RESULT_CODE);

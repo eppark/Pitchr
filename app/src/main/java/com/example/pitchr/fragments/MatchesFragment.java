@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.adapters.MatchesAdapter;
 import com.example.pitchr.helpers.LinePagerIndicatorDecoration;
@@ -177,10 +178,17 @@ public class MatchesFragment extends Fragment {
                 if (e != null) {
                     Log.e(TAG, "Issue with getting matches", e);
                     Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "null"));
                     return;
                 }
                 Log.d(TAG, "Query matches success!");
+
                 if (matches.size() > 0) {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type"), Arrays.asList("success", "existing"));
+
                     // If the matches already exists, just use that
                     allMatches.clear();
 
@@ -199,6 +207,9 @@ public class MatchesFragment extends Fragment {
                     btnFindMatches.setVisibility(View.GONE);
                     ivLoadingAnimation.setVisibility(View.GONE);
                 } else {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type"), Arrays.asList("success", "new"));
+
                     // If matches don't exist, create them
                     HashMap<String, Object> params = new HashMap<String, Object>();
                     params.put("currentuser", ParseUser.getCurrentUser().getObjectId());

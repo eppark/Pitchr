@@ -12,7 +12,12 @@ import com.example.pitchr.models.Match;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
 import com.parse.Parse;
+import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ParseApplication extends Application {
 
@@ -40,5 +45,16 @@ public class ParseApplication extends Application {
                 .server(getString(R.string.back4app_server_url))
                 .build()
         );
+    }
+
+    // Log to Parse Analytics
+    public static void logEvent(String eventName, List<String> dimensionName, List<String> dimensionValue) {
+        Map<String, String> dimensions = new HashMap<String, String>();
+        // Define ranges to bucket data points into meaningful segments
+        for (int i = 0; i < dimensionName.size(); i++) {
+            dimensions.put(dimensionName.get(i), dimensionValue.get(i));
+        }
+        // Send the dimensions to Parse along with the event
+        ParseAnalytics.trackEventInBackground(eventName, dimensions);
     }
 }

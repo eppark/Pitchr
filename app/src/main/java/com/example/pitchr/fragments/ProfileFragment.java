@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SettingsActivity;
@@ -47,6 +48,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
@@ -157,9 +159,17 @@ public class ProfileFragment extends Fragment {
                             public void done(ParseException e) {
                                 if (e != null) {
                                     Log.e(TAG, "Issue with unfollowing", e);
+
+                                    // LOG TO ANALYTICS
+                                    ParseApplication.logEvent("followEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "unfollow"));
                                     return;
                                 }
                                 Log.d(TAG, "Unfollow success");
+
+                                // LOG TO ANALYTICS
+                                ParseApplication.logEvent("followEvent", Arrays.asList("status", "type"), Arrays.asList("success", "unfollow"));
+
+                                // Set variable
                                 following = false;
                                 setupFollowStatus();
                             }
@@ -173,9 +183,17 @@ public class ProfileFragment extends Fragment {
                             public void done(ParseException e) {
                                 if (e != null) {
                                     Log.e(TAG, "Issue with following", e);
+
+                                    // LOG TO ANALYTICS
+                                    ParseApplication.logEvent("followEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "follow"));
                                     return;
                                 }
                                 Log.d(TAG, "Follow success");
+
+                                // LOG TO ANALYTICS
+                                ParseApplication.logEvent("followEvent", Arrays.asList("status", "type"), Arrays.asList("success", "follow"));
+
+                                // Set variable
                                 following = true;
                                 setupFollowStatus();
                             }
@@ -221,11 +239,15 @@ public class ProfileFragment extends Fragment {
             ibtnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View buttonView) {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("shareEvent", Arrays.asList("status"), Arrays.asList("success"));
 
+                    // Get the view image
                     view.setDrawingCacheEnabled(true);
                     Bitmap bitmap = view.getDrawingCache();
                     Uri uri = saveImage(bitmap);
 
+                    // Set up the sharing intent
                     Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                     sharingIntent.putExtra(Intent.EXTRA_TEXT, "Check out my Pitchr profile!");
                     sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -234,7 +256,6 @@ public class ProfileFragment extends Fragment {
 
                     // Grant permissions
                     List<ResolveInfo> resInfoList = getContext().getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
-
                     for (ResolveInfo resolveInfo : resInfoList) {
                         String packageName = resolveInfo.activityInfo.packageName;
                         getContext().grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);

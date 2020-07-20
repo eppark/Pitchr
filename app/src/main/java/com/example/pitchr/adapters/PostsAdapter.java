@@ -3,7 +3,9 @@ package com.example.pitchr.adapters;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -112,19 +114,40 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivPfp.setOnClickListener(profileListener);
 
             // When the user clicks on the post, take them to the details page for that post
-            View.OnClickListener detailsListener = new View.OnClickListener() {
+            // When the user double taps a post, like the post
+            View.OnTouchListener touchListener = new View.OnTouchListener() {
+                private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.flContainer, DetailsFragment.newInstance(currentPost), TAG);
+                        ft.addToBackStack(TAG);
+                        ft.commit();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        setLike();
+                        return true;
+                    }
+                });
+
                 @Override
-                public void onClick(View view) {
-                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(R.id.flContainer, DetailsFragment.newInstance(currentPost), TAG);
-                    ft.addToBackStack(TAG);
-                    ft.commit();
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    view.performClick();
+                    return gestureDetector.onTouchEvent(motionEvent);
                 }
             };
-            tvCaption.setOnClickListener(detailsListener);
-            tvTime.setOnClickListener(detailsListener);
-            ibtnComment.setOnClickListener(detailsListener);
-            itemView.setOnClickListener(detailsListener);
+            tvCaption.setOnTouchListener(touchListener);
+            tvTime.setOnTouchListener(touchListener);
+            ibtnComment.setOnTouchListener(touchListener);
+            itemView.setOnTouchListener(touchListener);
 
             // When the user clicks the heart, change accordingly
             ibtnLike.setOnClickListener(new View.OnClickListener() {

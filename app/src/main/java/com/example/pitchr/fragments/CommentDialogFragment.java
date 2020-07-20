@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.Post;
@@ -33,6 +34,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
+
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -150,9 +153,15 @@ public class CommentDialogFragment extends DialogFragment {
                 if (e != null) {
                     Log.e(TAG, "Error while saving", e);
                     Toast.makeText(getContext(), "Error while saving comment!", Toast.LENGTH_SHORT).show();
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("commentEvent", Arrays.asList("status"), Arrays.asList("failure"));
                     return;
                 }
                 Log.i(TAG, "Comment save success!");
+
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("commentEvent", Arrays.asList("status"), Arrays.asList("success"));
             }
         });
         return comment;

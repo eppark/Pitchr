@@ -4,18 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Window;
-import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
-import com.example.pitchr.fragments.ProfileFragment;
 import com.parse.ParseUser;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+
+import java.util.Arrays;
 
 public class SpotifyAuthenticationActivity extends AppCompatActivity {
 
@@ -48,6 +48,11 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
                     ParseUser.getCurrentUser().put("token", response.getAccessToken());
                     ParseUser.getCurrentUser().saveInBackground();
                     Log.d(TAG, "Successfully got auth token");
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("spotifyAuthEvent", Arrays.asList("status"), Arrays.asList("success"));
+
+                    // Go to the main activity
                     goMainActivity();
                     break;
 
@@ -55,6 +60,11 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
                 case ERROR:
                     // Handle error response
                     Log.d(TAG, "Error authenticating!");
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("spotifyAuthEvent", Arrays.asList("status"), Arrays.asList("failure"));
+
+                    // Try logging in again
                     retryLogin();
                     break;
 
@@ -62,11 +72,17 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
                 default:
                     // Handle other cases
                     Log.d(TAG, "Authentication flow cancelled");
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("spotifyAuthEvent", Arrays.asList("status"), Arrays.asList("cancelled"));
+
+                    // Try logging in again
                     retryLogin();
             }
         }
     }
 
+    // Build the authenticator
     private void authenticateSpotify(boolean dialog) {
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(getString(R.string.spotify_api_key), AuthenticationResponse.Type.TOKEN, getString(R.string.redirect_url));
         builder.setScopes(new String[]{SCOPES});
@@ -75,12 +91,14 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }
 
+    // Go to the main activity
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }
 
+    // Try logging again if we're running into issues
     private void retryLogin() {
         ParseUser.logOut();
         AuthorizationClient.clearCookies(this); // Clear Spotify cookies

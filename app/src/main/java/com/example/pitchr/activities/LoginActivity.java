@@ -8,13 +8,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.example.pitchr.R;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
+import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(view);
         binding.pbLoading.setVisibility(View.INVISIBLE); // Hide the progress bar at first
 
+        // LOG TO ANALYTICS
+        ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
         if (ParseUser.getCurrentUser() != null) {
             // If the session isn't valid, log the user out
             if (!ParseUser.getCurrentUser().isAuthenticated()) {
@@ -43,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        // Set up logging in button
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Set up signing up button
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,10 +85,16 @@ public class LoginActivity extends AppCompatActivity {
                     // There was an error
                     Log.e(TAG, "Issue with login", e);
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "login"));
                     return;
                 }
                 goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Login success.", Toast.LENGTH_SHORT).show();
+
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("success", "login"));
             }
         });
     }
@@ -99,14 +114,21 @@ public class LoginActivity extends AppCompatActivity {
                     // There was an error
                     Log.e(TAG, "Issue with signup", e);
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "signup"));
                     return;
                 }
                 goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Signup success.", Toast.LENGTH_SHORT).show();
+
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("success", "signup"));
             }
         });
     }
 
+    // Go to the Spotify authentication activity
     private void goSpotifyAuth(boolean returning) {
         Intent i = new Intent(this, SpotifyAuthenticationActivity.class);
         i.putExtra("returning", returning);

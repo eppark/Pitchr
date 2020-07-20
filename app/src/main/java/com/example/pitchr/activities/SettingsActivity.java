@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivitySettingsBinding;
 import com.example.pitchr.fragments.ProfileFragment;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,10 +106,17 @@ public class SettingsActivity extends AppCompatActivity {
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ParseUser.logOut();
+                ParseUser.logOut(); // Log the Parse user out
                 AuthorizationClient.clearCookies(SettingsActivity.this); // Clear Spotify cookies
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
+
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("logoutEvent", Arrays.asList("logout"), Arrays.asList("success"));
+
+                // Tell the main activity that we're logging out
                 ((ResultReceiver) getIntent().getParcelableExtra("finisher")).send(ProfileFragment.RESULT_CODE, new Bundle());
+
+                // Go to the login activity
                 startActivity(i);
                 finish();
             }
