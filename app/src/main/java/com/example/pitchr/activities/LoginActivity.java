@@ -17,8 +17,6 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // LOG TO ANALYTICS
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("loginActivity", Arrays.asList("status"), Arrays.asList("success"));
 
         if (ParseUser.getCurrentUser() != null) {
             // If the session isn't valid, log the user out

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
 
     private List<Song> mSongs;
     private Context mContext;
+    public int currentPosition = -1;
 
     // Define listener member variable
     private OnItemClickListener listener;
@@ -40,15 +42,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
         public ImageView ivSongImage;
         public TextView tvSongName;
         public TextView tvArtists;
+        public RelativeLayout rlSong;
 
         public ViewHolder(final View itemView, final OnItemClickListener clickListener) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            ivSongImage = (ImageView)itemView.findViewById(R.id.ivSongImage);
-            tvSongName = (TextView)itemView.findViewById(R.id.tvSongName);
-            tvArtists = (TextView)itemView.findViewById(R.id.tvArtists);
+            ivSongImage = (ImageView) itemView.findViewById(R.id.ivSongImage);
+            tvSongName = (TextView) itemView.findViewById(R.id.tvSongName);
+            tvArtists = (TextView) itemView.findViewById(R.id.tvArtists);
+            rlSong = (RelativeLayout) itemView.findViewById(R.id.rlSong);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,6 +99,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
             Glide.with(getContext()).load(image).into(viewHolder.ivSongImage);
         } else {
             viewHolder.ivSongImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.music_placeholder));
+        }
+
+        // Change the background if we need to
+        if (currentPosition != -1 && currentPosition == position) {
+            if (currentPosition == position) {
+                viewHolder.rlSong.setBackgroundColor(getContext().getResources().getColor(R.color.spotifyGreen));
+            }
+        } else {
+            viewHolder.rlSong.setBackgroundResource(0);
         }
     }
 

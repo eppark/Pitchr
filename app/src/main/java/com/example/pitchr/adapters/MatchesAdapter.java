@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.fragments.ProfileFragment;
@@ -116,6 +117,23 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
             allSongs = new ArrayList<>();
             rvFavSongs.setLayoutManager(layoutManager);
             adapter = new SongsAdapter(context, allSongs);
+            adapter.setOnItemClickListener(new SongsAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View itemView, int position) {
+                    // Make sure the position is valid
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Check if we're playing, pausing, or resuming
+                        if (adapter.currentPosition == position) {
+                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                            adapter.currentPosition = -1;
+                        } else {
+                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + allSongs.get(position).getSpotifyId());
+                            adapter.currentPosition = position;
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
             rvFavSongs.setAdapter(adapter);
             querySongs();
         }

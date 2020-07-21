@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.databinding.ActivityMainBinding;
@@ -31,6 +32,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.android.appremote.api.error.CouldNotFindSpotifyApp;
 import com.spotify.android.appremote.api.error.NotLoggedInException;
 import com.spotify.android.appremote.api.error.UserNotAuthorizedException;
+import com.spotify.protocol.types.Repeat;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
 public class MainActivity extends AppCompatActivity implements CommentDialogFragment.CommentDialogFragmentListener {
@@ -38,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
     public static final String TAG = MainActivity.class.getSimpleName();
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     public ActivityMainBinding binding;
-    public SpotifyAppRemote mSpotifyAppRemote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
         getSupportActionBar().setTitle(" ");
+
+        // Get Spotify service
+        connect();
 
         // Set the bottom navigation view
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -78,9 +82,6 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
 
         // Set default selection
         binding.bottomNavigationView.setSelectedItemId(R.id.action_home);
-
-        // Get Spotify service
-        //connect();
     }
 
     @Override
@@ -108,8 +109,12 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
             @Override
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                mSpotifyAppRemote = spotifyAppRemote;
                 Log.d(TAG, "Spotify connected successfully");
+                ((ParseApplication) getApplicationContext()).mSpotifyAppRemote = spotifyAppRemote;
+
+                // Set it so that the player repeats the currently playing song and doesn't shuffle
+                ((ParseApplication) getApplicationContext()).mSpotifyAppRemote.getPlayerApi().setRepeat(Repeat.ONE);
+                ((ParseApplication) getApplicationContext()).mSpotifyAppRemote.getPlayerApi().setShuffle(false);
             }
 
             @Override
@@ -135,6 +140,13 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
     // Disconnect when we need to
     public void onStop() {
         super.onStop();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        SpotifyAppRemote.disconnect(((ParseApplication) getApplicationContext()).mSpotifyAppRemote);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onStop();
+        connect();
     }
 }

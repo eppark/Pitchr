@@ -219,7 +219,7 @@ public class ProfileFragment extends Fragment {
                     i.putExtra("finisher", new ResultReceiver(null) {
                         @Override
                         protected void onReceiveResult(int resultCode, Bundle resultData) {
-                            //((MainActivity) getActivity()).onStop();
+                            ((MainActivity) getActivity()).onStop();
                             getActivity().finish();
                         }
                     });

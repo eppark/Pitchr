@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.fragments.DetailsFragment;
@@ -31,21 +32,28 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.spotify.android.appremote.api.PlayerApi;
+import com.spotify.protocol.client.CallResult;
+import com.spotify.protocol.client.Result;
+import com.spotify.protocol.types.PlayerState;
 
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     public static final String TAG = PostsAdapter.class.getSimpleName();
     private Context context;
     private List<Post> posts;
+    int currentPosition;
 
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
+        currentPosition = -1;
     }
 
     @NonNull
@@ -58,6 +66,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = posts.get(position);
+
+        // Set play and paused correctly
+        if (position == currentPosition) {
+            if (holder.paused) {
+                holder.ibtnPlay.setImageResource(R.drawable.ic_music_play);
+            } else {
+                holder.ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+            }
+        } else {
+            holder.ibtnPlay.setImageResource(R.drawable.ic_music_play);
+            holder.paused = false;
+        }
+
         holder.bind(post);
     }
 
@@ -66,7 +87,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return posts.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         Post currentPost;
         private TextView tvUsername;
@@ -82,6 +103,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvTime;
         private boolean liked;
         private ImageButton ibtnPlay;
+        private boolean paused;
         int likes;
 
         public ViewHolder(View itemView) {
@@ -161,7 +183,21 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ibtnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) context).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + currentPost.getSong().getSpotifyId());
+                    // Check if we're playing, pausing, or resuming
+                    if (currentPosition == getAdapterPosition()) {
+                        if (paused) {
+                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
+                            paused = false;
+                        } else {
+                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                            paused = true;
+                        }
+                    } else {
+                        ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + currentPost.getSong().getSpotifyId());
+                        paused = false;
+                    }
+                    currentPosition = getAdapterPosition();
+                    notifyDataSetChanged();
                 }
             });
         }
@@ -214,8 +250,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     } else {
                         tvLikes.setText("");
                     }
-                    for(int i = 0; i < users.size(); i++) {
-                        if(users.get(i).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                    for (int i = 0; i < users.size(); i++) {
+                        if (users.get(i).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                             addLike();
                             break;
                         }

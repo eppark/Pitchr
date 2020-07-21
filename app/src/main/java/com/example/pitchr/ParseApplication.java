@@ -14,12 +14,15 @@ import com.example.pitchr.models.Song;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ParseApplication extends Application {
+
+    public SpotifyAppRemote mSpotifyAppRemote;
 
     @Override
     public void onCreate() {

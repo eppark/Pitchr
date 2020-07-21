@@ -63,6 +63,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Find song");
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
         binding.pbProgressAction.setVisibility(View.GONE);
+        binding.tvSearchSongs.setVisibility(View.VISIBLE);
 
         aSongs = new ArrayList<>();
 
@@ -136,6 +137,12 @@ public class SearchActivity extends AppCompatActivity {
                 aSongs.addAll(Song.songsFromTracksList(tracksPager.tracks.items));
                 songsAdapter.notifyDataSetChanged();
                 binding.pbProgressAction.setVisibility(View.GONE);
+
+                if (aSongs.size() == 0) {
+                    binding.tvSearchSongs.setVisibility(View.VISIBLE);
+                } else {
+                    binding.tvSearchSongs.setVisibility(View.GONE);
+                }
             }
         });
     }

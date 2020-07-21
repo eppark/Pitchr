@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.adapters.CommentsAdapter;
@@ -32,6 +33,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.spotify.android.appremote.api.PlayerApi;
 
 import org.parceler.Parcels;
 
@@ -64,8 +66,10 @@ public class DetailsFragment extends Fragment {
     ImageView ivSongImage;
     TextView tvSongName;
     TextView tvArtists;
+    ImageButton ibtnPlay;
     int likes;
     boolean liked;
+    int paused;
 
     // Swipe to refresh and scroll to load more comments endlessly
     private SwipeRefreshLayout swipeContainer;
@@ -98,6 +102,8 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // View binding
         rvComments = (RecyclerView) view.findViewById(R.id.rvComments);
         tvUsername = (TextView) view.findViewById(R.id.tvUsername);
         ivPfp = (ImageView) view.findViewById(R.id.ivPfp);
@@ -110,7 +116,9 @@ public class DetailsFragment extends Fragment {
         ibtnLike = (ImageButton) view.findViewById(R.id.ibtnLike);
         tvLikes = (TextView) view.findViewById(R.id.tvLikes);
         tvComments = (TextView) view.findViewById(R.id.tvComments);
+        ibtnPlay = (ImageButton) view.findViewById(R.id.ibtnPlay);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        paused = -1;
 
         // Get the post details
         post = Parcels.unwrap(getArguments().getParcelable(Post.class.getSimpleName()));
@@ -221,6 +229,29 @@ public class DetailsFragment extends Fragment {
             public void onClick(View view) {
                 CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(post);
                 commentDialogFragment.show(((MainActivity) view.getContext()).fragmentManager, "fragment_comment_dialog");
+            }
+        });
+
+        // Set play button
+        ibtnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Check if we're playing, pausing, or resuming
+                if (paused != -1) {
+                    if (paused == 1) {
+                        ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
+                        paused = 0;
+                    } else {
+                        ibtnPlay.setImageResource(R.drawable.ic_music_play);
+                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                        paused = 1;
+                    }
+                } else {
+                    ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                    ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + post.getSong().getSpotifyId());
+                    paused = 0;
+                }
             }
         });
     }

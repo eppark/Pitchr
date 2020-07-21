@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SettingsActivity;
@@ -118,8 +119,15 @@ public class FavSongsFragment extends Fragment {
             public void onItemClick(View itemView, int position) {
                 // Make sure the position is valid
                 if (position != RecyclerView.NO_POSITION) {
-                    Song song = allSongs.get(position);
-
+                    // Check if we're playing, pausing, or resuming
+                    if (adapter.currentPosition == position) {
+                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                        adapter.currentPosition = -1;
+                    } else {
+                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + allSongs.get(position).getSpotifyId());
+                        adapter.currentPosition = position;
+                    }
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
