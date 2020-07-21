@@ -39,6 +39,9 @@ public class ComposeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("composeActivity", Arrays.asList("status"), Arrays.asList("success"));
+
         // Set ViewBinding
         binding = ActivityComposeBinding.inflate(getLayoutInflater());
 

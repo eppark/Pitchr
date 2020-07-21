@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.adapters.SongsAdapter;
 import com.example.pitchr.databinding.ActivitySearchBinding;
@@ -25,6 +26,7 @@ import com.parse.ParseUser;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +53,9 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("searchActivity", Arrays.asList("status"), Arrays.asList("success"));
 
         // Set ViewBinding
         binding = ActivitySearchBinding.inflate(getLayoutInflater());

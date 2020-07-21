@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityChatBinding;
 import com.parse.FindCallback;
@@ -23,6 +24,7 @@ import com.parse.SaveCallback;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -41,6 +43,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("chatActivity", Arrays.asList("status"), Arrays.asList("success"));
 
         // layout of activity is stored in a special property called root
         View view = binding.getRoot();
@@ -76,7 +81,6 @@ public class ChatActivity extends AppCompatActivity {
         myHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
     }
 
-
     // Setup button event handler which posts the entered message to Parse
     private void setupMessagePosting() {
         // When send button is clicked, create message object on Parse
@@ -92,10 +96,18 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         if (e != null) {
+                            // LOG TO ANALYTICS
+                            ParseApplication.logEvent("messageEvent", Arrays.asList("status"), Arrays.asList("failure"));
+
+                            // Let the user know there was an error
                             Log.e(TAG, "Error while saving", e);
                             Toast.makeText(getApplicationContext(), "Error while saving message!", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        // LOG TO ANALYTICS
+                        ParseApplication.logEvent("messageEvent", Arrays.asList("status"), Arrays.asList("success"));
+
+                        // Save to Parse and refresh messages
                         Log.i(TAG, "Message save success!");
                         currentDm.getRelation(DM.KEY_MESSAGES).add(message);
                         currentDm.saveInBackground();

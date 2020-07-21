@@ -30,6 +30,9 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_spotify_authentication);
         boolean returning = getIntent().getBooleanExtra("returning", false);
 
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("spotifyAuthenticationActivity", Arrays.asList("status"), Arrays.asList("success"));
+
         // If the user is a returning user, we don't need to show the dialog option again. Otherwise, we can show it
         authenticateSpotify(!returning);
     }

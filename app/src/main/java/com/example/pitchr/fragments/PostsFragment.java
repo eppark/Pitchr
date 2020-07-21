@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SearchActivity;
@@ -39,6 +40,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PostsFragment extends Fragment {
@@ -79,6 +81,11 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("postsFragment", Arrays.asList("status"), Arrays.asList("success"));
+
+        // View binding
         rvPosts = (RecyclerView) view.findViewById(R.id.rvPosts);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         pbLoading = (ProgressBar) view.findViewById(R.id.pbLoading);

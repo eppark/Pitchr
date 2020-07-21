@@ -90,6 +90,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("profileFragment", Arrays.asList("status"), Arrays.asList("success"));
+
+        // View binding
         ivPfp = view.findViewById(R.id.ivPfp);
         tvUsername = view.findViewById(R.id.tvUsername);
         btnFollow = view.findViewById(R.id.btnFollow);

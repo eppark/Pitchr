@@ -35,6 +35,8 @@ import com.spotify.android.appremote.api.error.UserNotAuthorizedException;
 import com.spotify.protocol.types.Repeat;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity implements CommentDialogFragment.CommentDialogFragmentListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("mainActivity", Arrays.asList("status"), Arrays.asList("success"));
 
         // Set ViewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());

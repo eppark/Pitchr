@@ -38,6 +38,7 @@ import com.spotify.android.appremote.api.PlayerApi;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -102,6 +103,9 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("detailsFragment", Arrays.asList("status"), Arrays.asList("success"));
 
         // View binding
         rvComments = (RecyclerView) view.findViewById(R.id.rvComments);

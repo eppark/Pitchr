@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityDirectMessagesBinding;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
@@ -20,6 +21,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DirectMessagesActivity extends AppCompatActivity {
@@ -34,6 +36,9 @@ public class DirectMessagesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("directMessagesActivity", Arrays.asList("status"), Arrays.asList("success"));
 
         // Set ViewBinding
         final ActivityDirectMessagesBinding binding = ActivityDirectMessagesBinding.inflate(getLayoutInflater());

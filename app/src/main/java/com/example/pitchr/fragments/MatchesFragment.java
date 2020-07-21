@@ -74,6 +74,11 @@ public class MatchesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("matchesFragment", Arrays.asList("status"), Arrays.asList("success"));
+
+        // View binding
         rvMatches = (RecyclerView) view.findViewById(R.id.rvMatches);
         btnFindMatches = (Button) view.findViewById(R.id.btnFindMatches);
         tsMatches = (TextSwitcher) view.findViewById(R.id.tsFindUsers);

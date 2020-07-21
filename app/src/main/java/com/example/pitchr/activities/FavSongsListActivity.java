@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.adapters.FavSongsListAdapter;
 import com.example.pitchr.databinding.ActivityFavSongsListBinding;
@@ -34,6 +35,7 @@ import com.parse.SaveCallback;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FavSongsListActivity extends AppCompatActivity {
@@ -47,6 +49,9 @@ public class FavSongsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("favSongsListActivity", Arrays.asList("status"), Arrays.asList("success"));
 
         // Set ViewBinding
         binding = ActivityFavSongsListBinding.inflate(getLayoutInflater());

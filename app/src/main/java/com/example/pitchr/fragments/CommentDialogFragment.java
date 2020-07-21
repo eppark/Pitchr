@@ -82,6 +82,10 @@ public class CommentDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("commentDialogFragment", Arrays.asList("status"), Arrays.asList("success"));
+
         // Bind views
         etCompose = (EditText) view.findViewById(R.id.etCompose);
         ivPfp = (ImageView) view.findViewById(R.id.ivPFP);

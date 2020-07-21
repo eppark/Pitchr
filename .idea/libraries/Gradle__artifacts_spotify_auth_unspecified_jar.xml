@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: artifacts:spotify-auth:unspecified@jar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/spotify-auth/build/.transforms/739e5369e75c4d87aea1a3aee85fb7b8/jetified-spotify-auth-release-1.2.3/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/spotify-auth/build/.transforms/739e5369e75c4d87aea1a3aee85fb7b8/jetified-spotify-auth-release-1.2.3/res" />
+      <root url="jar://$PROJECT_DIR$/spotify-auth/build/.transforms/6ab46ede1fa4d4375f77d9c6e8af4cfe/jetified-spotify-auth-release-1.2.3/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/spotify-auth/build/.transforms/6ab46ede1fa4d4375f77d9c6e8af4cfe/jetified-spotify-auth-release-1.2.3/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

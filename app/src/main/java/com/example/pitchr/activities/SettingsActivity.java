@@ -76,6 +76,9 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // LOG TO ANALYTICS
+        ParseApplication.logEvent("settingsActivity", Arrays.asList("status"), Arrays.asList("success"));
+
         // Set ViewBinding
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
 
