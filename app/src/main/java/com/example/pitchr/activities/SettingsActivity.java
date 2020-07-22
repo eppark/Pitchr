@@ -32,6 +32,8 @@ import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Song;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -61,6 +63,7 @@ import static androidx.core.content.FileProvider.*;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String TAG = SettingsActivity.class.getSimpleName();
+    public static final int FAV_SONGS_REQUEST_CODE = 4575246;
     ActivitySettingsBinding binding;
     public static final int FAV_SONG_LIMIT = 10;
     public SpotifyApi spotifyApi;
@@ -156,7 +159,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Move to the activity
                 Intent i = new Intent(SettingsActivity.this, FavSongsListActivity.class);
-                startActivity(i);
+                startActivityForResult(i, FAV_SONGS_REQUEST_CODE);
             }
         });
     }

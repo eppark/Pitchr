@@ -81,6 +81,7 @@ public class FavSongsListActivity extends AppCompatActivity {
         queryInitial();
     }
 
+    // Query the initial top songs
     private void queryInitial() {
         adapter.clear();
         querySongs(0);
@@ -128,12 +129,14 @@ public class FavSongsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.miAdd:
+                // If the user clicks to add a song, show the search activity
                 Intent i = new Intent(FavSongsListActivity.this, SearchActivity.class);
                 i.putExtra("add", true);
                 startActivityForResult(i, REQUEST_CODE);
                 return true;
             case R.id.miSave:
-                queryFavSongs();
+                // If the user clicks to save the song, exit
+                createFavSongs();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -155,7 +158,7 @@ public class FavSongsListActivity extends AppCompatActivity {
     }
 
     // Create a list of favorite songs from Spotify for the user
-    private void queryFavSongs() {
+    private void createFavSongs() {
         ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
         query.include(FavSongs.KEY_USER);
         query.include(FavSongs.KEY_SONG);

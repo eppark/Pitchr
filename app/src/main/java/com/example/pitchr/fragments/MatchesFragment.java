@@ -226,6 +226,8 @@ public class MatchesFragment extends Fragment {
                                 Toast.makeText(getContext(), "Failed to create matches", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+
+                            // We only want to try once in case there is an error on the backend to prevent looping forever
                             attempts++;
                             if (attempts < 2) {
                                 // Once we've created the matches, add them to the adapter
