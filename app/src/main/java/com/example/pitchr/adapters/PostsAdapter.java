@@ -183,21 +183,23 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ibtnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Check if we're playing, pausing, or resuming
-                    if (currentPosition == getAdapterPosition()) {
-                        if (paused) {
-                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
-                            paused = false;
+                    if (((ParseApplication) (context.getApplicationContext())).spotifyExists) {
+                        // Check if we're playing, pausing, or resuming
+                        if (currentPosition == getAdapterPosition()) {
+                            if (paused) {
+                                ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
+                                paused = false;
+                            } else {
+                                ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                                paused = true;
+                            }
                         } else {
-                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
-                            paused = true;
+                            ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + currentPost.getSong().getSpotifyId());
+                            paused = false;
                         }
-                    } else {
-                        ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + currentPost.getSong().getSpotifyId());
-                        paused = false;
+                        currentPosition = getAdapterPosition();
+                        notifyDataSetChanged();
                     }
-                    currentPosition = getAdapterPosition();
-                    notifyDataSetChanged();
                 }
             });
         }

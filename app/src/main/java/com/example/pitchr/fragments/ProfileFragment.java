@@ -1,8 +1,6 @@
 package com.example.pitchr.fragments;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Environment;
 import android.os.ResultReceiver;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.pitchr.ParseApplication;
@@ -33,6 +31,10 @@ import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SettingsActivity;
 import com.example.pitchr.adapters.ViewPagerAdapter;
 import com.example.pitchr.models.Following;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
@@ -41,15 +43,16 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import org.parceler.Parcels;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -62,7 +65,8 @@ public class ProfileFragment extends Fragment {
     Button btnFollow;
     TabLayout htabTabs;
     ViewPager htabViewpager;
-    ImageButton ibtnShare;
+    ImageButton ibtnFacebook;
+    ImageButton ibtnTwitter;
     Following followingObject;
     public boolean following;
 
@@ -101,8 +105,10 @@ public class ProfileFragment extends Fragment {
         htabHeader = view.findViewById(R.id.htab_header);
         htabTabs = view.findViewById(R.id.htab_tabs);
         htabViewpager = view.findViewById(R.id.htab_viewpager);
-        ibtnShare = view.findViewById(R.id.ibtnShare);
-        ibtnShare.setVisibility(View.GONE); // Hide the share button at first
+        ibtnFacebook = view.findViewById(R.id.ibtnFacebook);
+        ibtnTwitter = view.findViewById(R.id.ibtnTwitter);
+        ibtnFacebook.setVisibility(View.GONE); // Hide the share buttons at first
+        ibtnTwitter.setVisibility(View.GONE);
 
         // Set user info
         user = (ParseUser) Parcels.unwrap(getArguments().getParcelable(ParseUser.class.getSimpleName()));
@@ -207,8 +213,9 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-            // Hide the share button
-            ibtnShare.setVisibility(View.GONE);
+            // Hide the share buttons
+            ibtnFacebook.setVisibility(View.GONE);
+            ibtnTwitter.setVisibility(View.GONE);
         } else {
             // If this is the current user, we can change the button to settings
             btnFollow.setSelected(false);
@@ -239,34 +246,64 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-            // Show the share button
-            ibtnShare.setVisibility(View.VISIBLE);
-            ibtnShare.setOnClickListener(new View.OnClickListener() {
+            // Show the share buttons
+            ibtnFacebook.setVisibility(View.VISIBLE);
+            ibtnFacebook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View buttonView) {
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("shareEvent", Arrays.asList("status"), Arrays.asList("success"));
+                    ParseApplication.logEvent("shareEvent", Arrays.asList("status", "type"), Arrays.asList("success", "facebook"));
 
                     // Get the view image
                     view.setDrawingCacheEnabled(true);
                     Bitmap bitmap = view.getDrawingCache();
-                    Uri uri = saveImage(bitmap);
 
-                    // Set up the sharing intent
-                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                    sharingIntent.putExtra(Intent.EXTRA_TEXT, "Check out my Pitchr profile!");
-                    sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    sharingIntent.setType("image/*");
-                    Intent chooser = Intent.createChooser(sharingIntent, "Share using");
+                    // Share to Facebook
+                    SharePhoto photo = new SharePhoto.Builder()
+                            .setBitmap(bitmap)
+                            .build();
+                    SharePhotoContent content = new SharePhotoContent.Builder()
+                            .addPhoto(photo)
+                            .setShareHashtag(new ShareHashtag.Builder()
+                                    .setHashtag("#Pitchr")
+                                    .build())
+                            .build();
+                    ShareDialog.show(ProfileFragment.this, content);
+                }
+            });
 
-                    // Grant permissions
-                    List<ResolveInfo> resInfoList = getContext().getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        getContext().grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            ibtnTwitter.setVisibility(View.VISIBLE);
+            ibtnTwitter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View buttonView) {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("shareEvent", Arrays.asList("status", "type"), Arrays.asList("success", "twitter"));
+
+                    // Get the view image
+                    view.setDrawingCacheEnabled(true);
+                    Bitmap bitmap = view.getDrawingCache();
+
+                    // Save and get URI
+                    Uri uri = bitmapToUri(bitmap);
+                    if (uri == null) {
+                        Log.d(TAG, "Failed to save image!");
+                        Toast.makeText(getContext(), "Failed to generate share image!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    startActivity(chooser);
+
+                    // Authorize Twitter
+                    TwitterConfig config = new TwitterConfig.Builder(getContext())
+                            .logger(new DefaultLogger(Log.DEBUG))
+                            .twitterAuthConfig(new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret)))
+                            .debug(true)
+                            .build();
+                    Twitter.initialize(config);
+
+                    // Share to Twitter
+                    TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
+                            .text("Check out my #Pitchr profile!")
+                            .image(uri);
+                    builder.show();
                 }
             });
         }
@@ -298,31 +335,24 @@ public class ProfileFragment extends Fragment {
         if (following) {
             btnFollow.setSelected(true);
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.spotifyGreen));
-            btnFollow.setText("FOLLOWING");
+            btnFollow.setText(R.string.following);
         } else {
             btnFollow.setSelected(false);
             btnFollow.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-            btnFollow.setText("FOLLOW");
+            btnFollow.setText(R.string.follow);
         }
     }
 
     // Returns a Uri from a Bitmap
-    private Uri saveImage(Bitmap image) {
-        File imagesFolder = new File(getContext().getCacheDir(), "images");
-        Uri uri = null;
+    private Uri bitmapToUri(Bitmap image) {
         try {
-            imagesFolder.mkdirs();
-            File file = new File(imagesFolder, "shared_image.png");
-
-            FileOutputStream stream = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.PNG, 90, stream);
-            stream.flush();
-            stream.close();
-            uri = FileProvider.getUriForFile(getContext(), "com.pitchr.fileprovider", file);
-
-        } catch (IOException e) {
-            Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), image, "share_image", null);
+            return Uri.parse(path);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception while trying to write file for sharing!", e);
+            return null;
         }
-        return uri;
     }
 }

@@ -40,4 +40,6 @@
     <string name="find_users_with_the_same_music_tastes_as_you">Find users with the same music tastes as you.</string>
     <string name="finding_matches_for_you">Finding matches for you…</string>
     <string name="add_favorite_songs">Add Favorite Songs</string>
+    <string name="follow">FOLLOW</string>
+    <string name="following">FOLLOWING</string>
 </resources>

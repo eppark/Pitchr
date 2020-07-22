@@ -240,21 +240,23 @@ public class DetailsFragment extends Fragment {
         ibtnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Check if we're playing, pausing, or resuming
-                if (paused != -1) {
-                    if (paused == 1) {
-                        ibtnPlay.setImageResource(R.drawable.ic_music_pause);
-                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
-                        paused = 0;
+                if (((ParseApplication) (getContext().getApplicationContext())).spotifyExists) {
+                    // Check if we're playing, pausing, or resuming
+                    if (paused != -1) {
+                        if (paused == 1) {
+                            ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                            ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
+                            paused = 0;
+                        } else {
+                            ibtnPlay.setImageResource(R.drawable.ic_music_play);
+                            ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                            paused = 1;
+                        }
                     } else {
-                        ibtnPlay.setImageResource(R.drawable.ic_music_play);
-                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
-                        paused = 1;
+                        ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + post.getSong().getSpotifyId());
+                        paused = 0;
                     }
-                } else {
-                    ibtnPlay.setImageResource(R.drawable.ic_music_pause);
-                    ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + post.getSong().getSpotifyId());
-                    paused = 0;
                 }
             }
         });

@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="200dp"
-                android:text="FOLLOW"
+                android:text="@string/follow"
                 android:textStyle="bold"
                 app:layout_anchorGravity="center" />
 
@@ -91,13 +91,23 @@
                 app:tabTextColor="@color/gray3" />
 
             <ImageButton
-                android:id="@+id/ibtnShare"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:id="@+id/ibtnTwitter"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="48dp"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_twitter_share" />
+
+            <ImageButton
+                android:id="@+id/ibtnFacebook"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_gravity="top|end"
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/ic_share" />
+                app:srcCompat="@drawable/ic_facebook_share" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

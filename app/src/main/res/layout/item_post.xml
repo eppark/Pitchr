@@ -75,10 +75,11 @@
 
         <ImageButton
             android:id="@+id/ibtnPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_music_play" />
     </RelativeLayout>
 
@@ -104,8 +105,7 @@
         android:layout_marginEnd="0dp"
         android:layout_toStartOf="@+id/tvLikes"
         android:backgroundTint="#00FFFFFF"
-        android:scaleType="fitCenter"
-        android:tint="@color/gray3"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/ic_heart" />
 
     <TextView
@@ -113,8 +113,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTime"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="-4dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="0dp"
         android:layout_toStartOf="@+id/ibtnComment"
         android:textColor="@color/gray2"
@@ -129,7 +129,7 @@
         android:layout_marginEnd="0dp"
         android:layout_toStartOf="@+id/tvComments"
         android:backgroundTint="#00FFFFFF"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:tint="@color/gray3"
         app:srcCompat="@drawable/ic_comments" />
 
@@ -139,8 +139,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTime"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="-4dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="16dp"
         android:textColor="@color/gray2"
         tools:text="999m" />

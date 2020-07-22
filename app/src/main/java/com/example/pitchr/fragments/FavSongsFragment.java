@@ -117,17 +117,19 @@ public class FavSongsFragment extends Fragment {
         adapter.setOnItemClickListener(new SongsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                // Make sure the position is valid
-                if (position != RecyclerView.NO_POSITION) {
-                    // Check if we're playing, pausing, or resuming
-                    if (adapter.currentPosition == position) {
-                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
-                        adapter.currentPosition = -1;
-                    } else {
-                        ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + allSongs.get(position).getSpotifyId());
-                        adapter.currentPosition = position;
+                if (((ParseApplication) (getContext().getApplicationContext())).spotifyExists) {
+                    // Make sure the position is valid
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Check if we're playing, pausing, or resuming
+                        if (adapter.currentPosition == position) {
+                            ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                            adapter.currentPosition = -1;
+                        } else {
+                            ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + allSongs.get(position).getSpotifyId());
+                            adapter.currentPosition = position;
+                        }
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.notifyDataSetChanged();
                 }
             }
         });

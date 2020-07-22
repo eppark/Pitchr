@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
             @Override
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                 Log.d(TAG, "Spotify connected successfully");
+                ((ParseApplication) getApplicationContext()).spotifyExists = true;
+
                 ((ParseApplication) getApplicationContext()).mSpotifyAppRemote = spotifyAppRemote;
 
                 // Set it so that the player repeats the currently playing song and doesn't shuffle
@@ -135,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                     finish();
                 } else if (throwable instanceof CouldNotFindSpotifyApp) {
                     // Show button to download Spotify
+                    ((ParseApplication) getApplicationContext()).spotifyExists = false;
                     Toast.makeText(MainActivity.this, "Please install the Spotify app!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
                 }

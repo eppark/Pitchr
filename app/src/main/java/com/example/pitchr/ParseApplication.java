@@ -23,6 +23,7 @@ import java.util.Map;
 public class ParseApplication extends Application {
 
     public SpotifyAppRemote mSpotifyAppRemote;
+    public boolean spotifyExists;
 
     @Override
     public void onCreate() {
