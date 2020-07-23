@@ -32,8 +32,6 @@ import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Song;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.FunctionCallback;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -45,6 +43,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +51,7 @@ import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.Callback;
@@ -63,7 +63,7 @@ import static androidx.core.content.FileProvider.*;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String TAG = SettingsActivity.class.getSimpleName();
-    public static final int FAV_SONGS_REQUEST_CODE = 4575246;
+    public static final int FAV_SONGS_REQUEST_CODE = 86;
     ActivitySettingsBinding binding;
     public static final int FAV_SONG_LIMIT = 10;
     public SpotifyApi spotifyApi;
@@ -417,20 +417,44 @@ public class SettingsActivity extends AppCompatActivity {
 
                 } else {
                     // If the Song isn't already in the database, we need to save it
-                    song.saveInBackground(new SaveCallback() {
+                    spotifyApi.getService().getTrackAudioFeatures(song.getSpotifyId(), new Callback<AudioFeaturesTrack>() {
                         @Override
-                        public void done(ParseException e) {
-                            favSongsObject.put(FavSongs.KEY_SONG, song);
-                            favSongsObject.saveInBackground(new SaveCallback() {
+                        public void success(AudioFeaturesTrack audioFeaturesTrack, Response response) {
+                            // Get and save the audio features for the song
+                            List<Float> audioFeatures = new ArrayList<>();
+                            audioFeatures.add(audioFeaturesTrack.acousticness);
+                            audioFeatures.add(audioFeaturesTrack.danceability);
+                            audioFeatures.add(audioFeaturesTrack.energy);
+                            audioFeatures.add(audioFeaturesTrack.instrumentalness);
+                            audioFeatures.add(audioFeaturesTrack.liveness);
+                            audioFeatures.add(audioFeaturesTrack.loudness);
+                            audioFeatures.add(audioFeaturesTrack.speechiness);
+                            audioFeatures.add(audioFeaturesTrack.valence);
+                            audioFeatures.add(audioFeaturesTrack.tempo);
+
+                            // Save
+                            song.setAudioFeatures(audioFeatures);
+                            song.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    if (e != null) {
-                                        Log.e(TAG, "Failed to add fav song to database!", e);
-                                        return;
-                                    }
-                                    Log.d(TAG, "Successfully added fav song object to database!");
+                                    favSongsObject.put(FavSongs.KEY_SONG, song);
+                                    favSongsObject.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e != null) {
+                                                Log.e(TAG, "Failed to add fav song to database!", e);
+                                                return;
+                                            }
+                                            Log.d(TAG, "Successfully added fav song object to database!");
+                                        }
+                                    });
                                 }
                             });
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(TAG, "Failed to get audio features", error);
                         }
                     });
                 }

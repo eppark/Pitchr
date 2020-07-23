@@ -38,6 +38,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class FavSongsListActivity extends AppCompatActivity {
 
     public static final String TAG = FavSongsListActivity.class.getSimpleName();
@@ -64,6 +70,8 @@ public class FavSongsListActivity extends AppCompatActivity {
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
         getSupportActionBar().setTitle("Favorite Songs");
 
+        // Hide views first
+        binding.pbLoading.setVisibility(View.GONE);
         binding.tvNoSongs.setVisibility(View.GONE);
 
         allSongs = new ArrayList<>();
@@ -136,6 +144,7 @@ public class FavSongsListActivity extends AppCompatActivity {
                 return true;
             case R.id.miSave:
                 // If the user clicks to save the song, exit
+                binding.pbLoading.setVisibility(View.VISIBLE);
                 createFavSongs();
                 return true;
             default:
@@ -185,6 +194,7 @@ public class FavSongsListActivity extends AppCompatActivity {
                 for (Song song : allSongs) {
                     addToFavSong(song);
                 }
+                binding.pbLoading.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "Successfully updated favorite songs!", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -220,20 +230,46 @@ public class FavSongsListActivity extends AppCompatActivity {
 
                 } else {
                     // If the Song isn't already in the database, we need to save it
-                    song.saveInBackground(new SaveCallback() {
+                    SpotifyApi spotifyApi = new SpotifyApi();
+                    spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
+                    spotifyApi.getService().getTrackAudioFeatures(song.getSpotifyId(), new Callback<AudioFeaturesTrack>() {
                         @Override
-                        public void done(ParseException e) {
-                            favSongsObject.put(FavSongs.KEY_SONG, song);
-                            favSongsObject.saveInBackground(new SaveCallback() {
+                        public void success(AudioFeaturesTrack audioFeaturesTrack, Response response) {
+                            // Get and save the audio features for the song
+                            List<Float> audioFeatures = new ArrayList<>();
+                            audioFeatures.add(audioFeaturesTrack.acousticness);
+                            audioFeatures.add(audioFeaturesTrack.danceability);
+                            audioFeatures.add(audioFeaturesTrack.energy);
+                            audioFeatures.add(audioFeaturesTrack.instrumentalness);
+                            audioFeatures.add(audioFeaturesTrack.liveness);
+                            audioFeatures.add(audioFeaturesTrack.loudness);
+                            audioFeatures.add(audioFeaturesTrack.speechiness);
+                            audioFeatures.add(audioFeaturesTrack.valence);
+                            audioFeatures.add(audioFeaturesTrack.tempo);
+
+                            // Save
+                            song.setAudioFeatures(audioFeatures);
+                            song.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    if (e != null) {
-                                        Log.e(TAG, "Failed to add fav song to database!", e);
-                                        return;
-                                    }
-                                    Log.d(TAG, "Successfully added fav song object to database!");
+                                    favSongsObject.put(FavSongs.KEY_SONG, song);
+                                    favSongsObject.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e != null) {
+                                                Log.e(TAG, "Failed to add fav song to database!", e);
+                                                return;
+                                            }
+                                            Log.d(TAG, "Successfully added fav song object to database!");
+                                        }
+                                    });
                                 }
                             });
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
                         }
                     });
                 }

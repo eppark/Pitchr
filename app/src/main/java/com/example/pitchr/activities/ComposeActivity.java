@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityComposeBinding;
-import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
 import com.parse.FindCallback;
@@ -26,8 +25,15 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -51,6 +57,7 @@ public class ComposeActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("Compose");
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
+        binding.pbLoading.setVisibility(View.GONE); // Hide the loading bar at first
 
         // Get the song
         song = Parcels.unwrap(getIntent().getParcelableExtra(Song.class.getSimpleName()));
@@ -92,6 +99,9 @@ public class ComposeActivity extends AppCompatActivity {
                     Toast.makeText(this, "Caption can't be empty!", Toast.LENGTH_SHORT).show();
                     return true;
                 } else {
+                    // Show the loading bar
+                    binding.pbLoading.setVisibility(View.VISIBLE);
+
                     // Make a new Post
                     Post post = new Post();
                     post.put(Post.KEY_AUTHOR, ParseUser.getCurrentUser());
@@ -105,18 +115,45 @@ public class ComposeActivity extends AppCompatActivity {
                         @Override
                         public void done(List<Song> objects, ParseException e) {
                             if (objects.size() > 0) {
+                                // If it is, we can just save this song
                                 post.put(Post.KEY_SONG, objects.get(0));
                                 savePost(post);
                             } else {
-                                song.saveInBackground(new SaveCallback() {
+                                // If it isn't, we need to save this Song object
+                                SpotifyApi spotifyApi = new SpotifyApi();
+                                spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
+                                spotifyApi.getService().getTrackAudioFeatures(song.getSpotifyId(), new Callback<AudioFeaturesTrack>() {
                                     @Override
-                                    public void done(ParseException e) {
-                                        post.put(Post.KEY_SONG, song);
-                                        savePost(post);
+                                    public void success(AudioFeaturesTrack audioFeaturesTrack, Response response) {
+                                        // Get the audio features into a list
+                                        List<Float> audioFeatures = new ArrayList<>();
+                                        audioFeatures.add(audioFeaturesTrack.acousticness);
+                                        audioFeatures.add(audioFeaturesTrack.danceability);
+                                        audioFeatures.add(audioFeaturesTrack.energy);
+                                        audioFeatures.add(audioFeaturesTrack.instrumentalness);
+                                        audioFeatures.add(audioFeaturesTrack.liveness);
+                                        audioFeatures.add(audioFeaturesTrack.loudness);
+                                        audioFeatures.add(audioFeaturesTrack.speechiness);
+                                        audioFeatures.add(audioFeaturesTrack.valence);
+                                        audioFeatures.add(audioFeaturesTrack.tempo);
+
+                                        // Save
+                                        song.setAudioFeatures(audioFeatures);
+                                        song.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                post.put(Post.KEY_SONG, song);
+                                                savePost(post);
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        Log.e(TAG, "Failed to get audio features", error);
                                     }
                                 });
                             }
-
                         }
                     });
 
@@ -148,6 +185,7 @@ public class ComposeActivity extends AppCompatActivity {
 
                 // Finish the parent activity as well
                 setResult(SearchActivity.RESULT_CODE);
+                binding.pbLoading.setVisibility(View.GONE);
                 finish();
             }
         });

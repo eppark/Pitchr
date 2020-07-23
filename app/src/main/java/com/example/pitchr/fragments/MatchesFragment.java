@@ -28,6 +28,7 @@ import com.example.pitchr.helpers.LinePagerIndicatorDecoration;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Following;
 import com.example.pitchr.models.Match;
+import com.example.pitchr.models.Match2;
 import com.example.pitchr.models.MatchItem;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
@@ -131,8 +132,8 @@ public class MatchesFragment extends Fragment {
                         btnFindMatches.setEnabled(false);
                         tsMatches.setText(getString(R.string.finding_matches_for_you));
 
-                        // Get the matches for the user
-                        getMatches();
+                        // Get the matches for the user depending on the version
+                        getMatches(((ParseApplication) getContext().getApplicationContext()).version);
                     }
                 });
             }
@@ -140,7 +141,7 @@ public class MatchesFragment extends Fragment {
     }
 
     // Get matches for the user
-    private void getMatches() {
+    private void getMatches(int version) {
         // Get the following, since we don't want matches with any users we are following
         followingList = new ArrayList<>();
         ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
@@ -161,14 +162,22 @@ public class MatchesFragment extends Fragment {
                     followingList.add(followingItem.getFollowing());
                 }
 
-                // Now we can query for matches
-                getMatchList();
+                // Now we can query for matches depending on the version
+                switch (version) {
+                    case 1:
+                        getMatchList();
+                        break;
+                    case 2:
+                    default:
+                        getMatch2List();
+                        break;
+                }
             }
         });
-
     }
 
     // Get matches (that aren't users the current already follows)
+    // This function gets matches that follow algorithm 1
     private void getMatchList() {
         // Query
         ParseQuery<Match> matchQuery = ParseQuery.getQuery(Match.class);
@@ -185,14 +194,14 @@ public class MatchesFragment extends Fragment {
                     Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
 
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "null"));
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("failure", "null", "1"));
                     return;
                 }
                 Log.d(TAG, "Query matches success!");
 
                 if (matches.size() > 0) {
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type"), Arrays.asList("success", "existing"));
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "existing", "1"));
 
                     // If the matches already exists, just use that
                     allMatches.clear();
@@ -213,7 +222,7 @@ public class MatchesFragment extends Fragment {
                     ivLoadingAnimation.setVisibility(View.GONE);
                 } else {
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type"), Arrays.asList("success", "new"));
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "new", "1"));
 
                     // If matches don't exist, create them
                     HashMap<String, Object> params = new HashMap<String, Object>();
@@ -232,6 +241,79 @@ public class MatchesFragment extends Fragment {
                             if (attempts < 2) {
                                 // Once we've created the matches, add them to the adapter
                                 getMatchList();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    // Get matches2 (that aren't users the current already follows)
+    // This function gets matches that follow algorithm 2
+    private void getMatch2List() {
+        // Query
+        ParseQuery<Match2> matchQuery = ParseQuery.getQuery(Match2.class);
+        matchQuery.include(Match2.KEY_TO);
+        matchQuery.whereEqualTo(Match2.KEY_FROM, ParseUser.getCurrentUser());
+        matchQuery.whereNotContainedIn(Match2.KEY_TO, Arrays.asList(followingList));
+        matchQuery.addDescendingOrder(Match2.KEY_PERCENT);
+        matchQuery.findInBackground(new FindCallback<Match2>() {
+
+            @Override
+            public void done(List<Match2> matches, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting matches", e);
+                    Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
+
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("failure", "null", "2"));
+                    return;
+                }
+                Log.d(TAG, "Query matches success!");
+
+                if (matches.size() > 0) {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "existing", "2"));
+
+                    // If the matches already exists, just use that
+                    allMatches.clear();
+
+                    for (int i = 0; i < 5; i++) {
+                        if (i < matches.size()) {
+                            allMatches.add(new MatchItem(matches.get(i).getTo(), matches.get(i).getPercent()));
+                        }
+                    }
+                    matchesAdapter.notifyDataSetChanged();
+
+                    // Show the recycler view now!
+                    tsMatches.setVisibility(View.INVISIBLE);
+                    btnFindMatches.setVisibility(View.INVISIBLE);
+                    ivLoadingAnimation.setVisibility(View.INVISIBLE);
+                    tsMatches.setVisibility(View.GONE);
+                    btnFindMatches.setVisibility(View.GONE);
+                    ivLoadingAnimation.setVisibility(View.GONE);
+                } else {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "new", "2"));
+
+                    // If matches don't exist, create them
+                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    params.put("currentuser", ParseUser.getCurrentUser().getObjectId());
+                    ParseCloud.callFunctionInBackground("findMatch2ForUser", params, new FunctionCallback<Boolean>() {
+                        @Override
+                        public void done(Boolean object, ParseException e) {
+                            if (e != null) {
+                                Log.e(TAG, "Issue with creating matches", e);
+                                Toast.makeText(getContext(), "Failed to create matches", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            // We only want to try once in case there is an error on the backend to prevent looping forever
+                            attempts++;
+                            if (attempts < 2) {
+                                // Once we've created the matches, add them to the adapter
+                                getMatch2List();
                             }
                         }
                     });

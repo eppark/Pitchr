@@ -15,15 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
-import com.example.pitchr.activities.MainActivity;
 import com.example.pitchr.activities.SettingsActivity;
 import com.example.pitchr.adapters.SongsAdapter;
-import com.example.pitchr.adapters.ViewPagerAdapter;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Song;
@@ -42,7 +41,7 @@ public class FavSongsFragment extends Fragment {
     public static final String TAG = FavSongsFragment.class.getSimpleName();
     public static final int RESULT_CODE = 4567;
     ParseUser user;
-    RecyclerView rvSongs;
+    public RecyclerView rvSongs;
     SongsAdapter adapter;
     ArrayList<Song> allSongs;
     SwipeRefreshLayout swipeContainer;

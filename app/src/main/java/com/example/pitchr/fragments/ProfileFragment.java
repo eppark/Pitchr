@@ -2,6 +2,7 @@ package com.example.pitchr.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.ResultReceiver;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -254,21 +257,27 @@ public class ProfileFragment extends Fragment {
                     // LOG TO ANALYTICS
                     ParseApplication.logEvent("shareEvent", Arrays.asList("status", "type"), Arrays.asList("success", "facebook"));
 
-                    // Get the view image
-                    view.setDrawingCacheEnabled(true);
-                    Bitmap bitmap = view.getDrawingCache();
+                    // Get the view image of favorite songs
+                    RecyclerView layoutView = ((FavSongsFragment) ((ViewPagerAdapter) htabViewpager.getAdapter()).getItem(0)).rvSongs;
+                    if (layoutView.getAdapter().getItemCount() == 0) {
+                        Toast.makeText(getContext(), "Add some favorite songs first!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        layoutView.measure(View.MeasureSpec.makeMeasureSpec(layoutView.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                        Bitmap bitmap = Bitmap.createBitmap(layoutView.getWidth(), layoutView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                        layoutView.draw(new Canvas(bitmap));
 
-                    // Share to Facebook
-                    SharePhoto photo = new SharePhoto.Builder()
-                            .setBitmap(bitmap)
-                            .build();
-                    SharePhotoContent content = new SharePhotoContent.Builder()
-                            .addPhoto(photo)
-                            .setShareHashtag(new ShareHashtag.Builder()
-                                    .setHashtag("#Pitchr")
-                                    .build())
-                            .build();
-                    ShareDialog.show(ProfileFragment.this, content);
+                        // Share to Facebook
+                        SharePhoto photo = new SharePhoto.Builder()
+                                .setBitmap(bitmap)
+                                .build();
+                        SharePhotoContent content = new SharePhotoContent.Builder()
+                                .addPhoto(photo)
+                                .setShareHashtag(new ShareHashtag.Builder()
+                                        .setHashtag("#Pitchr")
+                                        .build())
+                                .build();
+                        ShareDialog.show(ProfileFragment.this, content);
+                    }
                 }
             });
 
@@ -279,31 +288,37 @@ public class ProfileFragment extends Fragment {
                     // LOG TO ANALYTICS
                     ParseApplication.logEvent("shareEvent", Arrays.asList("status", "type"), Arrays.asList("success", "twitter"));
 
-                    // Get the view image
-                    view.setDrawingCacheEnabled(true);
-                    Bitmap bitmap = view.getDrawingCache();
+                    // Get the view image of favorite songs
+                    RecyclerView layoutView = ((FavSongsFragment) ((ViewPagerAdapter) htabViewpager.getAdapter()).getItem(0)).rvSongs;
+                    if (layoutView.getAdapter().getItemCount() == 0) {
+                        Toast.makeText(getContext(), "Add some favorite songs first!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        layoutView.measure(View.MeasureSpec.makeMeasureSpec(layoutView.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                        Bitmap bitmap = Bitmap.createBitmap(layoutView.getWidth(), layoutView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                        layoutView.draw(new Canvas(bitmap));
 
-                    // Save and get URI
-                    Uri uri = bitmapToUri(bitmap);
-                    if (uri == null) {
-                        Log.d(TAG, "Failed to save image!");
-                        Toast.makeText(getContext(), "Failed to generate share image!", Toast.LENGTH_SHORT).show();
-                        return;
+                        // Save and get URI
+                        Uri uri = bitmapToUri(bitmap);
+                        if (uri == null) {
+                            Log.d(TAG, "Failed to save image!");
+                            Toast.makeText(getContext(), "Failed to generate share image!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // Authorize Twitter
+                        TwitterConfig config = new TwitterConfig.Builder(getContext())
+                                .logger(new DefaultLogger(Log.DEBUG))
+                                .twitterAuthConfig(new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret)))
+                                .debug(true)
+                                .build();
+                        Twitter.initialize(config);
+
+                        // Share to Twitter
+                        TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
+                                .text("Check out my favorite songs on #Pitchr !")
+                                .image(uri);
+                        builder.show();
                     }
-
-                    // Authorize Twitter
-                    TwitterConfig config = new TwitterConfig.Builder(getContext())
-                            .logger(new DefaultLogger(Log.DEBUG))
-                            .twitterAuthConfig(new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret)))
-                            .debug(true)
-                            .build();
-                    Twitter.initialize(config);
-
-                    // Share to Twitter
-                    TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
-                            .text("Check out my #Pitchr profile!")
-                            .image(uri);
-                    builder.show();
                 }
             });
         }

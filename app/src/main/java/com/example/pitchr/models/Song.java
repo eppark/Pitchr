@@ -1,5 +1,6 @@
 package com.example.pitchr.models;
 
+import com.example.pitchr.activities.MainActivity;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -17,6 +18,7 @@ public class Song extends ParseObject {
     public static final String KEY_SPOTIFY_ID = "spotifyId";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_CREATED_AT = "createdAt";
+    public static final String KEY_AUDIO_FEATURES = "audioFeatures";
     private static final String TAG = Song.class.getSimpleName();
 
     public String getName() {
@@ -44,6 +46,13 @@ public class Song extends ParseObject {
         saveInBackground();
     }
 
+    public List<Float> getAudioFeatures() {return getList(KEY_AUDIO_FEATURES); }
+
+    public void setAudioFeatures(List<Float> audioFeatures) {
+        put(KEY_AUDIO_FEATURES, audioFeatures);
+        saveInBackground();
+    }
+
     public String getImageUrl() {
         return getString(KEY_IMAGE);
     }
@@ -55,14 +64,14 @@ public class Song extends ParseObject {
     // Get a single Song object from a Track
     public static Song songFromTrack(Track track) {
         Song song = new Song();
-        song.put("name", track.name);
+        song.put(KEY_NAME, track.name);
         List<String> artistNames = new ArrayList<>();
         for (ArtistSimple artist : track.artists) {
             artistNames.add(artist.name);
         }
-        song.put("artists", artistNames);
-        song.put("spotifyId", track.id);
-        song.put("image", track.album.images.get(0).url);
+        song.put(KEY_ARTISTS, artistNames);
+        song.put(KEY_SPOTIFY_ID, track.id);
+        song.put(KEY_IMAGE, track.album.images.get(0).url);
         return song;
     }
 

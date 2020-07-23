@@ -139,6 +139,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void success(TracksPager tracksPager, Response response) {
                 Log.d(TAG, "Search tracks success!");
+                // Get audio features
                 aSongs.addAll(Song.songsFromTracksList(tracksPager.tracks.items));
                 songsAdapter.notifyDataSetChanged();
                 binding.pbProgressAction.setVisibility(View.GONE);

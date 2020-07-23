@@ -17,6 +17,15 @@
         android:layout_below="@id/toolbar"
         app:titleTextColor="@android:color/white" />
 
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/spotifyGreen"
+        android:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/rlUser"
         android:layout_below="@id/toolbar"

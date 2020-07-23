@@ -24,6 +24,7 @@ public class ParseApplication extends Application {
 
     public SpotifyAppRemote mSpotifyAppRemote;
     public boolean spotifyExists;
+    public int version = 2;
 
     @Override
     public void onCreate() {
