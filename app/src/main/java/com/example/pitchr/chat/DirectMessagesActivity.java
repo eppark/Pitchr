@@ -90,12 +90,24 @@ public class DirectMessagesActivity extends AppCompatActivity {
         queryMessages(0);
     }
 
-    // Only get messages from people who are following you
+    // Only get messages from people who are following you and you are following
     private void queryMessages(int page) {
-        ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
+        // Get messages from people you are following
+        ParseQuery<Following> followingParseQuery = ParseQuery.getQuery(Following.class);
+        followingParseQuery.whereEqualTo(Following.KEY_FOLLOWING, ParseUser.getCurrentUser());
+
+        // Get messages from people who are following you
+        ParseQuery<Following> followerParseQuery = ParseQuery.getQuery(Following.class);
+        followerParseQuery.whereEqualTo(Following.KEY_FOLLOWED_BY, ParseUser.getCurrentUser());
+
+        // Now combine them
+        List<ParseQuery<Following>> queries = new ArrayList<>();
+        queries.add(followerParseQuery);
+        queries.add(followingParseQuery);
+
+        ParseQuery<Following> query = ParseQuery.or(queries);
         query.include(Following.KEY_FOLLOWED_BY);
         query.include(Following.KEY_FOLLOWING);
-        query.whereEqualTo(Following.KEY_FOLLOWING, ParseUser.getCurrentUser());
         query.setSkip(20 * page);
         query.setLimit(20); // Only show 20 users at a time
         query.addDescendingOrder(Following.KEY_CREATED_AT);
@@ -108,8 +120,26 @@ public class DirectMessagesActivity extends AppCompatActivity {
                     return;
                 }
                 Log.d(TAG, "Query followers success!");
+
+                // Get all the users
                 for (Following followingItem : userList) {
-                    allUsers.add(followingItem.getFollowedBy());
+                    ParseUser other;
+                    if (followingItem.getFollowedBy().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                        other = followingItem.getFollowing();
+                    } else {
+                        other = followingItem.getFollowedBy();
+                    }
+                    // We only want to add the user if it is new
+                    boolean isNew = true;
+                    for (ParseUser current : allUsers) {
+                        if (current.getObjectId().equals(other.getObjectId())) {
+                            isNew = false;
+                            break;
+                        }
+                    }
+                    if (isNew) {
+                        allUsers.add(other);
+                    }
                 }
                 if (allUsers.size() == 0) {
                     // If we have no users

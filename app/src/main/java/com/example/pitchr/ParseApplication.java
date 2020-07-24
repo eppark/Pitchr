@@ -9,6 +9,7 @@ import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Following;
 import com.example.pitchr.models.Match;
+import com.example.pitchr.models.Match2;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
 import com.parse.Parse;
@@ -39,6 +40,7 @@ public class ParseApplication extends Application {
         ParseObject.registerSubclass(DM.class);
         ParseObject.registerSubclass(Message.class);
         ParseObject.registerSubclass(Match.class);
+        ParseObject.registerSubclass(Match2.class);
 
         // set applicationId, and server server based on the values in the back4app settings.
         // clientKey is not needed unless explicitly configured
