@@ -25,14 +25,16 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradient_animation"
         android:clickable="false"
-        tools:visibility="gone" />
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/match_bg"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/btnFindMatches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="274dp"
         android:backgroundTint="@color/gray2"
         android:padding="20dp"
         android:text="@string/find_a_match"
@@ -45,7 +47,7 @@
         android:layout_width="336dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="124dp"
         tools:visibility="visible">
 
         <TextView

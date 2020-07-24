@@ -26,31 +26,27 @@ import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.helpers.TimeFormatter;
 import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.Post;
+import com.example.pitchr.models.PostItem;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.spotify.android.appremote.api.PlayerApi;
-import com.spotify.protocol.client.CallResult;
-import com.spotify.protocol.client.Result;
-import com.spotify.protocol.types.PlayerState;
 
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     public static final String TAG = PostsAdapter.class.getSimpleName();
     private Context context;
-    private List<Post> posts;
+    private List<PostItem> posts;
     int currentPosition;
 
-    public PostsAdapter(Context context, List<Post> posts) {
+    public PostsAdapter(Context context, List<PostItem> posts) {
         this.context = context;
         this.posts = posts;
         currentPosition = -1;
@@ -65,7 +61,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Post post = posts.get(position);
+        PostItem post = posts.get(position);
 
         // Set play and paused correctly
         if (position == currentPosition) {
@@ -105,6 +101,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageButton ibtnPlay;
         private boolean paused;
         int likes;
+        private boolean isRec;
+        View divider;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -120,16 +118,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvLikes = (TextView) itemView.findViewById(R.id.tvLikes);
             tvComments = (TextView) itemView.findViewById(R.id.tvComments);
             ibtnPlay = (ImageButton) itemView.findViewById(R.id.ibtnPlay);
+            divider = (View) itemView.findViewById(R.id.divider);
             likes = 0;
 
             // When the user clicks on text or a profile picture, take them to the profile page for that user
             View.OnClickListener profileListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser()), TAG);
-                    ft.addToBackStack(TAG);
-                    ft.commit();
+                    if (!isRec) {
+                        FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser()), TAG);
+                        ft.addToBackStack(TAG);
+                        ft.commit();
+                    }
                 }
             };
             tvUsername.setOnClickListener(profileListener);
@@ -162,8 +163,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    view.performClick();
-                    return gestureDetector.onTouchEvent(motionEvent);
+                    if (!isRec) {
+                        view.performClick();
+                        return gestureDetector.onTouchEvent(motionEvent);
+                    }
+                    return true;
                 }
             };
             tvCaption.setOnTouchListener(touchListener);
@@ -204,33 +208,58 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             });
         }
 
-        public void bind(Post post) {
-            currentPost = post;
-            tvUsername.setText(post.getUser().getUsername());
-            tvCaption.setText(post.getCaption());
-            tvSongName.setText(post.getSong().getName());
-            tvArtists.setText(TextUtils.join(", ", post.getSong().getArtists()));
+        public void bind(PostItem post) {
+            currentPost = post.post;
+            isRec = post.isRec;
 
-            // Set the time to the correct format
-            tvTime.setText(TimeFormatter.getTimeDifference(post.getCreatedAt().toString()));
+            // If this is a normal song post, we just want to show the post
+            if (!isRec) {
+                // Show views
+                tvCaption.setVisibility(View.VISIBLE);
+                tvComments.setVisibility(View.VISIBLE);
+                tvLikes.setVisibility(View.VISIBLE);
+                ibtnComment.setVisibility(View.VISIBLE);
+                ibtnLike.setVisibility(View.VISIBLE);
+                tvCaption.setText(currentPost.getCaption());
+                tvUsername.setText(currentPost.getUser().getUsername());
 
-            // Set the images if we have them
-            String image = post.getSong().getImageUrl();
+                // Set the time to the correct format
+                tvTime.setText(TimeFormatter.getTimeDifference(currentPost.getCreatedAt().toString()));
+
+                // Set the pfp image if we have it
+                ParseFile pfpImage = currentPost.getUser().getParseFile("pfp");
+                if (pfpImage != null) {
+                    Glide.with(context).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
+                } else {
+                    Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
+                }
+
+                // Show if the user likes the post and the comment count
+                queryLiked();
+                setCommentCount();
+            } else {
+                // Else, this is a recommendation, so we want to hide the views accordingly
+                tvCaption.setVisibility(View.GONE);
+                tvComments.setVisibility(View.GONE);
+                tvLikes.setVisibility(View.GONE);
+                ibtnComment.setVisibility(View.GONE);
+                ibtnLike.setVisibility(View.GONE);
+
+                // Show this is based on a match
+                tvTime.setText(R.string.based_on_your_matches);
+                tvUsername.setText(R.string.recommended_for_you);
+                Glide.with(context).load(R.drawable.pitchr_default).circleCrop().into(ivPfp);
+            }
+
+            // Set song views
+            tvSongName.setText(currentPost.getSong().getName());
+            tvArtists.setText(TextUtils.join(", ", currentPost.getSong().getArtists()));
+            String image = currentPost.getSong().getImageUrl();
             if (image != null) {
                 Glide.with(context).load(image).into(ivSongImage);
             } else {
                 ivSongImage.setImageDrawable(context.getDrawable(R.drawable.music_placeholder));
             }
-            ParseFile pfpImage = post.getUser().getParseFile("pfp");
-            if (pfpImage != null) {
-                Glide.with(context).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
-            } else {
-                Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
-            }
-
-            // Show if the user likes the post and the comment count
-            queryLiked();
-            setCommentCount();
         }
 
         // Query if the post is liked from database
@@ -344,7 +373,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     }
 
     // Add a list of items
-    public void addAll(List<Post> list) {
+    public void addAll(List<PostItem> list) {
         posts.addAll(list);
         notifyDataSetChanged();
     }

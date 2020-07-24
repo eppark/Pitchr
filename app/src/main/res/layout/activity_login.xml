@@ -6,62 +6,76 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_match"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".activities.LoginActivity">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/pitchr_name_white"
-        tools:srcCompat="@drawable/pitchr_name_white" />
-
-    <EditText
-        android:id="@+id/etUsername"
-        android:layout_width="match_parent"
+        android:id="@+id/ivLoginBackground"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/spotifyGreen"
-        android:ems="10"
-        android:hint="@string/username"
-        android:maxLines="1"
-        android:textColor="@color/white" />
+        android:alpha="0.7"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/login_image" />
 
-    <EditText
-        android:id="@+id/etPassword"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etUsername"
-        android:layout_marginTop="0dp"
-        android:backgroundTint="@color/spotifyGreen"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:textColor="@color/white" />
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_below="@+id/etPassword"
-        android:layout_marginTop="0dp"
-        android:backgroundTint="@color/spotifyGreen"
-        android:text="@string/login"
-        android:textColor="@color/white" />
+        <ImageView
+            android:id="@+id/ivLogoLogin"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/pitchr_name_white"
+            tools:srcCompat="@drawable/pitchr_name_white" />
 
-    <Button
-        android:id="@+id/btnSignup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLogin"
-        android:layout_marginTop="0dp"
-        android:backgroundTint="@color/gray1"
-        android:text="@string/sign_up"
-        android:textColor="@color/gray3" />
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivLogoLogin"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/spotifyGreen"
+            android:ems="10"
+            android:hint="@string/username"
+            android:maxLines="1"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etUsername"
+            android:layout_marginTop="0dp"
+            android:backgroundTint="@color/spotifyGreen"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/etPassword"
+            android:layout_marginTop="0dp"
+            android:backgroundTint="@color/spotifyGreen"
+            android:text="@string/login"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnSignup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnLogin"
+            android:layout_marginTop="0dp"
+            android:backgroundTint="@color/gray1"
+            android:text="@string/sign_up"
+            android:textColor="@color/gray3" />
+
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/pbLoading"
@@ -69,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="64dp"
         android:indeterminateTint="@color/yellow"
         tools:visibility="visible" />
 

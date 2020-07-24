@@ -57,7 +57,7 @@ public class ComposeActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("Compose");
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
-        binding.pbLoading.setVisibility(View.GONE); // Hide the loading bar at first
+        binding.pbLoading.setVisibility(View.GONE);
 
         // Get the song
         song = Parcels.unwrap(getIntent().getParcelableExtra(Song.class.getSimpleName()));
@@ -99,7 +99,7 @@ public class ComposeActivity extends AppCompatActivity {
                     Toast.makeText(this, "Caption can't be empty!", Toast.LENGTH_SHORT).show();
                     return true;
                 } else {
-                    // Show the loading bar
+                    // Show loading bar
                     binding.pbLoading.setVisibility(View.VISIBLE);
 
                     // Make a new Post
@@ -183,9 +183,11 @@ public class ComposeActivity extends AppCompatActivity {
                 // LOG TO ANALYTICS
                 ParseApplication.logEvent("postEvent", Arrays.asList("status"), Arrays.asList("success"));
 
+                // Hide loading bar
+                binding.pbLoading.setVisibility(View.GONE);
+
                 // Finish the parent activity as well
                 setResult(SearchActivity.RESULT_CODE);
-                binding.pbLoading.setVisibility(View.GONE);
                 finish();
             }
         });

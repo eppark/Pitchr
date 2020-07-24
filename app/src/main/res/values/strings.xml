@@ -42,4 +42,6 @@
     <string name="add_favorite_songs">Add Favorite Songs</string>
     <string name="follow">FOLLOW</string>
     <string name="following">FOLLOWING</string>
+    <string name="based_on_your_matches">Based on your matches</string>
+    <string name="recommended_for_you">Recommended for you</string>
 </resources>

@@ -31,8 +31,13 @@ import com.example.pitchr.activities.SearchActivity;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.chat.DirectMessagesActivity;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
+import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Following;
+import com.example.pitchr.models.Match;
+import com.example.pitchr.models.Match2;
 import com.example.pitchr.models.Post;
+import com.example.pitchr.models.PostItem;
+import com.example.pitchr.models.Song;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -49,12 +54,15 @@ public class PostsFragment extends Fragment {
     private static final int RESULT_CODE = 11037;
     protected RecyclerView rvPosts;
     protected PostsAdapter adapter;
-    protected List<Post> allPosts;
+    protected List<PostItem> allPosts;
     protected List<ParseUser> following;
+    List<Song> songRecs;
+    List<Song> myFavSongs;
     Button btnFindUsers;
     TextView tvNoPosts;
     ProgressBar pbLoading;
     FloatingActionButton fabCompose;
+    private int counter;
 
     // Swipe to refresh and endless scrolling
     private SwipeRefreshLayout swipeContainer;
@@ -95,6 +103,11 @@ public class PostsFragment extends Fragment {
         tvNoPosts = (TextView) view.findViewById(R.id.tvNoPosts);
         tvNoPosts.setVisibility(View.GONE);
         btnFindUsers.setVisibility(View.GONE); // Hide lack of posts at first
+        counter = 0;
+
+        // Set up array lists for recommendations
+        myFavSongs = new ArrayList<>();
+        songRecs = new ArrayList<>();
 
         // Set posts, adapter, and layout
         allPosts = new ArrayList<>();
@@ -169,7 +182,147 @@ public class PostsFragment extends Fragment {
     private void initialQuery() {
         adapter.clear();
         pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-        queryFollowing(0);
+
+        // Get the current user's favorite songs
+        ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
+        query.include(FavSongs.KEY_USER);
+        query.include(FavSongs.KEY_SONG);
+        query.whereEqualTo(FavSongs.KEY_USER, ParseUser.getCurrentUser());
+        query.setLimit(20); // Only show 20 songs at a time
+        query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
+        query.findInBackground(new FindCallback<FavSongs>() {
+            @Override
+            public void done(List<FavSongs> songsList, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting fav songs", e);
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.d(TAG, "Query fav songs success!");
+                for (FavSongs songItem : songsList) {
+                    myFavSongs.add(songItem.getSong());
+                }
+
+                switch (((ParseApplication) getContext().getApplicationContext()).version) {
+                    case 1:
+                        // Query for the users that the current user is matched with
+                        // Use algorithm 1
+                        ParseQuery<Match> matchQuery = ParseQuery.getQuery(Match.class);
+                        matchQuery.include(Match.KEY_TO);
+                        matchQuery.whereEqualTo(Match.KEY_FROM, ParseUser.getCurrentUser());
+                        matchQuery.addDescendingOrder(Match.KEY_PERCENT);
+                        matchQuery.setLimit(5);
+                        matchQuery.findInBackground(new FindCallback<Match>() {
+                            @Override
+                            public void done(List<Match> matches, ParseException e) {
+                                if (e != null) {
+                                    Log.e(TAG, "Issue with getting matches", e);
+                                    Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                Log.d(TAG, "Query matches success!");
+
+                                if (matches.size() > 0) {
+                                    // Get the favorite songs for each match
+                                    for (Match match : matches) {
+                                        // We don't want exact matches
+                                        if (match.getPercent() < 1.0) {
+                                            ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
+                                            query.include(FavSongs.KEY_USER);
+                                            query.include(FavSongs.KEY_SONG);
+                                            query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
+                                            query.setLimit(20); // Only show 20 songs at a time
+                                            query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
+                                            query.findInBackground(new FindCallback<FavSongs>() {
+                                                @Override
+                                                public void done(List<FavSongs> songsList, ParseException e) {
+                                                    if (e != null) {
+                                                        Log.e(TAG, "Issue with getting fav songs", e);
+                                                        return;
+                                                    }
+                                                    Log.d(TAG, "Query fav songs success!");
+
+                                                    // If the song isn't in the current user's favorite songs list, we can add is to our recommended
+                                                    for (FavSongs songItem : songsList) {
+                                                        if (!myFavSongs.contains(songItem.getSong())) {
+                                                            songRecs.add(songItem.getSong());
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                                // Query for the users that the current user is following
+                                queryFollowing(0);
+                            }
+                        });
+                        break;
+                    case 2:
+                    default:
+                        // Query for the users that the current user is matched with
+                        // Use algorithm 2
+                        ParseQuery<Match2> match2Query = ParseQuery.getQuery(Match2.class);
+                        match2Query.include(Match2.KEY_TO);
+                        match2Query.whereEqualTo(Match2.KEY_FROM, ParseUser.getCurrentUser());
+                        match2Query.addDescendingOrder(Match2.KEY_PERCENT);
+                        match2Query.setLimit(5);
+                        match2Query.findInBackground(new FindCallback<Match2>() {
+                            @Override
+                            public void done(List<Match2> matches, ParseException e) {
+                                if (e != null) {
+                                    Log.e(TAG, "Issue with getting matches", e);
+                                    Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                Log.d(TAG, "Query matches success!");
+
+                                if (matches.size() > 0) {
+                                    // Get the favorite songs for each match
+                                    for (Match2 match : matches) {
+                                        // We don't want exact matches
+                                        if (match.getPercent() < 1.0) {
+                                            ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
+                                            query.include(FavSongs.KEY_USER);
+                                            query.include(FavSongs.KEY_SONG);
+                                            query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
+                                            query.setLimit(20); // Only show 20 songs at a time
+                                            query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
+                                            query.findInBackground(new FindCallback<FavSongs>() {
+                                                @Override
+                                                public void done(List<FavSongs> songsList, ParseException e) {
+                                                    if (e != null) {
+                                                        Log.e(TAG, "Issue with getting fav songs", e);
+                                                        return;
+                                                    }
+                                                    Log.d(TAG, "Query fav songs success!");
+
+                                                    // If the song isn't in the current user's favorite songs list, we can add is to our recommended
+                                                    for (FavSongs songItem : songsList) {
+                                                        boolean newSong = true;
+                                                        for (Song mySong : myFavSongs) {
+                                                            if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId())) {
+                                                                newSong = false;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (newSong) {
+                                                            songRecs.add(songItem.getSong());
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                                // Query for the users that the current user is following
+                                queryFollowing(0);
+                            }
+                        });
+                        break;
+                }
+            }
+        });
     }
 
     // Query posts by the current user and by the user's following list
@@ -215,7 +368,19 @@ public class PostsFragment extends Fragment {
                     return;
                 }
                 Log.d(TAG, "Query posts success!");
-                allPosts.addAll(posts);
+
+                // Add each of the posts
+                for (Post post : posts) {
+                    allPosts.add(new PostItem(post, false));
+
+                    // For every 5th post, show a recommendation
+                    if ((allPosts.size() - counter) % 5 == 0 && songRecs.size() > 0) {
+                        Post songRecPost = new Post();
+                        songRecPost.setSong(songRecs.remove(0));
+                        allPosts.add(new PostItem(songRecPost, true));
+                        counter++;
+                    }
+                }
                 pbLoading.setVisibility(View.GONE); // Hide progress bar
                 adapter.notifyDataSetChanged();
 
