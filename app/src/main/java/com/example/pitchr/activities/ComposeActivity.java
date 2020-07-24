@@ -187,7 +187,7 @@ public class ComposeActivity extends AppCompatActivity {
                 binding.pbLoading.setVisibility(View.GONE);
 
                 // Finish the parent activity as well
-                setResult(SearchActivity.RESULT_CODE);
+                setResult(SearchSongsActivity.RESULT_CODE);
                 finish();
             }
         });

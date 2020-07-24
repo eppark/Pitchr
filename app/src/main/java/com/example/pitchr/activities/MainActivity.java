@@ -23,6 +23,7 @@ import com.example.pitchr.fragments.DetailsFragment;
 import com.example.pitchr.fragments.MatchesFragment;
 import com.example.pitchr.fragments.PostsFragment;
 import com.example.pitchr.fragments.ProfileFragment;
+import com.example.pitchr.fragments.SearchUsersFragment;
 import com.example.pitchr.models.Comment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
@@ -35,16 +36,7 @@ import com.spotify.android.appremote.api.error.UserNotAuthorizedException;
 import com.spotify.protocol.types.Repeat;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity implements CommentDialogFragment.CommentDialogFragmentListener {
 
@@ -83,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                         break;
                     case R.id.action_match:
                         fragment = new MatchesFragment();
+                        break;
+                    case R.id.action_search:
+                        fragment = new SearchUsersFragment();
                         break;
                     case R.id.action_profile:
                     default:
@@ -165,31 +160,5 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         super.onResume();
         onStop();
         connect();
-    }
-
-    public static void getAudioFeatures(List<Float> audioFeatures, String id) {
-        // Use Spotify service
-        SpotifyApi spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
-        spotifyApi.getService().getTrackAudioFeatures(id, new Callback<AudioFeaturesTrack>() {
-            @Override
-            public void success(AudioFeaturesTrack audioFeaturesTrack, Response response) {
-                // Put into list
-                audioFeatures.add(audioFeaturesTrack.acousticness);
-                audioFeatures.add(audioFeaturesTrack.danceability);
-                audioFeatures.add(audioFeaturesTrack.energy);
-                audioFeatures.add(audioFeaturesTrack.instrumentalness);
-                audioFeatures.add(audioFeaturesTrack.liveness);
-                audioFeatures.add(audioFeaturesTrack.loudness);
-                audioFeatures.add(audioFeaturesTrack.speechiness);
-                audioFeatures.add(audioFeaturesTrack.valence);
-                audioFeatures.add(audioFeaturesTrack.tempo);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "Failed to get audio features", error);
-            }
-        });
     }
 }

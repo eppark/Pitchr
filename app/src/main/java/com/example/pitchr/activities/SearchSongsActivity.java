@@ -37,9 +37,9 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.client.Response;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchSongsActivity extends AppCompatActivity {
 
-    public static final String TAG = SearchActivity.class.getSimpleName();
+    public static final String TAG = SearchSongsActivity.class.getSimpleName();
     public static final int RESULT_CODE = 11037;
     SpotifyService spotify;
     ActivitySearchBinding binding;
@@ -95,7 +95,7 @@ public class SearchActivity extends AppCompatActivity {
                         finish();
                     } else {
                         // Create an intent for the new activity
-                        Intent intent = new Intent(SearchActivity.this, ComposeActivity.class);
+                        Intent intent = new Intent(SearchSongsActivity.this, ComposeActivity.class);
                         intent.putExtra(Song.class.getSimpleName(), Parcels.wrap(song)); // serialize the movie using Parceler
 
                         // Show the activity

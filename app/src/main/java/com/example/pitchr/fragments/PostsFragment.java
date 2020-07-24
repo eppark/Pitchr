@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.example.pitchr.ParseApplication;
 import com.example.pitchr.R;
 import com.example.pitchr.activities.MainActivity;
-import com.example.pitchr.activities.SearchActivity;
+import com.example.pitchr.activities.SearchSongsActivity;
 import com.example.pitchr.adapters.PostsAdapter;
 import com.example.pitchr.chat.DirectMessagesActivity;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
@@ -160,7 +160,7 @@ public class PostsFragment extends Fragment {
         fabCompose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getContext(), SearchActivity.class);
+                Intent i = new Intent(getContext(), SearchSongsActivity.class);
                 startActivityForResult(i, RESULT_CODE);
             }
         });

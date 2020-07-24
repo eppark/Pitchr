@@ -1,17 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchSongsActivity">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/spotifyGreen"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white" />
+    tools:context=".fragments.SearchUsersFragment">
 
     <ProgressBar
         android:id="@+id/pbProgressAction"
@@ -23,19 +16,18 @@
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSongs"
+        android:id="@+id/rvUsers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        />
 
     <TextView
-        android:id="@+id/tvSearchSongs"
+        android:id="@+id/tvNoUsers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
-        android:text="No songs selected"
+        android:text="@string/no_users_selected"
         android:textColor="@color/gray1" />
 
 </RelativeLayout>

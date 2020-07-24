@@ -44,4 +44,6 @@
     <string name="following">FOLLOWING</string>
     <string name="based_on_your_matches">Based on your matches</string>
     <string name="recommended_for_you">Recommended for you</string>
+    <string name="search_for_users">Search for users...</string>
+    <string name="no_users_selected">No users selected</string>
 </resources>
