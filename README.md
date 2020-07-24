@@ -29,30 +29,42 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 
 **Required Must-have Stories**
 
-- [ ] Users can create an account/log in, bringing up the main feed with a fade-in animation
-- [ ] Users can log out
-- [ ] Users can connect their Spotify account
-- [ ] Users can post Spotify songs
-    - [ ] Users can search songs from Spotify
-    - [ ] Users can double-tap to like a post
-- [ ] Users can take a picture as their profile picture
-- [ ] Users can find recommended "matched" users
-    - [ ] The app searches through other accounts' favorite songs to find exact song matches
-- [ ] Parse is used to keep track of the data
-- [ ] Material.io library is used for adding visual polish/animations between screens
+- [x] Users can create an account/log in
+- [x] Users can log out
+- [x] Users can connect their Spotify account
+- [x] Users can post Spotify songs
+    - [x] Users can search songs from Spotify
+    - [x] Users can double-tap to like a post
+- [x] Users can take a picture as their profile picture
+- [x] Users can find recommended "matched" users
+    - [x] The app searches through other accounts' favorite songs to find exact song matches
+- [x] Parse is used to keep track of the data
+- [x] Material.io library is used for adding visual polish/animations between screens
 
 **Optional Nice-to-have Stories**
 
-- [ ] Users can see their own profile
-    - [ ] Contains their own song posts
-    - [ ] Contains their following list
-    - [ ] Contains their follower list
+- [x] Users can see details page of post and comment/like
+- [x] Users can set their profile pic from their gallery
+- [x] Users can add their favorite songs to their profile
+    - [x] Users can use Spotify to automatically generate their favorite songs
+    - [x] Users can manually add songs from Spotify
+- [x] Users can see their own profile
+    - [x] Contains their favorite songs
+    - [x] Contains their following list
+    - [x] Contains their follower list
+- [x] Users can share their profiles to other platforms
+    - [x] App uses Facebook + Twitter SDKs to share the user's favorite songs
+- [x] Song matches are done using Cloud Code, so jobs can be run to update them daily
 - [ ] Song matches are intentionally not exact so users can find new music to listen to
     - [ ] Song matches also use matching genres
-    - [ ] Song matches also use matching artists
+    - [x] Song matches also use matching artists
+    - [x] Song matches also use audio features from Spotify
     - [ ] Song matches also use recommended songs
-    - [ ] Song matches also use recommended artists 
-- [ ] Users can tap a song post to hear it on Spotify (embed?)
+    - [ ] Song matches also use recommended artists
+- [x] Users can tap a song post to hear it on Spotify
+- [x] App brings up recommended songs to the user's feed
+- [ ] Users can search for other users
+- [x] App logs to Parse Analytics for statistical purposes
 
 ### 2. Screen Archetypes
 
