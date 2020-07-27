@@ -116,7 +116,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             allSongs = new ArrayList<>();
             rvFavSongs.setLayoutManager(layoutManager);
-            adapter = new SongsAdapter(context, allSongs);
+            adapter = new SongsAdapter(context, allSongs, SongsAdapter.TYPE_SONG);
             adapter.setOnItemClickListener(new SongsAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View itemView, int position) {

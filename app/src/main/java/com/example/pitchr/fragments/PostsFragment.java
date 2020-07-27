@@ -56,13 +56,12 @@ public class PostsFragment extends Fragment {
     protected PostsAdapter adapter;
     protected List<PostItem> allPosts;
     protected List<ParseUser> following;
-    List<Song> songRecs;
+    ArrayList<Song> songRecs;
     List<Song> myFavSongs;
     Button btnFindUsers;
     TextView tvNoPosts;
     ProgressBar pbLoading;
     FloatingActionButton fabCompose;
-    private int counter;
 
     // Swipe to refresh and endless scrolling
     private SwipeRefreshLayout swipeContainer;
@@ -103,7 +102,6 @@ public class PostsFragment extends Fragment {
         tvNoPosts = (TextView) view.findViewById(R.id.tvNoPosts);
         tvNoPosts.setVisibility(View.GONE);
         btnFindUsers.setVisibility(View.GONE); // Hide lack of posts at first
-        counter = 0;
 
         // Set up array lists for recommendations
         myFavSongs = new ArrayList<>();
@@ -231,7 +229,7 @@ public class PostsFragment extends Fragment {
                                             query.include(FavSongs.KEY_USER);
                                             query.include(FavSongs.KEY_SONG);
                                             query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
-                                            query.setLimit(20); // Only show 20 songs at a time
+                                            query.setLimit(10); // Only show 10 songs at a time
                                             query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
                                             query.findInBackground(new FindCallback<FavSongs>() {
                                                 @Override
@@ -286,7 +284,7 @@ public class PostsFragment extends Fragment {
                                             query.include(FavSongs.KEY_USER);
                                             query.include(FavSongs.KEY_SONG);
                                             query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
-                                            query.setLimit(20); // Only show 20 songs at a time
+                                            query.setLimit(10); // Only show 10 songs at a time
                                             query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
                                             query.findInBackground(new FindCallback<FavSongs>() {
                                                 @Override
@@ -371,14 +369,11 @@ public class PostsFragment extends Fragment {
 
                 // Add each of the posts
                 for (Post post : posts) {
-                    allPosts.add(new PostItem(post, false));
+                    allPosts.add(new PostItem(post, false, null));
 
-                    // For every 5th post, show a recommendation
-                    if ((allPosts.size() - counter) % 5 == 0 && songRecs.size() > 0) {
-                        Post songRecPost = new Post();
-                        songRecPost.setSong(songRecs.remove(0));
-                        allPosts.add(new PostItem(songRecPost, true));
-                        counter++;
+                    // If this is the 5th post, show the recommended songs
+                    if (allPosts.size() == 5 && songRecs.size() > 0) {
+                        allPosts.add(new PostItem(null, true, songRecs));
                     }
                 }
                 pbLoading.setVisibility(View.GONE); // Hide progress bar

@@ -78,7 +78,7 @@ public class SearchSongsActivity extends AppCompatActivity {
         spotify = spotifyApi.getService();
 
         // Initialize the adapter
-        songsAdapter = new SongsAdapter(this, aSongs);
+        songsAdapter = new SongsAdapter(this, aSongs, SongsAdapter.TYPE_SONG);
         songsAdapter.setOnItemClickListener(new SongsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {

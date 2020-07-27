@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.example.pitchr.helpers.TimeFormatter;
 import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.PostItem;
+import com.example.pitchr.models.Song;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -34,17 +36,20 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final String TAG = PostsAdapter.class.getSimpleName();
     private Context context;
     private List<PostItem> posts;
     int currentPosition;
+    private static int TYPE_REC = 1;
+    private static int TYPE_POST = 2;
 
     public PostsAdapter(Context context, List<PostItem> posts) {
         this.context = context;
@@ -54,28 +59,47 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        if (viewType == TYPE_POST) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
+            return new PostViewHolder(view);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.item_recview, parent, false);
+            return new RecViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public int getItemViewType(int position) {
+        if (posts.get(position).isRec) {
+            return TYPE_REC;
+        } else {
+            return TYPE_POST;
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         PostItem post = posts.get(position);
 
-        // Set play and paused correctly
-        if (position == currentPosition) {
-            if (holder.paused) {
-                holder.ibtnPlay.setImageResource(R.drawable.ic_music_play);
+        if (getItemViewType(position) == TYPE_POST) {
+            // Set play and paused correctly
+            if (position == currentPosition) {
+                if (((PostViewHolder) holder).paused) {
+                    ((PostViewHolder) holder).ibtnPlay.setImageResource(R.drawable.ic_music_play);
+                } else {
+                    ((PostViewHolder) holder).ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                }
             } else {
-                holder.ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                ((PostViewHolder) holder).ibtnPlay.setImageResource(R.drawable.ic_music_play);
+                ((PostViewHolder) holder).paused = false;
             }
-        } else {
-            holder.ibtnPlay.setImageResource(R.drawable.ic_music_play);
-            holder.paused = false;
-        }
 
-        holder.bind(post);
+            ((PostViewHolder) holder).bind(post);
+        } else {
+            ((RecViewHolder) holder).bind(post);
+        }
     }
 
     @Override
@@ -83,7 +107,48 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return posts.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class RecViewHolder extends RecyclerView.ViewHolder {
+
+        ArrayList<Song> allRecSongs;
+        SongsAdapter adapter;
+        RecyclerView rvRecSongs;
+
+        public RecViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rvRecSongs = (RecyclerView) itemView.findViewById(R.id.rvRecSongs);
+            itemView.setBackgroundColor(context.getResources().getColor(R.color.lightOrange));
+        }
+
+        public void bind(PostItem post) {
+            // Set up recommended songs view
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            allRecSongs = post.recSongs;
+            rvRecSongs.setLayoutManager(layoutManager);
+            adapter = new SongsAdapter(context, allRecSongs, SongsAdapter.TYPE_REC);
+            adapter.setOnItemClickListener(new SongsAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View itemView, int position) {
+                    if (((ParseApplication) (context.getApplicationContext())).spotifyExists) {
+                        // Make sure the position is valid
+                        if (position != RecyclerView.NO_POSITION) {
+                            // Check if we're playing, pausing, or resuming
+                            if (adapter.currentPosition == position) {
+                                ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
+                                adapter.currentPosition = -1;
+                            } else {
+                                ((ParseApplication) context.getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + allRecSongs.get(position).getSpotifyId());
+                                adapter.currentPosition = position;
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            });
+            rvRecSongs.setAdapter(adapter);
+        }
+    }
+
+    class PostViewHolder extends RecyclerView.ViewHolder {
 
         Post currentPost;
         private TextView tvUsername;
@@ -101,10 +166,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageButton ibtnPlay;
         private boolean paused;
         int likes;
-        private boolean isRec;
         View divider;
 
-        public ViewHolder(View itemView) {
+        public PostViewHolder(View itemView) {
             super(itemView);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
             ivPfp = (ImageView) itemView.findViewById(R.id.ivPfp);
@@ -121,16 +185,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             divider = (View) itemView.findViewById(R.id.divider);
             likes = 0;
 
+            // Set background color
+            itemView.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
+
             // When the user clicks on text or a profile picture, take them to the profile page for that user
             View.OnClickListener profileListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!isRec) {
-                        FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser()), TAG);
-                        ft.addToBackStack(TAG);
-                        ft.commit();
-                    }
+                    FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.flContainer, ProfileFragment.newInstance(currentPost.getUser()), TAG);
+                    ft.addToBackStack(TAG);
+                    ft.commit();
+
                 }
             };
             tvUsername.setOnClickListener(profileListener);
@@ -163,11 +229,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if (!isRec) {
-                        view.performClick();
-                        return gestureDetector.onTouchEvent(motionEvent);
-                    }
-                    return true;
+                    view.performClick();
+                    return gestureDetector.onTouchEvent(motionEvent);
                 }
             };
             tvCaption.setOnTouchListener(touchListener);
@@ -210,46 +273,25 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public void bind(PostItem post) {
             currentPost = post.post;
-            isRec = post.isRec;
 
-            // If this is a normal song post, we just want to show the post
-            if (!isRec) {
-                // Show views
-                tvCaption.setVisibility(View.VISIBLE);
-                tvComments.setVisibility(View.VISIBLE);
-                tvLikes.setVisibility(View.VISIBLE);
-                ibtnComment.setVisibility(View.VISIBLE);
-                ibtnLike.setVisibility(View.VISIBLE);
-                tvCaption.setText(currentPost.getCaption());
-                tvUsername.setText(currentPost.getUser().getUsername());
+            // Set Views
+            tvCaption.setText(currentPost.getCaption());
+            tvUsername.setText(currentPost.getUser().getUsername());
 
-                // Set the time to the correct format
-                tvTime.setText(TimeFormatter.getTimeDifference(currentPost.getCreatedAt().toString()));
+            // Set the time to the correct format
+            tvTime.setText(TimeFormatter.getTimeDifference(currentPost.getCreatedAt().toString()));
 
-                // Set the pfp image if we have it
-                ParseFile pfpImage = currentPost.getUser().getParseFile("pfp");
-                if (pfpImage != null) {
-                    Glide.with(context).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
-                } else {
-                    Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
-                }
-
-                // Show if the user likes the post and the comment count
-                queryLiked();
-                setCommentCount();
+            // Set the pfp image if we have it
+            ParseFile pfpImage = currentPost.getUser().getParseFile("pfp");
+            if (pfpImage != null) {
+                Glide.with(context).load(pfpImage.getUrl()).circleCrop().into(ivPfp);
             } else {
-                // Else, this is a recommendation, so we want to hide the views accordingly
-                tvCaption.setVisibility(View.GONE);
-                tvComments.setVisibility(View.GONE);
-                tvLikes.setVisibility(View.GONE);
-                ibtnComment.setVisibility(View.GONE);
-                ibtnLike.setVisibility(View.GONE);
-
-                // Show this is based on a match
-                tvTime.setText(R.string.based_on_your_matches);
-                tvUsername.setText(R.string.recommended_for_you);
-                Glide.with(context).load(R.drawable.pitchr_default).circleCrop().into(ivPfp);
+                Glide.with(context).load(R.drawable.default_pfp).circleCrop().into(ivPfp);
             }
+
+            // Show if the user likes the post and the comment count
+            queryLiked();
+            setCommentCount();
 
             // Set song views
             tvSongName.setText(currentPost.getSong().getName());

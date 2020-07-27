@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="MissingClass">
-        <activity android:name=".activities.FavSongsListActivity"></activity>
+        <activity android:name=".activities.FavSongsListActivity" />
         <activity android:name=".chat.ChatActivity" />
         <activity android:name=".chat.DirectMessagesActivity" />
         <activity android:name=".activities.SettingsActivity" />

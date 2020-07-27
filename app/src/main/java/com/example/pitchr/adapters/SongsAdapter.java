@@ -18,11 +18,14 @@ import com.example.pitchr.models.Song;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
+public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
     private List<Song> mSongs;
     private Context mContext;
     public int currentPosition = -1;
+    public static int TYPE_SONG = 1;
+    public static int TYPE_REC = 2;
+    private int type;
 
     // Define listener member variable
     private OnItemClickListener listener;
@@ -63,9 +66,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
         }
     }
 
-    public SongsAdapter(Context context, ArrayList<Song> aSongs) {
+    public SongsAdapter(Context context, ArrayList<Song> aSongs, int type) {
         mSongs = aSongs;
         mContext = context;
+        this.type = type;
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -74,8 +78,13 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        // Inflate the custom layout
-        View songView = inflater.inflate(R.layout.item_song, parent, false);
+        View songView;
+        if (type == TYPE_SONG) {
+            // Inflate the custom layout
+            songView = inflater.inflate(R.layout.item_song, parent, false);
+        } else {
+            songView = inflater.inflate(R.layout.item_recsong, parent, false);
+        }
 
         // Return a new holder instance
         SongsAdapter.ViewHolder viewHolder = new SongsAdapter.ViewHolder(songView, listener);
@@ -103,9 +112,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
 
         // Change the background if we need to
         if (currentPosition != -1 && currentPosition == position) {
-            if (currentPosition == position) {
-                viewHolder.rlSong.setBackgroundColor(getContext().getResources().getColor(R.color.spotifyGreen));
-            }
+            viewHolder.rlSong.setBackgroundColor(getContext().getResources().getColor(R.color.spotifyGreen));
         } else {
             viewHolder.rlSong.setBackgroundResource(0);
         }

@@ -82,7 +82,7 @@ public class FavSongsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         rvSongs = (RecyclerView) getView().findViewById(R.id.rvItems);
         rvSongs.setLayoutManager(layoutManager);
-        adapter = new SongsAdapter(this.getContext(), allSongs);
+        adapter = new SongsAdapter(this.getContext(), allSongs, SongsAdapter.TYPE_SONG);
         rvSongs.setAdapter(adapter);
 
         // Setup refresh listener which triggers new data loading
