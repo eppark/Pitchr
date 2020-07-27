@@ -63,8 +63,9 @@ Pitchr is a music-related social networking / connecting app that focuses on con
     - [ ] Song matches also use recommended artists
 - [x] Users can tap a song post to hear it on Spotify
 - [x] App brings up recommended songs to the user's feed
-- [ ] Users can search for other users
+- [ ] Users can search for other users based on username
 - [x] App logs to Parse Analytics for statistical purposes
+- [x] Users can send direct messages 1-on-1 with their followers or users they are following.
 
 ### 2. Screen Archetypes
 
