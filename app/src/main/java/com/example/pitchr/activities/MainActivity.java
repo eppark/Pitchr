@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
     public static final String TAG = MainActivity.class.getSimpleName();
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     public ActivityMainBinding binding;
+    int current;
+    int previous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextAppearance(this, R.style.PitchrTextAppearance);
         getSupportActionBar().setTitle(" ");
+        current = 1;
+        previous = -1;
 
         // Get Spotify service
         connect();
@@ -72,19 +76,39 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
                         fragment = new PostsFragment();
+
+                        // Show the correct animation
+                        previous = current;
+                        current = 1;
+
                         break;
                     case R.id.action_match:
                         fragment = new MatchesFragment();
+
+                        // Show the correct animation
+                        previous = current;
+                        current = 2;
+
                         break;
                     case R.id.action_search:
                         fragment = new SearchUsersFragment();
+
+                        // Show the correct animation
+                        previous = current;
+                        current = 3;
+
                         break;
                     case R.id.action_profile:
                     default:
                         fragment = ProfileFragment.newInstance(ParseUser.getCurrentUser());
+
+                        // Show the correct animation
+                        previous = current;
+                        current = 4;
+
                         break;
                 }
-                fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.flContainer, fragment).commit();
+                fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
@@ -144,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                     ((ParseApplication) getApplicationContext()).spotifyExists = false;
                     Toast.makeText(MainActivity.this, "Please install the Spotify app!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
+                } else {
+                    ((ParseApplication) getApplicationContext()).spotifyExists = true;
                 }
             }
         });

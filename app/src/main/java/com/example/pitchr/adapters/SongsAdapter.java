@@ -113,8 +113,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         // Change the background if we need to
         if (currentPosition != -1 && currentPosition == position) {
             viewHolder.rlSong.setBackgroundColor(getContext().getResources().getColor(R.color.spotifyGreen));
+            viewHolder.tvSongName.setSelected(true);
+            viewHolder.tvArtists.setSelected(true);
         } else {
             viewHolder.rlSong.setBackgroundResource(0);
+            viewHolder.tvSongName.setSelected(false);
+            viewHolder.tvArtists.setSelected(false);
         }
     }
 

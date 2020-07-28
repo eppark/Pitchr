@@ -52,8 +52,10 @@
             android:layout_marginEnd="0dp"
             android:layout_toStartOf="@+id/ibtnPlay"
             android:layout_toEndOf="@+id/ivSongImage"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:textSize="18sp"
             tools:text="Maps" />
@@ -68,8 +70,9 @@
             android:layout_marginEnd="0dp"
             android:layout_toStartOf="@+id/ibtnPlay"
             android:layout_toEndOf="@+id/ivSongImage"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:ellipsize="marquee"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:textColor="@color/gray1"
             tools:text="Maroony 5" />
 

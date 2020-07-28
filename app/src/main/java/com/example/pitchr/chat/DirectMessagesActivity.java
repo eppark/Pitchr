@@ -53,7 +53,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
 
         // Set message user list, adapter, and layout
         allUsers = new ArrayList<>();
-        adapter = new MessagesAdapter(this, allUsers);
+        adapter = new MessagesAdapter(this, allUsers, this);
         binding.rvMessages.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.rvMessages.setLayoutManager(linearLayoutManager);

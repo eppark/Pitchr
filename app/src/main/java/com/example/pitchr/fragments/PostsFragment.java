@@ -62,6 +62,8 @@ public class PostsFragment extends Fragment {
     TextView tvNoPosts;
     ProgressBar pbLoading;
     FloatingActionButton fabCompose;
+    public static final String CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
+    public static final String CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
 
     // Swipe to refresh and endless scrolling
     private SwipeRefreshLayout swipeContainer;
@@ -158,7 +160,14 @@ public class PostsFragment extends Fragment {
         fabCompose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Get the button's position
+                int[] location = new int[2];
+                fabCompose.getLocationOnScreen(location);
+
+                // Start the activity
                 Intent i = new Intent(getContext(), SearchSongsActivity.class);
+                i.putExtra(CIRCULAR_REVEAL_X, location[0]);
+                i.putExtra(CIRCULAR_REVEAL_Y, location[1]);
                 startActivityForResult(i, RESULT_CODE);
             }
         });

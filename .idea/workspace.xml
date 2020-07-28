@@ -9,23 +9,35 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dda1aa42-76d3-418d-a3ca-6993e669028c" name="Default Changelist" comment="Show the view of each">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_recsong.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_recview.xml" afterDir="false" />
+    <list default="true" id="dda1aa42-76d3-418d-a3ca-6993e669028c" name="Default Changelist" comment="Implemented miscellaneous UI improvements">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/enter_from_left.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/enter_from_right.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/exit_to_left.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/exit_to_right.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/ParseApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/ParseApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/ComposeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/ComposeActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/SearchSongsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/SearchSongsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/MatchesAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/MatchesAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/PostsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/PostsAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/SongsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/SongsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/FavSongsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/FavSongsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/chat/ChatActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/chat/ChatActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/chat/DirectMessagesActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/chat/DirectMessagesActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/chat/MessagesAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/chat/MessagesAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/DetailsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/DetailsFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/PostsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/PostsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/models/PostItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/models/PostItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_trash.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_trash.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_search.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_search.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_details.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_post.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_post.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_recsong.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_recsong.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_song.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_song.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,8 +63,8 @@
         <option value="layoutResourceFile_vertical" />
         <option value="Class" />
         <option value="valueResourceFile" />
-        <option value="resourceFile" />
         <option value="layoutResourceFile" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
@@ -383,11 +395,17 @@
       <option name="project" value="LOCAL" />
       <updated>1595629108407</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Recommended songs show on the feed via CardViews.">
+      <created>1595892918366</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1595892918366</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Created profile page" />
     <MESSAGE value="Set up getting the top ten songs for a user" />
     <MESSAGE value="Allow user to take photo or choose a photo from the gallery for their profile picture" />
     <MESSAGE value="Implemented logging out" />
@@ -412,20 +430,21 @@
     <MESSAGE value="Implemented another algorithm for matching based on audio features" />
     <MESSAGE value="Show music recommendations for the user based on their matches" />
     <MESSAGE value="Allow users to search for other users based on username" />
-    <option name="LAST_COMMIT_MESSAGE" value="Allow users to search for other users based on username" />
+    <MESSAGE value="Recommended songs show on the feed via CardViews." />
+    <option name="LAST_COMMIT_MESSAGE" value="Recommended songs show on the feed via CardViews." />
   </component>
   <component name="WindowStateProjectService">
     <state x="394" y="257" key="#PSD" timestamp="1594918822156">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="394" y="257" key="#PSD/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594918822156" />
-    <state x="681" y="234" width="748" height="569" key="#com.intellij.ide.util.MemberChooser" timestamp="1595867833649">
+    <state x="681" y="234" width="748" height="569" key="#com.intellij.ide.util.MemberChooser" timestamp="1595960489057">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="681" y="234" key="#com.intellij.ide.util.MemberChooser/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594914940442" />
     <state x="681" y="234" width="748" height="569" key="#com.intellij.ide.util.MemberChooser/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595521485139" />
     <state x="681" y="234" key="#com.intellij.ide.util.MemberChooser/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595284999783" />
-    <state x="681" y="234" key="#com.intellij.ide.util.MemberChooser/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595867833649" />
+    <state x="681" y="234" key="#com.intellij.ide.util.MemberChooser/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595960489057" />
     <state x="633" y="384" width="473" height="278" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1594664890186">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
@@ -439,12 +458,12 @@
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="487" y="315" key="AndroidCreateResourceDirectoryDialog/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594673308969" />
-    <state x="487" y="316" key="AndroidCreateResourceFileDialog" timestamp="1595610187068">
+    <state x="487" y="316" key="AndroidCreateResourceFileDialog" timestamp="1595954287998">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="487" y="315" key="AndroidCreateResourceFileDialog/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594753973657" />
     <state x="487" y="316" key="AndroidCreateResourceFileDialog/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595016263422" />
-    <state x="487" y="316" key="AndroidCreateResourceFileDialog/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595610187068" />
+    <state x="487" y="316" key="AndroidCreateResourceFileDialog/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595954287998" />
     <state x="725" y="392" width="372" height="323" key="AndroidCreateXmlResourceDialog" timestamp="1595613030437">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
@@ -452,77 +471,81 @@
     <state x="725" y="391" width="372" height="323" key="AndroidCreateXmlResourceDialog/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595524878855" />
     <state x="725" y="392" key="AndroidCreateXmlResourceDialog/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595441592471" />
     <state x="725" y="392" key="AndroidCreateXmlResourceDialog/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595613030437" />
-    <state x="624" y="111" key="CommitChangelistDialog2" timestamp="1595881356812">
+    <state x="624" y="111" key="CommitChangelistDialog2" timestamp="1595963948182">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="368" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594855455926" />
     <state x="300" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595460209299" />
     <state x="332" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444388483" />
     <state x="624" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1595863541463" />
-    <state x="624" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595881356812" />
-    <state width="1653" height="226" key="GridCell.Tab.0.bottom" timestamp="1595608385951">
+    <state x="624" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963948182" />
+    <state width="1653" height="331" key="GridCell.Tab.0.bottom" timestamp="1595963449911">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.0.bottom/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758698" />
     <state width="1653" height="331" key="GridCell.Tab.0.bottom/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363656" />
     <state width="1653" height="268" key="GridCell.Tab.0.bottom/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444603252" />
-    <state width="1653" height="226" key="GridCell.Tab.0.bottom/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595608385951" />
-    <state width="1653" height="226" key="GridCell.Tab.0.center" timestamp="1595608385950">
+    <state width="1653" height="331" key="GridCell.Tab.0.bottom/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449911" />
+    <state width="1653" height="331" key="GridCell.Tab.0.center" timestamp="1595963449911">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.0.center/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758697" />
     <state width="1653" height="331" key="GridCell.Tab.0.center/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363655" />
     <state width="1653" height="268" key="GridCell.Tab.0.center/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444603251" />
-    <state width="1653" height="226" key="GridCell.Tab.0.center/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595608385950" />
-    <state width="1653" height="226" key="GridCell.Tab.0.left" timestamp="1595608385948">
+    <state width="1653" height="331" key="GridCell.Tab.0.center/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449911" />
+    <state width="1653" height="331" key="GridCell.Tab.0.left" timestamp="1595963449911">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.0.left/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758697" />
     <state width="1653" height="331" key="GridCell.Tab.0.left/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363655" />
     <state width="1653" height="268" key="GridCell.Tab.0.left/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444603251" />
-    <state width="1653" height="226" key="GridCell.Tab.0.left/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595608385948" />
-    <state width="1653" height="226" key="GridCell.Tab.0.right" timestamp="1595608385951">
+    <state width="1653" height="331" key="GridCell.Tab.0.left/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449911" />
+    <state width="1653" height="331" key="GridCell.Tab.0.right" timestamp="1595963449911">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.0.right/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758698" />
     <state width="1653" height="331" key="GridCell.Tab.0.right/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363655" />
     <state width="1653" height="268" key="GridCell.Tab.0.right/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444603252" />
-    <state width="1653" height="226" key="GridCell.Tab.0.right/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595608385951" />
-    <state width="1653" height="331" key="GridCell.Tab.1.bottom" timestamp="1595466363656">
-      <screen x="0" y="23" width="1792" height="1022" />
+    <state width="1653" height="331" key="GridCell.Tab.0.right/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449911" />
+    <state width="1653" height="331" key="GridCell.Tab.1.bottom" timestamp="1595963449913">
+      <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.1.bottom/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758699" />
     <state width="1653" height="331" key="GridCell.Tab.1.bottom/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363656" />
     <state width="1653" height="331" key="GridCell.Tab.1.bottom/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595009615098" />
-    <state width="1653" height="331" key="GridCell.Tab.1.center" timestamp="1595466363656">
-      <screen x="0" y="23" width="1792" height="1022" />
+    <state width="1653" height="331" key="GridCell.Tab.1.bottom/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449913" />
+    <state width="1653" height="331" key="GridCell.Tab.1.center" timestamp="1595963449912">
+      <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.1.center/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758698" />
     <state width="1653" height="331" key="GridCell.Tab.1.center/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363656" />
     <state width="1653" height="331" key="GridCell.Tab.1.center/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595009615097" />
-    <state width="1653" height="331" key="GridCell.Tab.1.left" timestamp="1595466363656">
-      <screen x="0" y="23" width="1792" height="1022" />
+    <state width="1653" height="331" key="GridCell.Tab.1.center/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449912" />
+    <state width="1653" height="331" key="GridCell.Tab.1.left" timestamp="1595963449912">
+      <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.1.left/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758698" />
     <state width="1653" height="331" key="GridCell.Tab.1.left/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363656" />
     <state width="1653" height="331" key="GridCell.Tab.1.left/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595009615097" />
-    <state width="1653" height="331" key="GridCell.Tab.1.right" timestamp="1595466363656">
-      <screen x="0" y="23" width="1792" height="1022" />
+    <state width="1653" height="331" key="GridCell.Tab.1.left/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449912" />
+    <state width="1653" height="331" key="GridCell.Tab.1.right" timestamp="1595963449912">
+      <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state width="1653" height="331" key="GridCell.Tab.1.right/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594854758698" />
     <state width="1653" height="331" key="GridCell.Tab.1.right/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466363656" />
     <state width="1653" height="331" key="GridCell.Tab.1.right/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595009615097" />
+    <state width="1653" height="331" key="GridCell.Tab.1.right/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963449912" />
     <state x="401" y="192" key="SettingsEditor" timestamp="1594669493391">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="401" y="192" key="SettingsEditor/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594669493391" />
-    <state x="469" y="258" key="Vcs.Push.Dialog.v2" timestamp="1595609272146">
+    <state x="469" y="258" key="Vcs.Push.Dialog.v2" timestamp="1595892925467">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="469" y="258" key="Vcs.Push.Dialog.v2/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594857117397" />
     <state x="469" y="258" key="Vcs.Push.Dialog.v2/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595466238299" />
     <state x="469" y="259" key="Vcs.Push.Dialog.v2/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595376201612" />
-    <state x="469" y="258" key="Vcs.Push.Dialog.v2/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595609272146" />
+    <state x="469" y="258" key="Vcs.Push.Dialog.v2/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595892925467" />
     <state x="122" y="123" width="1495" height="791" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1594667158239">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
@@ -531,13 +554,13 @@
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="162" y="123" width="1495" height="791" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595608787578" />
-    <state x="517" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1595863535237">
+    <state x="517" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1595949178573">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="517" y="350" key="com.intellij.ide.util.TipDialog/-1440.23.1440.877/0.23.1792.1017@0.23.1792.1017" timestamp="1594911856378" />
     <state x="517" y="351" key="com.intellij.ide.util.TipDialog/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594738793128" />
     <state x="517" y="352" key="com.intellij.ide.util.TipDialog/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595524932533" />
-    <state x="517" y="352" key="com.intellij.ide.util.TipDialog/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1595863535237" />
+    <state x="517" y="352" key="com.intellij.ide.util.TipDialog/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1595949178573" />
     <state x="709" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595518768017">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
@@ -562,13 +585,13 @@
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="682" y="380" key="psd.choose.module.panel.dimension/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594742220857" />
-    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup" timestamp="1595871924312">
+    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup" timestamp="1595963552114">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="534" y="241" width="670" height="676" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594915940458" />
     <state x="534" y="241" width="670" height="678" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595525378899" />
     <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444583544" />
-    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595871924312" />
+    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595963552114" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -1,5 +1,6 @@
 package com.example.pitchr.chat;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -33,11 +34,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
-
+    Activity mActivity;
     private Context context;
     private List<ParseUser> allMessages;
 
-    public MessagesAdapter(Context context, List<ParseUser> allMessages) {
+    public MessagesAdapter(Context context, List<ParseUser> allMessages, Activity mActivity) {
+        this.mActivity = mActivity;
         this.context = context;
         this.allMessages = allMessages;
     }
@@ -101,6 +103,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             intent.putExtra("receiver", Parcels.wrap(currentMessage));
             intent.putExtra("dm", Parcels.wrap(currentDm));
             context.startActivity(intent);
+            mActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
         }
 
         // Get the current DM

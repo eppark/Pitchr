@@ -10,7 +10,6 @@
         <item name="colorControlNormal">@color/white</item>
 
         <!-- Animations -->
-        <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
 
@@ -24,6 +23,10 @@
         <item name="colorSecondary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:colorForeground">@color/white</item>
+    </style>
+
+    <style name="CircularReveal" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

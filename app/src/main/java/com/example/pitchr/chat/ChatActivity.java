@@ -166,8 +166,8 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
     @Override

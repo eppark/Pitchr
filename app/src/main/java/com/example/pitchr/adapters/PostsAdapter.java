@@ -88,12 +88,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (position == currentPosition) {
                 if (((PostViewHolder) holder).paused) {
                     ((PostViewHolder) holder).ibtnPlay.setImageResource(R.drawable.ic_music_play);
+                    ((PostViewHolder) holder).tvSongName.setSelected(false);
+                    ((PostViewHolder) holder).tvArtists.setSelected(false);
                 } else {
                     ((PostViewHolder) holder).ibtnPlay.setImageResource(R.drawable.ic_music_pause);
+                    ((PostViewHolder) holder).tvSongName.setSelected(true);
+                    ((PostViewHolder) holder).tvArtists.setSelected(true);
                 }
             } else {
                 ((PostViewHolder) holder).ibtnPlay.setImageResource(R.drawable.ic_music_play);
                 ((PostViewHolder) holder).paused = false;
+                ((PostViewHolder) holder).tvSongName.setSelected(false);
+                ((PostViewHolder) holder).tvArtists.setSelected(false);
             }
 
             ((PostViewHolder) holder).bind(post);
@@ -213,7 +219,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
-                        FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        FragmentTransaction ft = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
                         ft.replace(R.id.flContainer, DetailsFragment.newInstance(currentPost), TAG);
                         ft.addToBackStack(TAG);
                         ft.commit();

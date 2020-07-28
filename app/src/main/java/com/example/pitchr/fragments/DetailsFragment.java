@@ -247,15 +247,21 @@ public class DetailsFragment extends Fragment {
                             ibtnPlay.setImageResource(R.drawable.ic_music_pause);
                             ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().resume();
                             paused = 0;
+                            tvSongName.setSelected(true);
+                            tvArtists.setSelected(true);
                         } else {
                             ibtnPlay.setImageResource(R.drawable.ic_music_play);
                             ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().pause();
                             paused = 1;
+                            tvSongName.setSelected(false);
+                            tvArtists.setSelected(false);
                         }
                     } else {
                         ibtnPlay.setImageResource(R.drawable.ic_music_pause);
                         ((ParseApplication) getContext().getApplicationContext()).mSpotifyAppRemote.getPlayerApi().play("spotify:track:" + post.getSong().getSpotifyId());
                         paused = 0;
+                        tvSongName.setSelected(true);
+                        tvArtists.setSelected(true);
                     }
                 }
             }

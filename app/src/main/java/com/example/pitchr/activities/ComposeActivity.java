@@ -89,6 +89,14 @@ public class ComposeActivity extends AppCompatActivity {
         return true;
     }
 
+    // Show the slide animation
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+    }
+
+    // Show the post option item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

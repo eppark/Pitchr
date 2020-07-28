@@ -38,8 +38,9 @@
                     android:id="@+id/tvSongName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     tools:text="Maps" />
@@ -50,8 +51,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvSongName"
                     android:layout_marginTop="4dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
                     android:textColor="@color/gray1"
                     android:textSize="12sp"
                     tools:text="Maroony 5" />

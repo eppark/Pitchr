@@ -23,7 +23,7 @@
         <activity android:name=".chat.DirectMessagesActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ComposeActivity" />
-        <activity android:name=".activities.SearchSongsActivity" />
+        <activity android:name=".activities.SearchSongsActivity" android:theme="@style/CircularReveal" />
         <activity
             android:name=".activities.SpotifyAuthenticationActivity"
             android:launchMode="singleInstance" />
@@ -48,13 +48,13 @@
 
         <meta-data
             android:name="com.parse.SERVER_URL"
-            android:value="@string/back4app_server_url" />
+            android:value="@string/parse_server_url" />
         <meta-data
             android:name="com.parse.APPLICATION_ID"
-            android:value="@string/back4app_app_id" />
+            android:value="@string/parse_app_id" />
         <meta-data
             android:name="com.parse.CLIENT_KEY"
-            android:value="@string/back4app_client_key" />
+            android:value="@string/parse_client_key" />
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <provider android:authorities="@string/facebook_content_provider"
