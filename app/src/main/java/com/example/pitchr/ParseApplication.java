@@ -2,7 +2,6 @@ package com.example.pitchr;
 
 import android.app.Application;
 
-import com.example.pitchr.R;
 import com.example.pitchr.chat.DM;
 import com.example.pitchr.chat.Message;
 import com.example.pitchr.models.Comment;

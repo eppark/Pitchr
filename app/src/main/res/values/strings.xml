@@ -31,6 +31,7 @@
     <string name="send">Send</string>
     <string name="no_messages">No messages. Why not say hi?</string>
     <string name="add" />
+    <string name="ad_attribution">Ad</string>
     <string name="check">save</string>
     <string name="edit_list_manually">Edit list manually</string>
     <string name="snack_bar_text">Deleted favorite song</string>
@@ -43,6 +44,7 @@
     <string name="following">FOLLOWING</string>
     <string name="based_on_your_matches">Based on your matches</string>
     <string name="recommended_for_you">Recommended for you</string>
-    <string name="search_for_users">Search for users...</string>
+    <string name="search_for_users">Search for users…</string>
     <string name="no_users_selected">No users selected</string>
+    <string name="ad">Ad</string>
 </resources>

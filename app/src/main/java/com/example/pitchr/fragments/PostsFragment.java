@@ -38,6 +38,10 @@ import com.example.pitchr.models.Match2;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.PostItem;
 import com.example.pitchr.models.Song;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -58,9 +62,16 @@ public class PostsFragment extends Fragment {
     protected List<ParseUser> following;
     ArrayList<Song> songRecs;
     List<Song> myFavSongs;
+    ArrayList<UnifiedNativeAd> allAds;
     Button btnFindUsers;
     TextView tvNoPosts;
     ProgressBar pbLoading;
+
+    // The AdLoader used to load ads.
+    private AdLoader adLoader;
+    private int NUMBER_OF_ADS = 3;
+
+    // Floating Action Button for composing
     FloatingActionButton fabCompose;
     public static final String CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
     public static final String CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
@@ -105,9 +116,10 @@ public class PostsFragment extends Fragment {
         tvNoPosts.setVisibility(View.GONE);
         btnFindUsers.setVisibility(View.GONE); // Hide lack of posts at first
 
-        // Set up array lists for recommendations
+        // Set up array lists for songs, recommendations, and ads
         myFavSongs = new ArrayList<>();
         songRecs = new ArrayList<>();
+        allAds = new ArrayList<>();
 
         // Set posts, adapter, and layout
         allPosts = new ArrayList<>();
@@ -189,6 +201,7 @@ public class PostsFragment extends Fragment {
     private void initialQuery() {
         adapter.clear();
         pbLoading.setVisibility(View.VISIBLE); // Show progress bar
+        clearData(); // Clear ads
 
         // Get the current user's favorite songs
         ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
@@ -378,12 +391,15 @@ public class PostsFragment extends Fragment {
 
                 // Add each of the posts
                 for (Post post : posts) {
-                    allPosts.add(new PostItem(post, false, null));
+                    allPosts.add(new PostItem(post, PostItem.TYPE_POST, null));
 
                     // If this is the 5th post, show the recommended songs
                     if (allPosts.size() == 5 && songRecs.size() > 0) {
-                        allPosts.add(new PostItem(null, true, songRecs));
+                        allPosts.add(new PostItem(null, PostItem.TYPE_REC, songRecs));
                     }
+                }
+                if (allAds.isEmpty()) {
+                    loadNativeAds();
                 }
                 pbLoading.setVisibility(View.GONE); // Hide progress bar
                 adapter.notifyDataSetChanged();
@@ -430,5 +446,62 @@ public class PostsFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // Destroy all data to prevent memory leaks when applicable
+    public void clearData() {
+        for (UnifiedNativeAd ad : allAds) {
+            ad.destroy();
+        }
+        allAds = new ArrayList<>();
+    }
+
+    // Insert ads into our list
+    private void insertAdsInAdapterItems() {
+        if (allAds.size() <= 0) {
+            return;
+        }
+
+        int offset = (allPosts.size() / (allAds.size() + 1)) + 1;
+        int index = offset;
+        for (UnifiedNativeAd ad : allAds) {
+            allPosts.add(index, new PostItem(null, PostItem.TYPE_AD, null, ad));
+            index = index + offset;
+        }
+    }
+
+    // Load the ads
+    private void loadNativeAds() {
+        AdLoader.Builder builder = new AdLoader.Builder(getContext(), getString(R.string.ad_unit_id));
+        adLoader = builder.forUnifiedNativeAd(
+                new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        // If this callback occurs after the activity is destroyed, destroy and return to prevent a memory leak.
+                        if (getActivity().isDestroyed()) {
+                            unifiedNativeAd.destroy();
+                            return;
+                        }
+
+                        // A native ad loaded successfully, check if the ad loader has finished loading and if so, insert the ads into the list.
+                        allAds.add(unifiedNativeAd);
+                        if (!adLoader.isLoading()) {
+                            insertAdsInAdapterItems();
+                        }
+                    }
+                }).withAdListener(
+                new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        // A native ad failed to load, check if the ad loader has finished loading and if so, insert the ads into the list.
+                        Log.e(TAG, "The previous native ad failed to load. Attempting to load another.");
+                        if (!adLoader.isLoading()) {
+                            insertAdsInAdapterItems();
+                        }
+                    }
+                }).build();
+
+        // Load the Native Express ad.
+        adLoader.loadAds(new AdRequest.Builder().build(), NUMBER_OF_ADS);
     }
 }

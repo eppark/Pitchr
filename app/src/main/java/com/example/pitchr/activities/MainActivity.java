@@ -25,6 +25,9 @@ import com.example.pitchr.fragments.PostsFragment;
 import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.fragments.SearchUsersFragment;
 import com.example.pitchr.models.Comment;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -64,27 +67,35 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         // Get Spotify service
         connect();
 
+        // Set up ads
+        setupAds();
+
         // Set the bottom navigation view
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment fragment;
+                String tag;
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
                         fragment = new PostsFragment();
+                        tag = "HOME_POSTS_FRAGMENT";
                         break;
                     case R.id.action_match:
                         fragment = new MatchesFragment();
+                        tag = "HOME_MATCHES_FRAGMENT";
                         break;
                     case R.id.action_search:
                         fragment = new SearchUsersFragment();
+                        tag = "HOME_SEARCH_FRAGMENT";
                         break;
                     case R.id.action_profile:
                     default:
                         fragment = ProfileFragment.newInstance(ParseUser.getCurrentUser());
+                        tag = "HOME_PROFILE_FRAGMENT";
                         break;
                 }
-                fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(R.id.flContainer, fragment).commit();
+                fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(R.id.flContainer, fragment, tag).commit();
                 return true;
             }
         });
@@ -102,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         }
     }
 
+    // Show new comments
     @Override
     public void onFinishCommentDialog(Comment comment) {
         ((DetailsFragment) fragmentManager.findFragmentByTag(PostsAdapter.TAG)).allComments.add(0, comment);
@@ -145,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                     Toast.makeText(MainActivity.this, "Please install the Spotify app!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
                 } else {
-                    ((ParseApplication) getApplicationContext()).spotifyExists = true;
+                    ((ParseApplication) getApplicationContext()).spotifyExists = false;
                 }
             }
         });
@@ -157,10 +169,28 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         SpotifyAppRemote.disconnect(((ParseApplication) getApplicationContext()).mSpotifyAppRemote);
     }
 
+    // When we resume, we should stop and reconnect just in case
     @Override
     protected void onResume() {
         super.onResume();
         onStop();
         connect();
+    }
+
+    // Set up ads
+    private void setupAds() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+    }
+
+    // Destroy the ads when we can
+    @Override
+    protected void onDestroy() {
+        onStop();
+        ((PostsFragment) fragmentManager.findFragmentByTag("HOME_POSTS_FRAGMENT")).clearData();
+        super.onDestroy();
     }
 }

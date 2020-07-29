@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pitchr">
 
+    <!-- Permissions for Spotify/Twitter/Facebook SDK and Camera/Gallery -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -36,6 +37,7 @@
         </activity>
         <activity android:name=".activities.MainActivity" />
 
+        <!-- File Provider for Camera and Gallery -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.pitchr.fileprovider"
@@ -46,6 +48,7 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
+        <!-- Parse -->
         <meta-data
             android:name="com.parse.SERVER_URL"
             android:value="@string/parse_server_url" />
@@ -56,10 +59,16 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/parse_client_key" />
 
+        <!-- Facebook SDK Sharing -->
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <provider android:authorities="@string/facebook_content_provider"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
+
+        <!-- Google AdMob -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id"/>
     </application>
 
 </manifest>

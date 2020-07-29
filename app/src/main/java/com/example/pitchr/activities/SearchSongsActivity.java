@@ -114,7 +114,7 @@ public class SearchSongsActivity extends AppCompatActivity {
         SpotifyApi spotifyApi = new SpotifyApi();
         spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
         spotify = spotifyApi.getService();
-
+        
         // Initialize the adapter
         aSongs = new ArrayList<>();
         songsAdapter = new SongsAdapter(this, aSongs, SongsAdapter.TYPE_SONG);

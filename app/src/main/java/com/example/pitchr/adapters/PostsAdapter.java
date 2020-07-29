@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,8 @@ import com.example.pitchr.models.Comment;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.PostItem;
 import com.example.pitchr.models.Song;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -42,14 +47,16 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import static com.example.pitchr.models.PostItem.TYPE_AD;
+import static com.example.pitchr.models.PostItem.TYPE_POST;
+import static com.example.pitchr.models.PostItem.TYPE_REC;
+
 public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final String TAG = PostsAdapter.class.getSimpleName();
     private Context context;
     private List<PostItem> posts;
     int currentPosition;
-    private static int TYPE_REC = 1;
-    private static int TYPE_POST = 2;
 
     public PostsAdapter(Context context, List<PostItem> posts) {
         this.context = context;
@@ -64,19 +71,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewType == TYPE_POST) {
             view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
             return new PostViewHolder(view);
-        } else {
+        } else if (viewType == TYPE_REC) {
             view = LayoutInflater.from(context).inflate(R.layout.item_recview, parent, false);
             return new RecViewHolder(view);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.item_ad, parent, false);
+            return new AdViewHolder(view);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (posts.get(position).isRec) {
-            return TYPE_REC;
-        } else {
-            return TYPE_POST;
-        }
+        return posts.get(position).type;
     }
 
     @Override
@@ -103,14 +109,64 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
 
             ((PostViewHolder) holder).bind(post);
-        } else {
+        } else if (getItemViewType(position) == TYPE_REC) {
             ((RecViewHolder) holder).bind(post);
+        } else {
+            ((AdViewHolder) holder).pbLoading.setVisibility(View.VISIBLE);
+            ((AdViewHolder) holder).bind(post.ad);
+            ((AdViewHolder) holder).pbLoading.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+    class AdViewHolder extends RecyclerView.ViewHolder {
+
+        UnifiedNativeAdView adView;
+        ProgressBar pbLoading;
+
+        public AdViewHolder(@NonNull View itemView) {
+            super(itemView);
+            pbLoading = (ProgressBar) itemView.findViewById(R.id.pbLoading);
+            adView = (UnifiedNativeAdView) itemView.findViewById(R.id.ad_view);
+
+            // Register the view used for each individual asset.
+            adView.setHeadlineView(adView.findViewById(R.id.primary));
+            adView.setBodyView(adView.findViewById(R.id.secondary));
+            adView.setCallToActionView(adView.findViewById(R.id.cta));
+            adView.setMediaView(adView.findViewById(R.id.media));
+            adView.setStarRatingView(adView.findViewById(R.id.rating_bar));
+        }
+
+        private void bind(UnifiedNativeAd nativeAd) {
+            // Some assets are guaranteed to be in every UnifiedNativeAd.
+            ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+            ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
+            ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
+
+            // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
+            // check before trying to display them.
+            if (nativeAd.getMediaContent() == null) {
+                adView.getIconView().setVisibility(View.INVISIBLE);
+            } else {
+                adView.getMediaView().setMediaContent(nativeAd.getMediaContent());
+                adView.getMediaView().setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                adView.getMediaView().setVisibility(View.VISIBLE);
+            }
+
+            if (nativeAd.getStarRating() == null) {
+                adView.getStarRatingView().setVisibility(View.GONE);
+            } else {
+                ((RatingBar) adView.getStarRatingView()).setRating(nativeAd.getStarRating().floatValue());
+                adView.getStarRatingView().setVisibility(View.VISIBLE);
+            }
+
+            // Assign native ad object to the native view.
+            adView.setNativeAd(nativeAd);
+        }
     }
 
     class RecViewHolder extends RecyclerView.ViewHolder {
