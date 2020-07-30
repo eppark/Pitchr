@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pop">Pop</string>
+    <string name="hip_hop">Hip-Hop</string>
+    <string name="rock">Rock</string>
+    <string name="country">Country</string>
+    <string name="r_amp_b"><![CDATA[R&B]]></string>
+    <string name="alternative">Alternative</string>
+    <string name="edm">EDM</string>
+    <string name="latin">Latin</string>
+</resources>

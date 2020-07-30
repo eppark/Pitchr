@@ -28,6 +28,7 @@ import com.example.pitchr.databinding.ActivitySearchBinding;
 import com.example.pitchr.fragments.PostsFragment;
 import com.example.pitchr.helpers.EndlessRecyclerViewScrollListener;
 import com.example.pitchr.models.Song;
+import com.google.android.material.chip.ChipGroup;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -41,8 +42,13 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
+import kaaes.spotify.webapi.android.models.PlaylistsPager;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.client.Response;
+
+import static android.view.View.NO_ID;
 
 public class SearchSongsActivity extends AppCompatActivity {
 
@@ -52,11 +58,19 @@ public class SearchSongsActivity extends AppCompatActivity {
     ActivitySearchBinding binding;
     private SongsAdapter songsAdapter;
     private ArrayList<Song> aSongs;
+
+    // Limit of songs to get
     private static final int LIMIT = 20;
+
+    // Search query or playlist ID
     String songQuery;
+    String playlistId = "";
+
+    // For reveal animation
     int revealX;
     int revealY;
 
+    // Endless scrolling
     private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
@@ -114,7 +128,7 @@ public class SearchSongsActivity extends AppCompatActivity {
         SpotifyApi spotifyApi = new SpotifyApi();
         spotifyApi.setAccessToken(ParseUser.getCurrentUser().getString("token"));
         spotify = spotifyApi.getService();
-        
+
         // Initialize the adapter
         aSongs = new ArrayList<>();
         songsAdapter = new SongsAdapter(this, aSongs, SongsAdapter.TYPE_SONG);
@@ -156,11 +170,86 @@ public class SearchSongsActivity extends AppCompatActivity {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                fetchSongs(songQuery, page);
+                if (playlistId.isEmpty()) {
+                    fetchSongs(songQuery, page);
+                } else {
+                    fetchGenreSongs(page);
+                }
             }
         };
+
         // Adds the scroll listener to RecyclerView
         binding.rvSongs.addOnScrollListener(scrollListener);
+
+        // Show the different song playlists if the user clicks a genre button
+        binding.chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                // If we de-checked, set that
+                if (checkedId == NO_ID) {
+                    playlistId = "";
+                } else {
+                    // Show the loading bar and clear the arraylist first
+                    binding.pbProgressAction.setVisibility(View.VISIBLE);
+                    aSongs.clear();
+
+                    // Get the category ID and set options to just get the first playlist
+                    String categoryId = group.findViewById(checkedId).getContentDescription().toString();
+                    Map<String, Object> options = new HashMap<>();
+                    options.put(SpotifyService.LIMIT, 1);
+
+                    // Get the first playlist for the genre
+                    spotify.getPlaylistsForCategory(categoryId, options, new SpotifyCallback<PlaylistsPager>() {
+                        @Override
+                        public void failure(SpotifyError spotifyError) {
+                            Log.e(TAG, "Search playlists failed!", spotifyError);
+                        }
+
+                        @Override
+                        public void success(PlaylistsPager playlistsPager, Response response) {
+                            Log.d(TAG, "Search playlists success!");
+
+                            // Get the songs from the playlist
+                            playlistId = playlistsPager.playlists.items.get(0).id;
+                            fetchGenreSongs(0);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    // Executes an API call to the Spotify playlist endpoint, parses the results
+    // Converts them into an array of Song objects and adds them to the adapter
+    private void fetchGenreSongs(int offset) {
+        Map<String, Object> options = new HashMap<>();
+        options.put(SpotifyService.OFFSET, LIMIT * offset);
+        options.put(SpotifyService.LIMIT, LIMIT);
+
+        spotify.getPlaylistTracks("", playlistId, new SpotifyCallback<Pager<PlaylistTrack>>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e(TAG, "Get playlist tracks failed!", spotifyError);
+            }
+
+            @Override
+            public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                Log.d(TAG, "Get playlist tracks success!");
+                // Add to the song list
+                for (PlaylistTrack playlistTrack : playlistTrackPager.items) {
+                    aSongs.add(Song.songFromTrack(playlistTrack.track));
+                }
+                songsAdapter.notifyDataSetChanged();
+                binding.pbProgressAction.setVisibility(View.GONE);
+
+                // Just in case there are no songs that match the query
+                if (aSongs.size() == 0) {
+                    binding.tvSearchSongs.setVisibility(View.VISIBLE);
+                } else {
+                    binding.tvSearchSongs.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     // Executes an API call to the Spotify search endpoint, parses the results
@@ -179,11 +268,12 @@ public class SearchSongsActivity extends AppCompatActivity {
             @Override
             public void success(TracksPager tracksPager, Response response) {
                 Log.d(TAG, "Search tracks success!");
-                // Get audio features
+                // Add to the song list
                 aSongs.addAll(Song.songsFromTracksList(tracksPager.tracks.items));
                 songsAdapter.notifyDataSetChanged();
                 binding.pbProgressAction.setVisibility(View.GONE);
 
+                // Just in case there are no songs that match the query
                 if (aSongs.size() == 0) {
                     binding.tvSearchSongs.setVisibility(View.VISIBLE);
                 } else {

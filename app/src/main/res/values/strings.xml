@@ -47,4 +47,6 @@
     <string name="search_for_users">Search for users…</string>
     <string name="no_users_selected">No users selected</string>
     <string name="ad">Ad</string>
+    <string name="no_songs_selected">No songs selected</string>
+    <string name="indie">Indie</string>
 </resources>

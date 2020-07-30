@@ -13,11 +13,13 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <!-- Text appearance -->
     <style name="PitchrTextAppearance">
         <item name="android:fontFamily">@font/pitchr</item>
         <item name="android:textSize">28sp</item>
     </style>
 
+    <!-- Bottom navigation view icons -->
     <style name="BottomNavigationView">
         <item name="colorPrimary">@color/spotifyGreen</item>
         <item name="colorSecondary">@color/white</item>
@@ -25,10 +27,12 @@
         <item name="android:colorForeground">@color/white</item>
     </style>
 
+    <!-- Circular floating action button reveal animation -->
     <style name="CircularReveal" parent="AppTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <!-- Ad view -->
     <style name="AppTheme.AdAttribution">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

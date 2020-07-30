@@ -33,7 +33,6 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.spotify.android.appremote.api.PlayerApi;
 
 import org.parceler.Parcels;
 

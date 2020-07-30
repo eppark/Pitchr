@@ -42,6 +42,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -123,6 +124,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return posts.size();
     }
 
+    // Ad view holder
     class AdViewHolder extends RecyclerView.ViewHolder {
 
         UnifiedNativeAdView adView;
@@ -169,6 +171,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+    // Review view holder
     class RecViewHolder extends RecyclerView.ViewHolder {
 
         ArrayList<Song> allRecSongs;
@@ -191,6 +194,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onItemClick(View itemView, int position) {
                     if (((ParseApplication) (context.getApplicationContext())).spotifyExists) {
+                        // LOG TO ANALYTICS
+                        ParseApplication.logEvent("recEvent", Arrays.asList("status"), Arrays.asList("success"));
+
                         // Make sure the position is valid
                         if (position != RecyclerView.NO_POSITION) {
                             // Check if we're playing, pausing, or resuming
@@ -210,6 +216,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+    // Post view holder
     class PostViewHolder extends RecyclerView.ViewHolder {
 
         Post currentPost;

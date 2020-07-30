@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
                     startActivity(i);
                     finish();
                 } else if (throwable instanceof CouldNotFindSpotifyApp) {
-                    // Show button to download Spotify
+                    // Show button to matches_image Spotify
                     ((ParseApplication) getApplicationContext()).spotifyExists = false;
                     Toast.makeText(MainActivity.this, "Please install the Spotify app!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
     @Override
     protected void onDestroy() {
         onStop();
-        ((PostsFragment) fragmentManager.findFragmentByTag("HOME_POSTS_FRAGMENT")).clearData();
+        ((PostsFragment) fragmentManager.findFragmentByTag("HOME_POSTS_FRAGMENT")).clearAdData();
         super.onDestroy();
     }
 }

@@ -69,7 +69,6 @@ public class PostsFragment extends Fragment {
 
     // The AdLoader used to load ads.
     private AdLoader adLoader;
-    private int NUMBER_OF_ADS = 3;
 
     // Floating Action Button for composing
     FloatingActionButton fabCompose;
@@ -201,7 +200,11 @@ public class PostsFragment extends Fragment {
     private void initialQuery() {
         adapter.clear();
         pbLoading.setVisibility(View.VISIBLE); // Show progress bar
-        clearData(); // Clear ads
+
+        // Clear favorite songs, song recommendations, and ads
+        myFavSongs.clear();
+        songRecs.clear();
+        clearAdData();
 
         // Get the current user's favorite songs
         ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
@@ -398,7 +401,7 @@ public class PostsFragment extends Fragment {
                         allPosts.add(new PostItem(null, PostItem.TYPE_REC, songRecs));
                     }
                 }
-                if (allAds.isEmpty()) {
+                if (allAds.isEmpty() && allPosts.size() > 5) {
                     loadNativeAds();
                 }
                 pbLoading.setVisibility(View.GONE); // Hide progress bar
@@ -449,11 +452,11 @@ public class PostsFragment extends Fragment {
     }
 
     // Destroy all data to prevent memory leaks when applicable
-    public void clearData() {
+    public void clearAdData() {
         for (UnifiedNativeAd ad : allAds) {
             ad.destroy();
         }
-        allAds = new ArrayList<>();
+        allAds.clear();
     }
 
     // Insert ads into our list
@@ -462,6 +465,7 @@ public class PostsFragment extends Fragment {
             return;
         }
 
+        // Insert the ads based on how many posts and ads we have
         int offset = (allPosts.size() / (allAds.size() + 1)) + 1;
         int index = offset;
         for (UnifiedNativeAd ad : allAds) {
@@ -477,12 +481,6 @@ public class PostsFragment extends Fragment {
                 new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        // If this callback occurs after the activity is destroyed, destroy and return to prevent a memory leak.
-                        if (getActivity().isDestroyed()) {
-                            unifiedNativeAd.destroy();
-                            return;
-                        }
-
                         // A native ad loaded successfully, check if the ad loader has finished loading and if so, insert the ads into the list.
                         allAds.add(unifiedNativeAd);
                         if (!adLoader.isLoading()) {
@@ -502,6 +500,6 @@ public class PostsFragment extends Fragment {
                 }).build();
 
         // Load the Native Express ad.
-        adLoader.loadAds(new AdRequest.Builder().build(), NUMBER_OF_ADS);
+        adLoader.loadAds(new AdRequest.Builder().build(), Math.round(allPosts.size() / 5));
     }
 }

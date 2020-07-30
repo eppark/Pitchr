@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class LinePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
 
-    private int colorActive = 0xFFFFFFFF;
-    private int colorInactive = 0x66FFFFFF;
+    private int colorActive = 0xFFAF8467;
+    private int colorInactive = 0x66AF8467;
 
     private static final float DP = Resources.getSystem().getDisplayMetrics().density;
 
@@ -121,7 +121,7 @@ public class LinePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
 
-        // Offset the view at the top
-        outRect.top = mIndicatorHeight;
+        // Offset the view at the bottom
+        outRect.bottom = mIndicatorHeight * 2;
     }
 }
