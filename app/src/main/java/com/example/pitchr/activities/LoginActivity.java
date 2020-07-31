@@ -89,11 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                     ParseApplication.logLoginEvent("failure");
                     return;
                 }
-                goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Login success.", Toast.LENGTH_SHORT).show();
 
                 // LOG TO ANALYTICS
                 ParseApplication.logLoginEvent("success");
+
+                // Now authenticate via Spotify
+                goSpotifyAuth(false);
             }
         });
     }
@@ -118,11 +120,13 @@ public class LoginActivity extends AppCompatActivity {
                     ParseApplication.logSignupEvent("failure");
                     return;
                 }
-                goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Signup success.", Toast.LENGTH_SHORT).show();
 
                 // LOG TO ANALYTICS
                 ParseApplication.logSignupEvent("success");
+
+                // Now authenticate via Spotify
+                goSpotifyAuth(false);
             }
         });
     }

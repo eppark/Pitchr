@@ -112,8 +112,8 @@ public class SettingsActivity extends AppCompatActivity {
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AuthorizationClient.clearCookies(getBaseContext()); // Clear Spotify cookies
                 ParseUser.logOut(); // Log the Parse user out
-                AuthorizationClient.clearCookies(SettingsActivity.this); // Clear Spotify cookies
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
 
                 // LOG TO ANALYTICS
