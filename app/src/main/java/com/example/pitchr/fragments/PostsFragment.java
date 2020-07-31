@@ -49,7 +49,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PostsFragment extends Fragment {
@@ -102,7 +101,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("postsFragment", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("postsFragment");
 
         // View binding
         rvPosts = (RecyclerView) view.findViewById(R.id.rvPosts);

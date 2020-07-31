@@ -45,7 +45,7 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("chatActivity", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("chatActivity");
 
         // layout of activity is stored in a special property called root
         View view = binding.getRoot();

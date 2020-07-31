@@ -80,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("settingsActivity", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("settingsActivity");
 
         // Set ViewBinding
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());

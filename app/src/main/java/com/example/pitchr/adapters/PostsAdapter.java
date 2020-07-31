@@ -195,7 +195,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 public void onItemClick(View itemView, int position) {
                     if (((ParseApplication) (context.getApplicationContext())).spotifyExists) {
                         // LOG TO ANALYTICS
-                        ParseApplication.logEvent("recEvent", Arrays.asList("status"), Arrays.asList("success"));
+                        ParseApplication.logEvent("recommendationClickEvent", Arrays.asList("status"), Arrays.asList("success"));
 
                         // Make sure the position is valid
                         if (position != RecyclerView.NO_POSITION) {
@@ -406,10 +406,16 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Set likes
         private void setLike() {
             if (!liked) {
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("likeEvent", Arrays.asList("type"), Arrays.asList("like"));
+
                 currentPost.addLike();
                 likes++;
                 addLike();
             } else {
+                // LOG TO ANALYTICS
+                ParseApplication.logEvent("likeEvent", Arrays.asList("type"), Arrays.asList("unlike"));
+
                 currentPost.removeLike();
                 likes--;
                 removeLike();

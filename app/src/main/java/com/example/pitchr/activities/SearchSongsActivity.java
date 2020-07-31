@@ -78,7 +78,7 @@ public class SearchSongsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("searchActivity", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("searchActivity");
 
         // Set ViewBinding
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
@@ -295,13 +295,17 @@ public class SearchSongsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 binding.pbProgressAction.setVisibility(View.VISIBLE);
-                // perform query here
+
+                // LOG TO ANALYTICS
+                ParseApplication.logSearchEvent(query);
+
+                // Perform query here
                 aSongs.clear();
                 songQuery = query;
                 fetchSongs(songQuery, 0);
 
-                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
-                // see https://code.google.com/p/android/issues/detail?id=24599
+                // Workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // See https://code.google.com/p/android/issues/detail?id=24599
                 searchView.clearFocus();
 
                 return true;

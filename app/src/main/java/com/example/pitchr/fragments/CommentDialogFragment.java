@@ -84,7 +84,7 @@ public class CommentDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("commentDialogFragment", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("commentDialogFragment");
 
         // Bind views
         etCompose = (EditText) view.findViewById(R.id.etCompose);

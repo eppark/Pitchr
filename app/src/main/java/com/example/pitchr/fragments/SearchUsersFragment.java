@@ -78,7 +78,7 @@ public class SearchUsersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("searchUsersFragment", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("searchUsersFragment");
 
         view.setBackgroundColor(getResources().getColor(R.color.gray3));
 
@@ -110,6 +110,9 @@ public class SearchUsersFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 pbProgressAction.setVisibility(View.VISIBLE);
+
+                // LOG TO ANALYTICS
+                ParseApplication.logSearchEvent(query);
 
                 // Perform query here
                 allUsers.clear();

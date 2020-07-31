@@ -16,8 +16,6 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-import java.util.Arrays;
-
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
@@ -39,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("loginActivity", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("loginActivity");
 
         if (ParseUser.getCurrentUser() != null) {
             // If the session isn't valid, log the user out
@@ -88,14 +86,14 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "login"));
+                    ParseApplication.logLoginEvent("failure");
                     return;
                 }
                 goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Login success.", Toast.LENGTH_SHORT).show();
 
                 // LOG TO ANALYTICS
-                ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("success", "login"));
+                ParseApplication.logLoginEvent("success");
             }
         });
     }
@@ -117,20 +115,24 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("failure", "signup"));
+                    ParseApplication.logSignupEvent("failure");
                     return;
                 }
                 goSpotifyAuth(false);
                 Toast.makeText(LoginActivity.this, "Signup success.", Toast.LENGTH_SHORT).show();
 
                 // LOG TO ANALYTICS
-                ParseApplication.logEvent("loginEvent", Arrays.asList("status", "type"), Arrays.asList("success", "signup"));
+                ParseApplication.logSignupEvent("success");
             }
         });
     }
 
     // Go to the Spotify authentication activity
     private void goSpotifyAuth(boolean returning) {
+        // SET USER IN ANALYTICS
+        ParseApplication.mFirebaseAnalytics.setUserId(ParseUser.getCurrentUser().getUsername());
+
+        // Go to the Spotify authentication activity
         Intent i = new Intent(this, SpotifyAuthenticationActivity.class);
         i.putExtra("returning", returning);
         Log.d(TAG, "spotifyauth");

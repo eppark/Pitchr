@@ -1,6 +1,7 @@
 package com.example.pitchr;
 
 import android.app.Application;
+import android.os.Bundle;
 
 import com.example.pitchr.chat.DM;
 import com.example.pitchr.chat.Message;
@@ -11,20 +12,19 @@ import com.example.pitchr.models.Match;
 import com.example.pitchr.models.Match2;
 import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.parse.Parse;
-import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ParseApplication extends Application {
 
     public SpotifyAppRemote mSpotifyAppRemote;
     public boolean spotifyExists;
     public int version = 2;
+    public static FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate() {
@@ -51,16 +51,53 @@ public class ParseApplication extends Application {
                 .server(getString(R.string.parse_server_url))
                 .build()
         );
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
-    // Log to Parse Analytics
+    // Log login event
+    public static void logLoginEvent(String method) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.METHOD, method);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+    }
+
+    // Log signup event
+    public static void logSignupEvent(String method) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.METHOD, method);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
+    }
+
+    // Log share event
+    public static void logShareEvent(String method, String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, method);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
+    }
+
+    // Log search event
+    public static void logSearchEvent(String searchQuery) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, searchQuery);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+    }
+
+    // Log activity event
+    public static void logActivityEvent(String activity) {
+        Bundle bundle = new Bundle();
+        bundle.putString("event", activity);
+        mFirebaseAnalytics.logEvent("activity_event", bundle);
+    }
+
+    // Log generic event
     public static void logEvent(String eventName, List<String> dimensionName, List<String> dimensionValue) {
-        Map<String, String> dimensions = new HashMap<String, String>();
-        // Define ranges to bucket data points into meaningful segments
+        Bundle bundle = new Bundle();
         for (int i = 0; i < dimensionName.size(); i++) {
-            dimensions.put(dimensionName.get(i), dimensionValue.get(i));
+            bundle.putString(dimensionName.get(i), dimensionValue.get(i));
         }
-        // Send the dimensions to Parse along with the event
-        ParseAnalytics.trackEventInBackground(eventName, dimensions);
+        mFirebaseAnalytics.logEvent(eventName, bundle);
     }
 }

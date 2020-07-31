@@ -38,7 +38,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("directMessagesActivity", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("directMessagesActivity");
 
         // Set ViewBinding
         final ActivityDirectMessagesBinding binding = ActivityDirectMessagesBinding.inflate(getLayoutInflater());

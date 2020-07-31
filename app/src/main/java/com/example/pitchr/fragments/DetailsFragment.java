@@ -104,7 +104,7 @@ public class DetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("detailsFragment", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("detailsFragment");
 
         // View binding
         rvComments = (RecyclerView) view.findViewById(R.id.rvComments);
@@ -210,10 +210,16 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!liked) {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("likeEvent", Arrays.asList("type"), Arrays.asList("like"));
+
                     post.addLike();
                     likes++;
                     addLike();
                 } else {
+                    // LOG TO ANALYTICS
+                    ParseApplication.logEvent("likeEvent", Arrays.asList("type"), Arrays.asList("unlike"));
+
                     post.removeLike();
                     likes--;
                     removeLike();

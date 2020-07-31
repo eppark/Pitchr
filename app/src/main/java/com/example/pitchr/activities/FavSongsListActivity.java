@@ -58,7 +58,7 @@ public class FavSongsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("favSongsListActivity", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("favSongsListActivity");
 
         // Set ViewBinding
         binding = ActivityFavSongsListBinding.inflate(getLayoutInflater());

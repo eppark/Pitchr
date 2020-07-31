@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,7 +98,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("profileFragment", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("profileFragment");
 
         // View binding
         ivPfp = view.findViewById(R.id.ivPfp);
@@ -255,7 +254,7 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View buttonView) {
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("shareEvent", Arrays.asList("status", "type"), Arrays.asList("success", "facebook"));
+                    ParseApplication.logShareEvent("Facebook", "fav_songs");
 
                     // Get the view image of favorite songs
                     RecyclerView layoutView = ((FavSongsFragment) ((ViewPagerAdapter) htabViewpager.getAdapter()).getItem(0)).rvSongs;
@@ -286,10 +285,11 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View buttonView) {
                     // LOG TO ANALYTICS
-                    ParseApplication.logEvent("shareEvent", Arrays.asList("status", "type"), Arrays.asList("success", "twitter"));
+                    ParseApplication.logShareEvent("Twitter", "fav_songs");
 
                     // Get the view image of favorite songs
-                    RecyclerView layoutView = ((FavSongsFragment) ((ViewPagerAdapter) htabViewpager.getAdapter()).getItem(0)).rvSongs;
+                    ViewPagerAdapter adapter = (ViewPagerAdapter) htabViewpager.getAdapter();
+                    RecyclerView layoutView = ((FavSongsFragment) adapter.getItem(adapter.getPageIndex("Fav Songs"))).rvSongs;
                     if (layoutView.getAdapter().getItemCount() == 0) {
                         Toast.makeText(getContext(), "Add some favorite songs first!", Toast.LENGTH_SHORT).show();
                     } else {

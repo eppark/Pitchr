@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +78,7 @@ public class MatchesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // LOG TO ANALYTICS
-        ParseApplication.logEvent("matchesFragment", Arrays.asList("status"), Arrays.asList("success"));
+        ParseApplication.logActivityEvent("matchesFragment");
 
         // View binding
         rvMatches = (RecyclerView) view.findViewById(R.id.rvMatches);
@@ -221,29 +222,42 @@ public class MatchesFragment extends Fragment {
                     btnFindMatches.setVisibility(View.GONE);
                     ivLoadingAnimation.setVisibility(View.GONE);
                 } else {
-                    // LOG TO ANALYTICS
-                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "new", "1"));
-
                     // If matches don't exist, create them
-                    HashMap<String, Object> params = new HashMap<String, Object>();
-                    params.put("currentuser", ParseUser.getCurrentUser().getObjectId());
-                    ParseCloud.callFunctionInBackground("findMatchForUser", params, new FunctionCallback<Boolean>() {
-                        @Override
-                        public void done(Boolean object, ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "Issue with creating matches", e);
-                                Toast.makeText(getContext(), "Failed to create matches", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                    if (attempts < 1) {
+                        attempts++; // We don't want to loop forever
 
-                            // We only want to try once in case there is an error on the backend to prevent looping forever
-                            attempts++;
-                            if (attempts < 2) {
-                                // Once we've created the matches, add them to the adapter
+                        // Call Cloud function
+                        HashMap<String, Object> params = new HashMap<String, Object>();
+                        params.put("currentuser", ParseUser.getCurrentUser().getObjectId());
+                        ParseCloud.callFunctionInBackground("findMatchForUser", params, new FunctionCallback<Object>() {
+                            @Override
+                            public void done(Object object, ParseException e) {
+                                if (e != null) {
+                                    // Log the failure
+                                    Log.e(TAG, "Issue with creating match1", e);
+                                    Toast.makeText(getContext(), "Failed to create matches", Toast.LENGTH_SHORT).show();
+
+                                    // LOG TO ANALYTICS
+                                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("failure", "new", "1"));
+                                    return;
+                                }
+                                // Else we are successful!
+                                // LOG TO ANALYTICS
+                                ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "new", "1"));
+
                                 getMatchList();
                             }
-                        }
-                    });
+                        });
+                    } else if (attempts < 5) {
+                        attempts++;
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getMatchList();
+                            }
+                        }, 3000); // Wait 3 seconds to ensure we don't spam the server
+                    }
                 }
             }
         });
@@ -294,29 +308,42 @@ public class MatchesFragment extends Fragment {
                     btnFindMatches.setVisibility(View.GONE);
                     ivLoadingAnimation.setVisibility(View.GONE);
                 } else {
-                    // LOG TO ANALYTICS
-                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "new", "2"));
-
                     // If matches don't exist, create them
-                    HashMap<String, Object> params = new HashMap<String, Object>();
-                    params.put("currentuser", ParseUser.getCurrentUser().getObjectId());
-                    ParseCloud.callFunctionInBackground("findMatch2ForUser", params, new FunctionCallback<Boolean>() {
-                        @Override
-                        public void done(Boolean object, ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "Issue with creating matches", e);
-                                Toast.makeText(getContext(), "Failed to create matches", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                    if (attempts < 1) {
+                        attempts++; // We don't want to loop forever
 
-                            // We only want to try once in case there is an error on the backend to prevent looping forever
-                            attempts++;
-                            if (attempts < 2) {
-                                // Once we've created the matches, add them to the adapter
+                        // Call Cloud function
+                        HashMap<String, Object> params = new HashMap<String, Object>();
+                        params.put("currentuser", ParseUser.getCurrentUser().getObjectId());
+                        ParseCloud.callFunctionInBackground("findMatch2ForUser", params, new FunctionCallback<Object>() {
+                            @Override
+                            public void done(Object object, ParseException e) {
+                                if (e != null) {
+                                    // Log the failure
+                                    Log.e(TAG, "Issue with creating match2", e);
+                                    Toast.makeText(getContext(), "Failed to create matches", Toast.LENGTH_SHORT).show();
+
+                                    // LOG TO ANALYTICS
+                                    ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("failure", "new", "2"));
+                                    return;
+                                }
+                                // Else we are successful!
+                                // LOG TO ANALYTICS
+                                ParseApplication.logEvent("matchEvent", Arrays.asList("status", "type", "version"), Arrays.asList("success", "new", "2"));
+
                                 getMatch2List();
                             }
-                        }
-                    });
+                        });
+                    } else if (attempts < 5) {
+                        attempts++;
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getMatch2List();
+                            }
+                        }, 3000); // Wait 3 seconds to ensure we don't spam the server
+                    }
                 }
             }
         });
