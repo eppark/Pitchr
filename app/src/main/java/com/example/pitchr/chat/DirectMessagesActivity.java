@@ -110,7 +110,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
         query.include(Following.KEY_FOLLOWING);
         query.setSkip(20 * page);
         query.setLimit(20); // Only show 20 users at a time
-        query.addDescendingOrder(Following.KEY_CREATED_AT);
+        query.addAscendingOrder(Following.KEY_UPDATED_AT);
         query.findInBackground(new FindCallback<Following>() {
             @Override
             public void done(List<Following> userList, ParseException e) {

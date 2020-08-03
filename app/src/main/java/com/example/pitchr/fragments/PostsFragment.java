@@ -49,6 +49,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class PostsFragment extends Fragment {
@@ -266,8 +269,24 @@ public class PostsFragment extends Fragment {
 
                                                     // If the song isn't in the current user's favorite songs list, we can add is to our recommended
                                                     for (FavSongs songItem : songsList) {
-                                                        if (!myFavSongs.contains(songItem.getSong())) {
-                                                            songRecs.add(songItem.getSong());
+                                                        boolean newSong = true;
+                                                        for (Song mySong : myFavSongs) {
+                                                            if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
+                                                                newSong = false;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (newSong) {
+                                                            boolean newRecSong = true;
+                                                            for (Song mySong : songRecs) {
+                                                                if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
+                                                                    newRecSong = false;
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if (newRecSong) {
+                                                                songRecs.add(songItem.getSong());
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -323,13 +342,22 @@ public class PostsFragment extends Fragment {
                                                     for (FavSongs songItem : songsList) {
                                                         boolean newSong = true;
                                                         for (Song mySong : myFavSongs) {
-                                                            if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId())) {
+                                                            if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
                                                                 newSong = false;
                                                                 break;
                                                             }
                                                         }
                                                         if (newSong) {
-                                                            songRecs.add(songItem.getSong());
+                                                            boolean newRecSong = true;
+                                                            for (Song mySong : songRecs) {
+                                                                if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
+                                                                    newRecSong = false;
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if (newRecSong) {
+                                                                songRecs.add(songItem.getSong());
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -397,6 +425,7 @@ public class PostsFragment extends Fragment {
 
                     // If this is the 5th post, show the recommended songs
                     if (allPosts.size() == 5 && songRecs.size() > 0) {
+                        Collections.shuffle(songRecs); // Shuffle
                         allPosts.add(new PostItem(null, PostItem.TYPE_REC, songRecs));
                     }
                 }

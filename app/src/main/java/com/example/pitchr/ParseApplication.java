@@ -14,6 +14,7 @@ import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 

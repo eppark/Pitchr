@@ -34,6 +34,7 @@ import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -118,6 +119,9 @@ public class SettingsActivity extends AppCompatActivity {
 
                 // LOG TO ANALYTICS
                 ParseApplication.logEvent("logoutEvent", Arrays.asList("logout"), Arrays.asList("success"));
+
+                // Remove notifications
+                ParsePush.unsubscribeInBackground(ParseUser.getCurrentUser().getUsername());
 
                 // Tell the main activity that we're logging out
                 ((ResultReceiver) getIntent().getParcelableExtra("finisher")).send(ProfileFragment.RESULT_CODE, new Bundle());

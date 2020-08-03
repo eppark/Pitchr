@@ -24,7 +24,9 @@
         <activity android:name=".chat.DirectMessagesActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ComposeActivity" />
-        <activity android:name=".activities.SearchSongsActivity" android:theme="@style/CircularReveal" />
+        <activity
+            android:name=".activities.SearchSongsActivity"
+            android:theme="@style/CircularReveal" />
         <activity
             android:name=".activities.SpotifyAuthenticationActivity"
             android:launchMode="singleInstance" />
@@ -60,15 +62,18 @@
             android:value="@string/parse_client_key" />
 
         <!-- Facebook SDK Sharing -->
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <provider android:authorities="@string/facebook_content_provider"
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <provider
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="@string/facebook_content_provider"
             android:exported="true" />
 
         <!-- Google AdMob -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
+            android:value="@string/admob_app_id" />
     </application>
 
 </manifest>
