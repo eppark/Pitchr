@@ -30,11 +30,11 @@ import com.example.pitchr.databinding.ActivitySettingsBinding;
 import com.example.pitchr.fragments.ProfileFragment;
 import com.example.pitchr.models.FavSongs;
 import com.example.pitchr.models.Song;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -114,14 +114,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AuthorizationClient.clearCookies(getBaseContext()); // Clear Spotify cookies
+
+                // Remove notifications
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(ParseUser.getCurrentUser().getUsername());
+
                 ParseUser.logOut(); // Log the Parse user out
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
 
                 // LOG TO ANALYTICS
                 ParseApplication.logEvent("logoutEvent", Arrays.asList("logout"), Arrays.asList("success"));
-
-                // Remove notifications
-                ParsePush.unsubscribeInBackground(ParseUser.getCurrentUser().getUsername());
 
                 // Tell the main activity that we're logging out
                 ((ResultReceiver) getIntent().getParcelableExtra("finisher")).send(ProfileFragment.RESULT_CODE, new Bundle());

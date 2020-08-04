@@ -1,8 +1,14 @@
 package com.example.pitchr;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.pitchr.chat.DM;
 import com.example.pitchr.chat.Message;
 import com.example.pitchr.models.Comment;
@@ -14,14 +20,18 @@ import com.example.pitchr.models.Post;
 import com.example.pitchr.models.Song;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.parse.Parse;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ParseApplication extends Application {
 
+    public static final String TAG = ParseApplication.class.getSimpleName();
     public SpotifyAppRemote mSpotifyAppRemote;
     public boolean spotifyExists;
     public int version = 2;
@@ -55,6 +65,9 @@ public class ParseApplication extends Application {
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        // Push notifs
+        Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
     }
 
     // Log login event
@@ -100,5 +113,31 @@ public class ParseApplication extends Application {
             bundle.putString(dimensionName.get(i), dimensionValue.get(i));
         }
         mFirebaseAnalytics.logEvent(eventName, bundle);
+    }
+
+    // Send a notification
+    public static void sendNotification(JSONObject notification, Context context) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(context.getString(R.string.fcm_api_url), notification,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, "onResponse: " + response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: ", error);
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", String.format("key=%s", context.getString(R.string.fcm_server_key)));
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+        PitchrSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 }

@@ -51,6 +51,8 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
@@ -209,6 +211,28 @@ public class ProfileFragment extends Fragment {
                                 // Set variable
                                 following = true;
                                 setupFollowStatus();
+
+                                // Notify the other user that they were followed
+                                String topic = String.format("/topics/%s", user.getUsername());
+                                String notificationTitle = "Pitchr";
+                                String notificationMessage = String.format("%s is now following you!", ParseUser.getCurrentUser().getUsername());
+
+                                JSONObject notification = new JSONObject();
+                                JSONObject notificationBody = new JSONObject();
+                                try {
+                                    // Set the message
+                                    notificationBody.put("title", notificationTitle);
+                                    notificationBody.put("message", notificationMessage);
+
+                                    // Set the topic
+                                    notification.put("to", topic);
+                                    notification.put("data", notificationBody);
+                                } catch (JSONException ex) {
+                                    Log.e(TAG, "onCreate error!", ex);
+                                }
+                                // Send the notification
+                                ParseApplication.sendNotification(notification, getContext().getApplicationContext());
+
                             }
                         });
                     }
