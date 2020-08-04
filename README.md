@@ -68,6 +68,12 @@ Pitchr is a music-related social networking / connecting app that focuses on con
 - [x] Users can send direct messages 1-on-1 with their followers or users they are following
 - [x] Ads show up on the user's feed using AdMob
 - [x] Users can use genre-filtering chips when searching for songs on Spotify
+- [ ] Users get push notifications
+    - [ ] Users get notified when someone follows them
+    - [ ] Users get notified when someone likes their post
+    - [ ] Users get notified when someone comments on their post
+    - [ ] Users get notified when someone direct messages them
+- [ ] Users can change their username and password
 
 ### 2. Screen Archetypes
 
