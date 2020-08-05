@@ -16,11 +16,14 @@ import com.example.pitchr.R;
 import com.example.pitchr.databinding.ActivityChatBinding;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -88,32 +91,63 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String description = binding.etMessage.getText().toString();
-                final Message message = new Message();
-                message.setMessage(description);
-                message.setReceiver(receiver);
-                message.setSender(ParseUser.getCurrentUser());
-                message.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
+                if (!description.isEmpty()) {
+                    final Message message = new Message();
+                    message.setMessage(description);
+                    message.setReceiver(receiver);
+                    message.setSender(ParseUser.getCurrentUser());
+                    message.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                // LOG TO ANALYTICS
+                                ParseApplication.logEvent("messageEvent", Arrays.asList("status"), Arrays.asList("failure"));
+
+                                // Let the user know there was an error
+                                Log.e(TAG, "Error while saving", e);
+                                Toast.makeText(getApplicationContext(), "Error while saving message!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             // LOG TO ANALYTICS
-                            ParseApplication.logEvent("messageEvent", Arrays.asList("status"), Arrays.asList("failure"));
+                            ParseApplication.logEvent("messageEvent", Arrays.asList("status"), Arrays.asList("success"));
 
-                            // Let the user know there was an error
-                            Log.e(TAG, "Error while saving", e);
-                            Toast.makeText(getApplicationContext(), "Error while saving message!", Toast.LENGTH_SHORT).show();
-                            return;
+                            // Save to Parse and refresh messages
+                            Log.i(TAG, "Message save success!");
+                            currentDm.getRelation(DM.KEY_MESSAGES).add(message);
+                            currentDm.saveInBackground();
+                            refreshMessages();
+
+                            // Notify the other user that they were messaged
+                            String topic = String.format("/topics/%s", receiver.getUsername());
+                            String notificationTitle = "Pitchr";
+                            String notificationMessage = String.format("%s sent you a message: \"%s\"", ParseUser.getCurrentUser().getUsername(), description);
+                            String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
+
+                            JSONObject notification = new JSONObject();
+                            JSONObject notificationBody = new JSONObject();
+                            try {
+                                // Set the message
+                                notificationBody.put("title", notificationTitle);
+                                notificationBody.put("message", notificationMessage);
+                                if (!icon.isEmpty()) {
+                                    notificationBody.put("icon", icon);
+                                } else {
+                                    notificationBody.put("icon", getString(R.string.default_app_icon_url));
+                                }
+
+                                // Set the topic
+                                notification.put("to", topic);
+                                notification.put("data", notificationBody);
+                            } catch (JSONException ex) {
+                                Log.e(TAG, "onCreate error!", ex);
+                            }
+                            // Send the notification
+                            ParseApplication.sendNotification(notification, getApplicationContext());
                         }
-                        // LOG TO ANALYTICS
-                        ParseApplication.logEvent("messageEvent", Arrays.asList("status"), Arrays.asList("success"));
-
-                        // Save to Parse and refresh messages
-                        Log.i(TAG, "Message save success!");
-                        currentDm.getRelation(DM.KEY_MESSAGES).add(message);
-                        currentDm.saveInBackground();
-                        refreshMessages();
-                    }
-                });
+                    });
+                } else {
+                    Toast.makeText(ChatActivity.this, "Can't send an empty message!", Toast.LENGTH_SHORT).show();
+                }
                 binding.etMessage.setText(null);
             }
         });

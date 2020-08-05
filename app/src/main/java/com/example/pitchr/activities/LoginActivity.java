@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.pitchr.ParseApplication;
 import com.example.pitchr.databinding.ActivityLoginBinding;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         if (ParseUser.getCurrentUser() != null) {
             // If the session isn't valid, log the user out
             if (!ParseUser.getCurrentUser().isAuthenticated()) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(ParseUser.getCurrentUser().getUsername());
                 ParseUser.logOut();
             } else {
                 // Else we can just authenticate with Spotify

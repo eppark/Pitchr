@@ -216,6 +216,7 @@ public class ProfileFragment extends Fragment {
                                 String topic = String.format("/topics/%s", user.getUsername());
                                 String notificationTitle = "Pitchr";
                                 String notificationMessage = String.format("%s is now following you!", ParseUser.getCurrentUser().getUsername());
+                                String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
 
                                 JSONObject notification = new JSONObject();
                                 JSONObject notificationBody = new JSONObject();
@@ -223,6 +224,11 @@ public class ProfileFragment extends Fragment {
                                     // Set the message
                                     notificationBody.put("title", notificationTitle);
                                     notificationBody.put("message", notificationMessage);
+                                    if (!icon.isEmpty()) {
+                                        notificationBody.put("icon", icon);
+                                    } else {
+                                        notificationBody.put("icon", getString(R.string.default_app_icon_url));
+                                    }
 
                                     // Set the topic
                                     notification.put("to", topic);
@@ -232,7 +238,6 @@ public class ProfileFragment extends Fragment {
                                 }
                                 // Send the notification
                                 ParseApplication.sendNotification(notification, getContext().getApplicationContext());
-
                             }
                         });
                     }

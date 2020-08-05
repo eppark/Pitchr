@@ -34,6 +34,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -216,6 +218,33 @@ public class DetailsFragment extends Fragment {
                     post.addLike();
                     likes++;
                     addLike();
+
+                    // Notify the other user that their post was liked
+                    String topic = String.format("/topics/%s", post.getUser().getUsername());
+                    String notificationTitle = "Pitchr";
+                    String notificationMessage = String.format("%s liked your post about %s!", ParseUser.getCurrentUser().getUsername(), post.getSong().getName());
+                    String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
+
+                    JSONObject notification = new JSONObject();
+                    JSONObject notificationBody = new JSONObject();
+                    try {
+                        // Set the message
+                        notificationBody.put("title", notificationTitle);
+                        notificationBody.put("message", notificationMessage);
+                        if (!icon.isEmpty()) {
+                            notificationBody.put("icon", icon);
+                        } else {
+                            notificationBody.put("icon", getString(R.string.default_app_icon_url));
+                        }
+
+                        // Set the topic
+                        notification.put("to", topic);
+                        notification.put("data", notificationBody);
+                    } catch (JSONException ex) {
+                        Log.e(TAG, "onCreate error!", ex);
+                    }
+                    // Send the notification
+                    ParseApplication.sendNotification(notification, getContext().getApplicationContext());
                 } else {
                     // LOG TO ANALYTICS
                     ParseApplication.logEvent("likeEvent", Arrays.asList("type"), Arrays.asList("unlike"));

@@ -19,6 +19,10 @@ import com.example.pitchr.activities.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
 
 public class PitchrFirebaseMessagingService extends FirebaseMessagingService {
@@ -45,9 +49,31 @@ public class PitchrFirebaseMessagingService extends FirebaseMessagingService {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        // Set notification icon
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.pitchr_default);
 
+        // Set notification icon
+        Bitmap largeIcon;
+        try {
+            // If we have an icon to use, show that
+            URL url = new URL(remoteMessage.getData().get("icon"));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap src = BitmapFactory.decodeStream(input);
+
+            // Crop the image into a square
+            if (src.getWidth() >= src.getHeight()) {
+                largeIcon = Bitmap.createBitmap(src, src.getWidth() / 2 - src.getHeight() / 2, 0, src.getHeight(), src.getHeight());
+            } else {
+                largeIcon = Bitmap.createBitmap(src, 0, src.getHeight() / 2 - src.getWidth() / 2, src.getWidth(), src.getWidth());
+            }
+        } catch (IOException e) {
+            // If we don't have an icon to use, use the default icon
+            Log.e(TAG, "IOException when getting icon", e);
+            largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.pitchr_default);
+        }
+
+        // Create the notification
         Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                 .setSmallIcon(R.drawable.pitchr_default_transparent)
