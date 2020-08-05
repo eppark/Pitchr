@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 binding.pbLoading.setVisibility(View.VISIBLE); // Show the progress bar
                 Log.i(TAG, "onClick login button");
-                String username = binding.etUsername.getText().toString();
-                String password = binding.etPassword.getText().toString();
+                String username = binding.etUsername.getEditText().getText().toString();
+                String password = binding.etPassword.getEditText().getText().toString();
                 loginUser(username, password);
             }
         });
@@ -69,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 binding.pbLoading.setVisibility(View.VISIBLE); // Show the progress bar
                 Log.i(TAG, "onClick signup button");
-                String username = binding.etUsername.getText().toString();
-                String password = binding.etPassword.getText().toString();
+                String username = binding.etUsername.getEditText().getText().toString();
+                String password = binding.etPassword.getEditText().getText().toString();
                 signupUser(username, password);
             }
         });

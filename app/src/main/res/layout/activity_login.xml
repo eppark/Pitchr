@@ -31,29 +31,55 @@
             app:srcCompat="@drawable/pitchr_name_white"
             tools:srcCompat="@drawable/pitchr_name_white" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivLogoLogin"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/spotifyGreen"
-            android:ems="10"
-            android:hint="@string/username"
-            android:maxLines="1"
-            android:textColor="@color/white" />
+            android:foregroundTint="@color/spotifyGreen"
+            android:textColorHint="@color/gray1"
+            app:boxStrokeColor="@color/spotifyGreen">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tietUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:backgroundTint="@color/spotifyGreen"
+                android:ems="10"
+                android:hint="@string/username"
+                android:maxLines="1"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etUsername"
+            android:layout_below="@id/etUsername"
             android:layout_marginTop="0dp"
             android:backgroundTint="@color/spotifyGreen"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@color/white" />
+            android:foregroundTint="@color/spotifyGreen"
+            android:textColorHint="@color/gray1"
+            app:boxStrokeColor="@color/spotifyGreen"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tietPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:backgroundTint="@color/spotifyGreen"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <Button
             android:id="@+id/btnLogin"
@@ -74,7 +100,6 @@
             android:backgroundTint="@color/gray1"
             android:text="@string/sign_up"
             android:textColor="@color/gray3" />
-
     </RelativeLayout>
 
     <ProgressBar
