@@ -12,15 +12,17 @@
     <list default="true" id="dda1aa42-76d3-418d-a3ca-6993e669028c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/LoginActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/activities/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/PostsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/adapters/PostsAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/DetailsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/DetailsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/PostsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/pitchr/fragments/PostsFragment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="4545524f50373098" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_API_30" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -58,7 +60,7 @@
     <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-08-04T21:36:08.828Z" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="SelectDeploymentTargetsDialog.selectedDevices" value="4545524f50373098&#10;Pixel_2_API_30&#10;Pixel_2_API_30_2" />
+    <property name="SelectDeploymentTargetsDialog.selectedDevices" value="Pixel_2_API_30&#10;Pixel_2_API_30_2" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
@@ -443,11 +445,17 @@
       <option name="project" value="LOCAL" />
       <updated>1596650431567</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Users can toggle password viewing on the login screen">
+      <created>1596661366659</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1596661366659</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Allow users to refresh their fav song list from Spotify" />
     <MESSAGE value="Set up direct messaging capabilities" />
     <MESSAGE value="Cleaned direct messaging and settings UI" />
     <MESSAGE value="Implemented adding songs manually" />
@@ -472,7 +480,8 @@
     <MESSAGE value="Fixed song recommendations to not show duplicates and ordered direct messages chronologically" />
     <MESSAGE value="Set up basic Firebase Messaging Service" />
     <MESSAGE value="Implemented push notifications for users when someone follows them, likes/comments on their post, or direct messages them." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented push notifications for users when someone follows them, likes/comments on their post, or direct messages them." />
+    <MESSAGE value="Users can toggle password viewing on the login screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Users can toggle password viewing on the login screen" />
   </component>
   <component name="WindowStateProjectService">
     <state x="394" y="257" key="#PSD" timestamp="1595969632935">
@@ -516,14 +525,14 @@
     <state x="725" y="392" key="AndroidCreateXmlResourceDialog/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595441592471" />
     <state x="725" y="391" key="AndroidCreateXmlResourceDialog/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1595970347588" />
     <state x="725" y="392" key="AndroidCreateXmlResourceDialog/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1596052510928" />
-    <state x="353" y="111" key="CommitChangelistDialog2" timestamp="1596650431377">
+    <state x="353" y="111" key="CommitChangelistDialog2" timestamp="1596661366542">
       <screen x="0" y="23" width="1792" height="1024" />
     </state>
     <state x="368" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594855455926" />
     <state x="300" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595460209299" />
     <state x="332" y="121" key="CommitChangelistDialog2/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444388483" />
     <state x="624" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1596469317539" />
-    <state x="353" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1596650431377" />
+    <state x="353" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1596661366542" />
     <state x="353" y="111" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1792.1026@0.23.1792.1026" timestamp="1596559794814" />
     <state x="587" y="280" key="Downloadable.Font.Dialog.Size" timestamp="1596128156419">
       <screen x="0" y="23" width="1792" height="1022" />
@@ -620,13 +629,14 @@
     </state>
     <state x="162" y="123" width="1495" height="791" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1596476823827" />
     <state x="162" y="130" width="1495" height="848" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-1920.23.1920.980/0.23.1792.1097@0.23.1792.1097" timestamp="1596136526621" />
-    <state x="517" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1596640277047">
+    <state x="517" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1596751917356">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
     <state x="517" y="350" key="com.intellij.ide.util.TipDialog/-1440.23.1440.877/0.23.1792.1017@0.23.1792.1017" timestamp="1594911856378" />
     <state x="517" y="351" key="com.intellij.ide.util.TipDialog/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594738793128" />
     <state x="517" y="352" key="com.intellij.ide.util.TipDialog/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595524932533" />
     <state x="517" y="352" key="com.intellij.ide.util.TipDialog/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1596640277047" />
+    <state x="517" y="352" key="com.intellij.ide.util.TipDialog/0.23.1792.1022@0.23.1792.1022" timestamp="1596751917356" />
     <state x="709" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595518768017">
       <screen x="0" y="23" width="1792" height="1022" />
     </state>
@@ -652,14 +662,14 @@
     </state>
     <state x="682" y="380" key="psd.choose.module.panel.dimension/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1594742220857" />
     <state x="682" y="381" key="psd.choose.module.panel.dimension/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1595969432085" />
-    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup" timestamp="1596652434996">
-      <screen x="0" y="23" width="1792" height="1024" />
+    <state x="534" y="241" width="670" height="682" key="search.everywhere.popup" timestamp="1596667494244">
+      <screen x="0" y="23" width="1792" height="1026" />
     </state>
     <state x="534" y="241" width="670" height="676" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1020@0.23.1792.1020" timestamp="1594915940458" />
     <state x="534" y="241" width="670" height="678" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1022@0.23.1792.1022" timestamp="1595525378899" />
     <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1440.23.1440.877/0.23.1792.1024@0.23.1792.1024" timestamp="1595444583544" />
     <state x="534" y="241" width="670" height="679" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1022@0.23.1792.1022" timestamp="1596649456793" />
-    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1596652434996" />
-    <state x="534" y="241" width="670" height="682" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1026@0.23.1792.1026" timestamp="1596584171635" />
+    <state x="534" y="241" width="670" height="680" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1024@0.23.1792.1024" timestamp="1596661541491" />
+    <state x="534" y="241" width="670" height="682" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1792.1026@0.23.1792.1026" timestamp="1596667494244" />
   </component>
 </project>

@@ -228,148 +228,150 @@ public class PostsFragment extends Fragment {
                     myFavSongs.add(songItem.getSong());
                 }
 
-                switch (((ParseApplication) getContext().getApplicationContext()).version) {
-                    case 1:
-                        // Query for the users that the current user is matched with
-                        // Use algorithm 1
-                        ParseQuery<Match> matchQuery = ParseQuery.getQuery(Match.class);
-                        matchQuery.include(Match.KEY_TO);
-                        matchQuery.whereEqualTo(Match.KEY_FROM, ParseUser.getCurrentUser());
-                        matchQuery.addDescendingOrder(Match.KEY_PERCENT);
-                        matchQuery.setLimit(5);
-                        matchQuery.findInBackground(new FindCallback<Match>() {
-                            @Override
-                            public void done(List<Match> matches, ParseException e) {
-                                if (e != null) {
-                                    Log.e(TAG, "Issue with getting matches", e);
-                                    Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                Log.d(TAG, "Query matches success!");
+                if (getContext() != null) {
+                    switch (((ParseApplication) getContext().getApplicationContext()).version) {
+                        case 1:
+                            // Query for the users that the current user is matched with
+                            // Use algorithm 1
+                            ParseQuery<Match> matchQuery = ParseQuery.getQuery(Match.class);
+                            matchQuery.include(Match.KEY_TO);
+                            matchQuery.whereEqualTo(Match.KEY_FROM, ParseUser.getCurrentUser());
+                            matchQuery.addDescendingOrder(Match.KEY_PERCENT);
+                            matchQuery.setLimit(5);
+                            matchQuery.findInBackground(new FindCallback<Match>() {
+                                @Override
+                                public void done(List<Match> matches, ParseException e) {
+                                    if (e != null) {
+                                        Log.e(TAG, "Issue with getting matches", e);
+                                        Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    Log.d(TAG, "Query matches success!");
 
-                                if (matches.size() > 0) {
-                                    // Get the favorite songs for each match
-                                    for (Match match : matches) {
-                                        // We don't want exact matches
-                                        if (match.getPercent() < 1.0) {
-                                            ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
-                                            query.include(FavSongs.KEY_USER);
-                                            query.include(FavSongs.KEY_SONG);
-                                            query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
-                                            query.setLimit(10); // Only show 10 songs at a time
-                                            query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
-                                            query.findInBackground(new FindCallback<FavSongs>() {
-                                                @Override
-                                                public void done(List<FavSongs> songsList, ParseException e) {
-                                                    if (e != null) {
-                                                        Log.e(TAG, "Issue with getting fav songs", e);
-                                                        return;
-                                                    }
-                                                    Log.d(TAG, "Query fav songs success!");
-
-                                                    // If the song isn't in the current user's favorite songs list, we can add is to our recommended
-                                                    for (FavSongs songItem : songsList) {
-                                                        boolean newSong = true;
-                                                        for (Song mySong : myFavSongs) {
-                                                            if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
-                                                                newSong = false;
-                                                                break;
-                                                            }
+                                    if (matches.size() > 0) {
+                                        // Get the favorite songs for each match
+                                        for (Match match : matches) {
+                                            // We don't want exact matches
+                                            if (match.getPercent() < 1.0) {
+                                                ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
+                                                query.include(FavSongs.KEY_USER);
+                                                query.include(FavSongs.KEY_SONG);
+                                                query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
+                                                query.setLimit(10); // Only show 10 songs at a time
+                                                query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
+                                                query.findInBackground(new FindCallback<FavSongs>() {
+                                                    @Override
+                                                    public void done(List<FavSongs> songsList, ParseException e) {
+                                                        if (e != null) {
+                                                            Log.e(TAG, "Issue with getting fav songs", e);
+                                                            return;
                                                         }
-                                                        if (newSong) {
-                                                            boolean newRecSong = true;
-                                                            for (Song mySong : songRecs) {
+                                                        Log.d(TAG, "Query fav songs success!");
+
+                                                        // If the song isn't in the current user's favorite songs list, we can add is to our recommended
+                                                        for (FavSongs songItem : songsList) {
+                                                            boolean newSong = true;
+                                                            for (Song mySong : myFavSongs) {
                                                                 if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
-                                                                    newRecSong = false;
+                                                                    newSong = false;
                                                                     break;
                                                                 }
                                                             }
-                                                            if (newRecSong) {
-                                                                songRecs.add(songItem.getSong());
+                                                            if (newSong) {
+                                                                boolean newRecSong = true;
+                                                                for (Song mySong : songRecs) {
+                                                                    if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
+                                                                        newRecSong = false;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                if (newRecSong) {
+                                                                    songRecs.add(songItem.getSong());
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
                                     }
+                                    // Query for the users that the current user is following
+                                    queryFollowing(0);
                                 }
-                                // Query for the users that the current user is following
-                                queryFollowing(0);
-                            }
-                        });
-                        break;
-                    case 2:
-                    default:
-                        // Query for the users that the current user is matched with
-                        // Use algorithm 2
-                        ParseQuery<Match2> match2Query = ParseQuery.getQuery(Match2.class);
-                        match2Query.include(Match2.KEY_TO);
-                        match2Query.whereEqualTo(Match2.KEY_FROM, ParseUser.getCurrentUser());
-                        match2Query.addDescendingOrder(Match2.KEY_PERCENT);
-                        match2Query.setLimit(5);
-                        match2Query.findInBackground(new FindCallback<Match2>() {
-                            @Override
-                            public void done(List<Match2> matches, ParseException e) {
-                                if (e != null) {
-                                    Log.e(TAG, "Issue with getting matches", e);
-                                    Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                Log.d(TAG, "Query matches success!");
+                            });
+                            break;
+                        case 2:
+                        default:
+                            // Query for the users that the current user is matched with
+                            // Use algorithm 2
+                            ParseQuery<Match2> match2Query = ParseQuery.getQuery(Match2.class);
+                            match2Query.include(Match2.KEY_TO);
+                            match2Query.whereEqualTo(Match2.KEY_FROM, ParseUser.getCurrentUser());
+                            match2Query.addDescendingOrder(Match2.KEY_PERCENT);
+                            match2Query.setLimit(5);
+                            match2Query.findInBackground(new FindCallback<Match2>() {
+                                @Override
+                                public void done(List<Match2> matches, ParseException e) {
+                                    if (e != null) {
+                                        Log.e(TAG, "Issue with getting matches", e);
+                                        Toast.makeText(getContext(), "Failed to get matches", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    Log.d(TAG, "Query matches success!");
 
-                                if (matches.size() > 0) {
-                                    // Get the favorite songs for each match
-                                    for (Match2 match : matches) {
-                                        // We don't want exact matches
-                                        if (match.getPercent() < 1.0) {
-                                            ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
-                                            query.include(FavSongs.KEY_USER);
-                                            query.include(FavSongs.KEY_SONG);
-                                            query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
-                                            query.setLimit(10); // Only show 10 songs at a time
-                                            query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
-                                            query.findInBackground(new FindCallback<FavSongs>() {
-                                                @Override
-                                                public void done(List<FavSongs> songsList, ParseException e) {
-                                                    if (e != null) {
-                                                        Log.e(TAG, "Issue with getting fav songs", e);
-                                                        return;
-                                                    }
-                                                    Log.d(TAG, "Query fav songs success!");
-
-                                                    // If the song isn't in the current user's favorite songs list, we can add is to our recommended
-                                                    for (FavSongs songItem : songsList) {
-                                                        boolean newSong = true;
-                                                        for (Song mySong : myFavSongs) {
-                                                            if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
-                                                                newSong = false;
-                                                                break;
-                                                            }
+                                    if (matches.size() > 0) {
+                                        // Get the favorite songs for each match
+                                        for (Match2 match : matches) {
+                                            // We don't want exact matches
+                                            if (match.getPercent() < 1.0) {
+                                                ParseQuery<FavSongs> query = ParseQuery.getQuery(FavSongs.class);
+                                                query.include(FavSongs.KEY_USER);
+                                                query.include(FavSongs.KEY_SONG);
+                                                query.whereEqualTo(FavSongs.KEY_USER, match.getTo());
+                                                query.setLimit(10); // Only show 10 songs at a time
+                                                query.addDescendingOrder(FavSongs.KEY_CREATED_AT);
+                                                query.findInBackground(new FindCallback<FavSongs>() {
+                                                    @Override
+                                                    public void done(List<FavSongs> songsList, ParseException e) {
+                                                        if (e != null) {
+                                                            Log.e(TAG, "Issue with getting fav songs", e);
+                                                            return;
                                                         }
-                                                        if (newSong) {
-                                                            boolean newRecSong = true;
-                                                            for (Song mySong : songRecs) {
+                                                        Log.d(TAG, "Query fav songs success!");
+
+                                                        // If the song isn't in the current user's favorite songs list, we can add is to our recommended
+                                                        for (FavSongs songItem : songsList) {
+                                                            boolean newSong = true;
+                                                            for (Song mySong : myFavSongs) {
                                                                 if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
-                                                                    newRecSong = false;
+                                                                    newSong = false;
                                                                     break;
                                                                 }
                                                             }
-                                                            if (newRecSong) {
-                                                                songRecs.add(songItem.getSong());
+                                                            if (newSong) {
+                                                                boolean newRecSong = true;
+                                                                for (Song mySong : songRecs) {
+                                                                    if (mySong.getSpotifyId().equals(songItem.getSong().getSpotifyId()) || (mySong.getName().equals(songItem.getSong().getName()) && mySong.getArtists().containsAll(songItem.getSong().getArtists()))) {
+                                                                        newRecSong = false;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                if (newRecSong) {
+                                                                    songRecs.add(songItem.getSong());
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
                                     }
+                                    // Query for the users that the current user is following
+                                    queryFollowing(0);
                                 }
-                                // Query for the users that the current user is following
-                                queryFollowing(0);
-                            }
-                        });
-                        break;
+                            });
+                            break;
+                    }
                 }
             }
         });
@@ -504,30 +506,32 @@ public class PostsFragment extends Fragment {
 
     // Load the ads
     private void loadNativeAds() {
-        AdLoader.Builder builder = new AdLoader.Builder(getContext(), getString(R.string.ad_unit_id));
-        adLoader = builder.forUnifiedNativeAd(
-                new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        // A native ad loaded successfully, check if the ad loader has finished loading and if so, insert the ads into the list.
-                        allAds.add(unifiedNativeAd);
-                        if (!adLoader.isLoading()) {
-                            insertAdsInAdapterItems();
+        if (getContext() != null) {
+            AdLoader.Builder builder = new AdLoader.Builder(getContext(), getString(R.string.ad_unit_id));
+            adLoader = builder.forUnifiedNativeAd(
+                    new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                        @Override
+                        public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                            // A native ad loaded successfully, check if the ad loader has finished loading and if so, insert the ads into the list.
+                            allAds.add(unifiedNativeAd);
+                            if (!adLoader.isLoading()) {
+                                insertAdsInAdapterItems();
+                            }
                         }
-                    }
-                }).withAdListener(
-                new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(int errorCode) {
-                        // A native ad failed to load, check if the ad loader has finished loading and if so, insert the ads into the list.
-                        Log.e(TAG, "The previous native ad failed to load. Attempting to load another.");
-                        if (!adLoader.isLoading()) {
-                            insertAdsInAdapterItems();
+                    }).withAdListener(
+                    new AdListener() {
+                        @Override
+                        public void onAdFailedToLoad(int errorCode) {
+                            // A native ad failed to load, check if the ad loader has finished loading and if so, insert the ads into the list.
+                            Log.e(TAG, "The previous native ad failed to load. Attempting to load another.");
+                            if (!adLoader.isLoading()) {
+                                insertAdsInAdapterItems();
+                            }
                         }
-                    }
-                }).build();
+                    }).build();
 
-        // Load the Native Express ad.
-        adLoader.loadAds(new AdRequest.Builder().build(), Math.round(allPosts.size() / 5));
+            // Load the Native Express ad.
+            adLoader.loadAds(new AdRequest.Builder().build(), Math.round(allPosts.size() / 5));
+        }
     }
 }

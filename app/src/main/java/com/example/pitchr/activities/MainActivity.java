@@ -127,31 +127,33 @@ public class MainActivity extends AppCompatActivity implements CommentDialogFrag
         ((DetailsFragment) fragmentManager.findFragmentByTag(PostsAdapter.TAG)).adapter.notifyDataSetChanged();
 
         // Notify the other user that their post was commented on
-        String topic = String.format("/topics/%s", comment.getOriginalPost().getUser().getUsername());
-        String notificationTitle = "Pitchr";
-        String notificationMessage = String.format("%s commented on your post about %s!", ParseUser.getCurrentUser().getUsername(), comment.getOriginalPost().getSong().getName());
-        String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
+        if (!comment.getOriginalPost().getUser().getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+            String topic = String.format("/topics/%s", comment.getOriginalPost().getUser().getUsername());
+            String notificationTitle = "Pitchr";
+            String notificationMessage = String.format("%s commented on your post about %s!", ParseUser.getCurrentUser().getUsername(), comment.getOriginalPost().getSong().getName());
+            String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
 
-        JSONObject notification = new JSONObject();
-        JSONObject notificationBody = new JSONObject();
-        try {
-            // Set the message
-            notificationBody.put("title", notificationTitle);
-            notificationBody.put("message", notificationMessage);
-            if (!icon.isEmpty()) {
-                notificationBody.put("icon", icon);
-            } else {
-                notificationBody.put("icon", getString(R.string.default_app_icon_url));
+            JSONObject notification = new JSONObject();
+            JSONObject notificationBody = new JSONObject();
+            try {
+                // Set the message
+                notificationBody.put("title", notificationTitle);
+                notificationBody.put("message", notificationMessage);
+                if (!icon.isEmpty()) {
+                    notificationBody.put("icon", icon);
+                } else {
+                    notificationBody.put("icon", getString(R.string.default_app_icon_url));
+                }
+
+                // Set the topic
+                notification.put("to", topic);
+                notification.put("data", notificationBody);
+            } catch (JSONException ex) {
+                Log.e(TAG, "onCreate error!", ex);
             }
-
-            // Set the topic
-            notification.put("to", topic);
-            notification.put("data", notificationBody);
-        } catch (JSONException ex) {
-            Log.e(TAG, "onCreate error!", ex);
+            // Send the notification
+            ParseApplication.sendNotification(notification, getApplicationContext());
         }
-        // Send the notification
-        ParseApplication.sendNotification(notification, getApplicationContext());
     }
 
     // Spotify player

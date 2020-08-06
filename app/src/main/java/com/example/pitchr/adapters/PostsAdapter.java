@@ -417,31 +417,33 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 addLike();
 
                 // Notify the other user that their post was liked
-                String topic = String.format("/topics/%s", currentPost.getUser().getUsername());
-                String notificationTitle = "Pitchr";
-                String notificationMessage = String.format("%s liked your post about %s!", ParseUser.getCurrentUser().getUsername(), currentPost.getSong().getName());
-                String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
+                if (!currentPost.getUser().getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+                    String topic = String.format("/topics/%s", currentPost.getUser().getUsername());
+                    String notificationTitle = "Pitchr";
+                    String notificationMessage = String.format("%s liked your post about %s!", ParseUser.getCurrentUser().getUsername(), currentPost.getSong().getName());
+                    String icon = ((ParseFile) ParseUser.getCurrentUser().get("pfp")) != null ? ((ParseFile) ParseUser.getCurrentUser().get("pfp")).getUrl() : "";
 
-                JSONObject notification = new JSONObject();
-                JSONObject notificationBody = new JSONObject();
-                try {
-                    // Set the message
-                    notificationBody.put("title", notificationTitle);
-                    notificationBody.put("message", notificationMessage);
-                    if (!icon.isEmpty()) {
-                        notificationBody.put("icon", icon);
-                    } else {
-                        notificationBody.put("icon", context.getString(R.string.default_app_icon_url));
+                    JSONObject notification = new JSONObject();
+                    JSONObject notificationBody = new JSONObject();
+                    try {
+                        // Set the message
+                        notificationBody.put("title", notificationTitle);
+                        notificationBody.put("message", notificationMessage);
+                        if (!icon.isEmpty()) {
+                            notificationBody.put("icon", icon);
+                        } else {
+                            notificationBody.put("icon", context.getString(R.string.default_app_icon_url));
+                        }
+
+                        // Set the topic
+                        notification.put("to", topic);
+                        notification.put("data", notificationBody);
+                    } catch (JSONException ex) {
+                        Log.e(TAG, "onCreate error!", ex);
                     }
-
-                    // Set the topic
-                    notification.put("to", topic);
-                    notification.put("data", notificationBody);
-                } catch (JSONException ex) {
-                    Log.e(TAG, "onCreate error!", ex);
+                    // Send the notification
+                    ParseApplication.sendNotification(notification, context.getApplicationContext());
                 }
-                // Send the notification
-                ParseApplication.sendNotification(notification, context.getApplicationContext());
             } else {
                 // LOG TO ANALYTICS
                 ParseApplication.logEvent("likeEvent", Arrays.asList("type"), Arrays.asList("unlike"));
